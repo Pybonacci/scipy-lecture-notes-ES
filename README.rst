@@ -1,47 +1,54 @@
-This repository gathers some lecture notes on the scientific Python
-ecosystem that can be used for a full course of scientific computing with
-Python.
+En este repositorio se encuentra una traducción (work in progress) de
+las scipy-lecture-notes (https://github.com/scipy-lectures/scipy-lecture-notes). 
+¿Qué son las scipy-lecture-notes? Son algunos apuntes de charlas y/o conferencias
+sobre el ecosistema científico en python que pueden ser usadas para un curso
+completo de computación científica en python.
 
-These documents are written with the rest markup language (.rst
-extension) and built using Sphinx: http://sphinx.pocoo.org/.
+Estos documentos han sido escritos con el lenguaje de marcado rest (extensión 
+.rst) y han sido creados usando Sphinx: http://sphinx.pocoo.org/.
 
-Modifying
-==========
+Modificando
+===========
 
-Reusing and distributing
--------------------------
+Reusando y distribuyendo
+------------------------
 
-As stated in the LICENSE.txt file, this material comes with no strings
-attached. Feel free to reuse and modify for your own teaching purposes.
+Como se ha expuesto en el fichero LICENSE.txt, este material ha sido creado
+sin ningún tipo de restricciones. Siéntete libre para reusarlo y modificarlo para
+tus propias necesidades de enseñanza.
 
-However, we would like this reference material to be improved over time,
-thus we encourage people to contribute back changes. These will be
-reviewed and edited by the original authors.
+Sin embargo, nos gustaría que este material de referencia fuera mejorado a
+lo largo del tiempo, es por ello que animamos a cualquiera a contribuir con
+los cambios o mejoras que consideren al repositorio oficial en inglés 
+(https://github.com/scipy-lectures/scipy-lecture-notes) para que sean revisadas
+y editadas por los autores originales y posteriormente puedan ser 
+traducidas al español u otros idiomas.
 
-Building instructions
-----------------------
+Instrucciones para crear la documentación
+-----------------------------------------
 
-To generate the html output for on-screen display, Type::
+Para crear la salida en html y que pueda ser mostrada en la pantalla, Escribe::
 
     make html
 
-the generated html files can be found in ``build/html``
+Los ficheros html generados se pueden encontrar en ``build/html``
 
-The first build takes a long time, but information is cached and
-subsequent builds will be faster.
+La primera vez que se cree la documentación puede tomar un tiempo considerable, 
+pero las posteriores creaciones de la documentación deberían ser más rápidas
+puesto que la información se encontrará cacheada.
 
-To generate the pdf file for printing::
+Para generar el fichero pdf para imprimir::
 
     make pdf
 
-The pdf builder is a bit pointy and you might have some TeX errors. Tweaking
-the layout in the rst files is usually enough to work around these
-problems.
+El constructor pdf es un poco 'peculiar' y podrías encontrar errores TeX. 
+Modificaciones al formato en los ficheros rst deberían ser suficiente para
+evitar estos problemas.
 
-Requirements
-............
+Requerimientos
+..............
 
-*probably incomplete*
+*probablemente incompleto*
 
 * make
 * sphinx (>= 1.0)
@@ -50,67 +57,67 @@ Requirements
 * matplotlib
 * scikit-learn (>= 0.8)
 
-Contributing
--------------
+Para contribuir
+---------------
 
-Editorial policy
+Política editorial
 ..................
 
-The goal of this material is to provide a concise text useful to
-learning the main features of the scipy ecosystem. If you want
-to contribute to reference material, we suggest that you contribute
-to the documentation of the specific packages that you are
-interested in.
+El objetivo de este material es proporcionar un texto conciso para aprender
+las principales características del ecosistema scipy. Si quieres contribuir
+a la traducción del material de referencia te sugerimos que contribuyas a la
+documentación de los paquetes específicos en los que estés interesado.
 
-The HTML output can be used for displaying on screen while
-teaching. The goal is to have the same material displayed as
-in the notes. This is why the HTML version should be kept concise, with
-bullet-lists rather than full-blown paragraphs and sentences.
-In the long run, we would like to build more elaborate discussions. For this,
-the policy is to use the::
+La salida en HTML puede ser usada para mostrar en una pantalla mientras 
+se está enseñando. El objetivo es disponer del mismo material tanto en
+pantalla como en los apuntes. Esta es la razón por la que la versión en
+HTML debería mantenerse concisa, con listas cortas de cosas en lugar 
+de párrafos y frases largas. Para la creación más elaborada de la documentación
+nos gustaría incluir discusiones más elaboradas. Para estas partes, la política
+es usar la directiva sphinx::
 
    .. only:: pdf
 
-sphinx directive.
+Cada capítulo debería mantenerse razonablemente corto: de 1 a 2 horas de tutorial.
+La razón es doble. Primero, estos capítulos son átomos que pueden ser combinados
+para crear un curso de computación científica con python. Segundo, la capacidad
+de atención de la gente no suele durar más allá de una o dos horas, independientemente
+de que estén leyendo un tutorial o estén atendiendo en una clase.
 
-Each chapter should be kept reasonably short: 1 to 2 hours of tutorial.
-The reason is two-fold. First these chapters are atoms that can be
-combined to build a course on scientific computing with Python. Second,
-people's attention span does not go much beyond an hour or two, whether
-they are reading a tutorial or following it in a class room.
-
-Modifying
+Modificar
 .........
 
-The easiest way to make your own version of this teaching material
-is to fork it under Github, and use the git version control system to
-maintain your own fork. For this, all you have to do is create an account
-on github (this site) and click on the *fork* button, on the top right of this
-page. You can use git to pull from your *fork*, and push back to it the
-changes. If you want to contribute the changes back, just fill a
-*pull request*, using the button on the top of your fork's page.
+La forma más fácil de hacer tu propia versión de este material de enseñanza
+es 'forkear' (crear una nueva forja) en Github y usar el sistema de control
+de versiones git para mantener tu propio fork (forja). Para ello, lo único que
+debes hacer es crear una cuenta en github (este sitio) y pulsar el botón
+*fork*, arriba a la derecha de esta página. Puedes usar git para hacer *pull* 
+desde tu *fork*, y hacer *push* para introducir los cambios. Si quieres deshacer
+tu contribución simplemente rellena un *pull request*, usando el botón *pull request*
+arriba de la página de tu fork.
 
-Please refrain from modifying the Makefile unless it is absolutely
-necessary.
+Por favor, abstenerse a modificar el Makefile a no ser que sea absolutamente
+necesario.
 
-Figures and code examples
-..........................
+Gráficas y ejemplos de código
+.............................
 
-The figure should be generated from Python source files. The policy is
-to create an ``examples`` directory, in which you put the corresponding
-Python files. Any files with a name starting with ``plot_`` will be run
-during the build process, and figures created by matplotlib will be saved
-as images in an ``auto_examples`` directory. You can use these to include
-in the document as figures. To display the code snippet, you can use the
-``literal-include`` directive. Any additional data needed by the plotting script
-should be included in the same directory. NB: the code to provide this style of
-plot inclusion was adopted from the scikits.learn project and can be found in
-``sphinxext/gen_rst.py``.
+Las figuras deberían ser generadas a partir del código fuente python. La
+política es crear un directorio ``examples`` en el cual colocar los
+correspondientes ficheros python. Cualquier fichero cuyo nombre empiece con
+``plot_`` será procesado durante la creación de la documentación y las
+figuras creadas con matplotlib serán guardadas como imágenes en el directorio
+``auto_examples``. Puedes usar lo anterior para incluir figuras en el 
+documento. Para mostrar fragmentos de código puedes usar la directiva
+``literal-include``. Cualquier dato adicional necesario en el script que
+genera la/s figura/s debería encontrarse en el mismo directorio que el script. 
+NB: el código para proporcionar este estilo de inclusión de figuras ha sido
+adoptado del proyecto scikits.learn y puede ser encontrado en ``sphinxext/gen_rst.py``.
 
-.. topic:: Contributing guide and chapter example
+.. topic:: Guía decontribución y capítulo ejemplo
 
-   The directory `guide` contains an example chapter with specific
-   instructions on how to contribute:
+   El directorio `guide` contiene un capítulo de ejemplo con instrucciones específicas
+   sobre como contribuir:
 
    .. toctree::
 
