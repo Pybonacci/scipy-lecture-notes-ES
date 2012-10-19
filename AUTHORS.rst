@@ -1,9 +1,9 @@
 ========
-Authors
+Autores
 ========
 
-Editors
-=========
+Editores
+========
 
 - Valentin Haenel
 
@@ -11,10 +11,10 @@ Editors
 
 - Gaël Varoquaux
 
-Chapter authors 
-===============
+Autores de capítulos
+====================
 
-Listed by alphabetical order.
+Listados por orden alfabético.
 
 - Christopher Burns
 
@@ -40,7 +40,7 @@ Listed by alphabetical order.
 
 - Zbigniew Jędrzejewski-Szmek
 
-Additional Contributions
+Contribucione adicionales
 =========================
 
 Fixes:
@@ -53,3 +53,7 @@ Fixes:
 
 - Akihiro Uchida
 
+Traductores al español
+======================
+
+- Kiko Correoso
