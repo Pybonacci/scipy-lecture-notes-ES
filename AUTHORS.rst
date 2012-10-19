@@ -40,8 +40,8 @@ Listados por orden alfabético.
 
 - Zbigniew Jędrzejewski-Szmek
 
-Contribucione adicionales
-=========================
+Contribuciones adicionales
+==========================
 
 Fixes:
 
