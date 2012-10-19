@@ -1,4 +1,4 @@
-Python Scientific Lecture Notes 
+Python Scientific Lecture Notes (Spanish translation)
 ===================================================================
 
 .. raw html to center the title
