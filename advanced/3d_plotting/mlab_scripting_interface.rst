@@ -88,8 +88,8 @@ es un array 3D que proporciona la forma del grid.
 
 |clear-floats|
 
-Figuras and decoraciones
--------------------------
+Figuras y decoraciones
+----------------------
 
 Gestión de figuras
 ..................
@@ -187,20 +187,20 @@ Cambiando las propiedades del gráfico
                      
         :transparent: hace que la transparencia del actor dependa de un escalar.
                       
-        :tube_radius: radio de los tubos usedos para representar las
+        :tube_radius: radio de los tubos usados para representar las
                       líneas, en modo mesh. Si se usa None, se usarán líneas simples.
                       
-        :tube_sides: number of sides of the tubes used to
-                     represent the lines. Must be an integer. Default: 6
+        :tube_sides: número de caras de los tubos usados para representar las líneas.
+                     Debe ser un entero. Valor por defecto: 6
                      
-        :vmax: vmax is used to scale the colormap
-               If None, the max of the data will be used
+        :vmax: vmax se usa para escalar el colormap
+               Si se usa None, El valor máximo de los datos será usado
                
-        :vmin: vmin is used to scale the colormap
-               If None, the min of the data will be used
+        :vmin: vmin se usa para escalar el colormap
+               Si se usa None, El valor mínimo de los datos será usado
     
 
-Example:
+Ejemplo:
 
 .. sourcecode:: ipython
 
@@ -227,13 +227,13 @@ Example:
     :align: center
     :scale: 70
 
-Decorations
+Decoraciones
 ............
 
 .. only:: latex
 
-    Different items can be added to the figure to carry extra
-    information, such as a colorbar or a title.
+    Diferentes items pueden ser añadidos a la figura para aportar
+    información extra, como una colorbar o un título.
 
 .. sourcecode:: ipython
 
@@ -255,7 +255,7 @@ Decorations
 
 .. warning:: 
 
-    **extent:** If we specified extents for a plotting object,  
-    `mlab.outline' and `mlab.axes` don't get them by default.
+    **extent (extensión):** Si se especifican extensiones para un objeto gráfico
+    `mlab.outline' y `mlab.axes` no los obtienen por defecto.
 
 
