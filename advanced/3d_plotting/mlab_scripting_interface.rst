@@ -1,18 +1,17 @@
-Mlab: the scripting interface
+Mlab: La interfaz de scripting
 ==============================
 
-The :mod:`mayavi.mlab` module provides simple plotting functions to apply
-to numpy arrays. Try them using in IPython, by starting IPython with the
-switch ``--gui=wx``.
+El módulo :mod:`mayavi.mlab` proporciona simples funciones de dibujo que se aplican sobre 
+numpy arrays. Pruébalo usando IPython, arrancando IPython con el switch ``--gui=wx``.
 
-3D plotting functions
-----------------------
+Funciones de gráficos 3D 
+------------------------
 
 .. image:: examples/points3d.png
     :align: right
     :scale: 50
 
-Points
+Puntos
 ......
  
 .. literalinclude:: examples/generate_figures.py
@@ -25,7 +24,7 @@ Points
     :align: right
     :scale: 50
 
-Lines
+Líneas
 ......
 
 .. literalinclude:: examples/generate_figures.py
@@ -38,8 +37,8 @@ Lines
     :align: right
     :scale: 50
 
-Elevation surface
-.................
+Superficie de elevaciones
+.........................
 
 .. literalinclude:: examples/generate_figures.py
     :start-after: ### begin surf example
@@ -51,8 +50,8 @@ Elevation surface
     :align: right
     :scale: 50
 
-Arbitrary regular mesh
-.......................
+Mallas arbitrarias regulares
+............................
 
 .. literalinclude:: examples/generate_figures.py
     :start-after: ### begin mesh example
@@ -60,13 +59,12 @@ Arbitrary regular mesh
 
 .. note:: 
 
-    A surface is defined by points **connected** to form triangles or
-    polygones. In `mlab.surf` and `mlab.mesh`, the connectivity is
-    implicity given by the layout of the arrays. See also
-    `mlab.triangular_mesh`.
+    Una superficie está definida por puntos **conectados** para formar triángulos o
+    polígonos. En `mlab.surf` y `mlab.mesh`, la conectividad se encuentra dada de forma implícita
+    por el layout de los arrays. Ver también `mlab.triangular_mesh`.
 
-**Our data is often more than points and values: it needs some
-connectivity information**
+**A menudo, nuestros datos son más que puntos y valores: necesitará alguna información para 
+la conectividad**
 
 .. _mayavi-voldata-label: 
 
@@ -74,8 +72,8 @@ connectivity information**
     :align: right
     :scale: 50
 
-Volumetric data
-................
+Datos volumétricos
+..................
 
 .. literalinclude:: examples/generate_figures.py
     :start-after: ### begin contour3d example
@@ -85,115 +83,112 @@ Volumetric data
     :align: right
     :scale: 50
 
-**This function works with a regular orthogonal grid:** the `value` array
-is a 3D array that gives the shape of the grid.
+**Esta función trabaja con un grid regular ortogonal:** el `valor` array
+es un array 3D que proporciona la forma del grid.
 
 |clear-floats|
 
-Figures and decorations
+Figuras and decoraciones
 -------------------------
 
-Figure management
+Gestión de figuras
 ..................
 
 .. only:: latex
 
-    Here is a list of functions useful to control the current figure
+    Aquí se encuentra una lista de funciones útiles para controlar la figura que se encuentra activa
 
 
 ================================ ==============================================================
-Get the current figure:		  `mlab.gcf()`
+Obtener la figura activa:		  `mlab.gcf()`
 -------------------------------- --------------------------------------------------------------
-Clear the current figure:	  `mlab.clf()`
+Limpiar la figura activa:	  `mlab.clf()`
 -------------------------------- --------------------------------------------------------------
-Set the current figure:		  `mlab.figure(1, bgcolor=(1, 1, 1), fgcolor=(0.5, 0.5, 0.5)`
+Establecer la figura activa:		  `mlab.figure(1, bgcolor=(1, 1, 1), fgcolor=(0.5, 0.5, 0.5)`
 -------------------------------- --------------------------------------------------------------
-Save figure to image file:	  `mlab.savefig('foo.png', size=(300, 300))`
+Guardar la figura en un fichero:	  `mlab.savefig('foo.png', size=(300, 300))`
 -------------------------------- --------------------------------------------------------------
-Change the view:		  mlab.view(azimuth=45, elevation=54, distance=1.)
+Cambiar la vista:		  mlab.view(azimuth=45, elevation=54, distance=1.)
 ================================ ==============================================================
 
-Changing plot properties
-.........................
+Cambiando las propiedades del gráfico
+.....................................
 
 .. only:: latex
 
-    In general, many properties of the various objects on the figure can
-    be changed. If these visualization are created via `mlab` functions, 
-    the easiest way to change them is to use the keyword arguments of
-    these functions, as described in the docstrings.
+    En general, muchas propiedades de los distintos objetos que se encuentran en la figura se
+    pueden cambiar. Si estas visualizaciones se crean funciones via `mlab`, 
+    la forma más fácil de cambiarlas es mediante el uso de argumentos en las keywords (palabras clave)
+    de esas funciones, como se describe en los docstrings.
 
-.. topic:: **Example docstring:** `mlab.mesh`
+.. topic:: **Ejemplo docstring:** `mlab.mesh`
 
-    Plots a surface using grid-spaced data supplied as 2D arrays.
+    Dibuja una superficie usando datos grid-espaciados suministrados con arrays 2D.
     
     **Function signatures**::
     
         mesh(x, y, z, ...)
     
-    x, y, z are 2D arrays, all of the same shape, giving the positions of
-    the vertices of the surface. The connectivity between these points is
-    implied by the connectivity on the arrays.
+    x, y, z son arrays 2D, todos con la misma forma, proporcionando las posiciones
+    de los vértices de las superficies. La conectividad entre los puntos se deriva
+    a partir de la conectividad en los arrays.
     
-    For simple structures (such as orthogonal grids) prefer the surf function,
-    as it will create more efficient data structures.
+    Para estructuras simples (como grids ortogonales) es preferible usar la función surf,
+    ya que creará estructuras de datos más eficientes.
     
     **Keyword arguments:**
     
-        :color: the color of the vtk object. Overides the colormap,
-                if any, when specified. This is specified as a
-                triplet of float ranging from 0 to 1, eg (1, 1,
-                1) for white.
+        :color: el color del objeto vtk. sobreescribe el colormap,
+                si existe, cuando se especifica. Se especifica mediante un
+                triplete de decimales en el intervalo que va desde 0 hasta 1, eg (1, 1,
+                1) para el blanco.
                 
-        :colormap: type of colormap to use.
+        :colormap: tipo de colormap a usar.
                    
         :extent: [xmin, xmax, ymin, ymax, zmin, zmax]
-                 Default is the x, y, z arrays extents. Use
-                 this to change the extent of the object
-                 created.
+                 Por defecto usa la extensión de los arrays x, y, z. Usar
+                 esto para cambiar la extensión de un objeto creado.
                  
-        :figure: Figure to populate.
+        :figure: Figura a rellenar.
                  
-        :line_width:  The with of the lines, if any used. Must be a float.
-                     Default: 2.0
+        :line_width:  Especifica el ancho de las líneas, en el caso de que se usen líneas. 
+                     Debe ser un valor decimal. Valor por defecto: 2.0
                      
-        :mask: boolean mask array to suppress some data points.
+        :mask: array de máscara booleana para suprimir algunos puntos de datos.
                
-        :mask_points: If supplied, only one out of 'mask_points' data point is
-                      displayed. This option is usefull to reduce the number
-                      of points displayed on large datasets Must be an integer
-                      or None.
+        :mask_points: Si se proporciona, solo uno de los puntos de datos 'mask_points' será
+                      mostrado. Esta opción es útil para reducir el número de puntos
+                      mostrados en grandes grupos de datos. Debe ser un entero o None.
                       
-        :mode: the mode of the glyphs. Must be '2darrow' or '2dcircle' or
-               '2dcross' or '2ddash' or '2ddiamond' or '2dhooked_arrow' or
-               '2dsquare' or '2dthick_arrow' or '2dthick_cross' or
-               '2dtriangle' or '2dvertex' or 'arrow' or 'cone' or 'cube' or
-               'cylinder' or 'point' or 'sphere'. Default: sphere
+        :mode: El modelo de los glyphs. Debe ser '2darrow' o '2dcircle' o
+               '2dcross' o '2ddash' o '2ddiamond' o '2dhooked_arrow' o
+               '2dsquare' o '2dthick_arrow' o '2dthick_cross' o
+               '2dtriangle' o '2dvertex' o 'arrow' o 'cone' o 'cube' o
+               'cylinder' o 'point' o 'sphere'. Valor por defecto: sphere
                
-        :name: the name of the vtk object created.
+        :name: el nombre del objeto vtk creado.
 
-        :representation: the representation type used for the surface. Must be
-                         'surface' or 'wireframe' or 'points' or 'mesh' or
-                         'fancymesh'. Default: surface
+        :representation: El tipo de representación usado para la superficie. Debe ser
+                         'surface' o 'wireframe' o 'points' o 'mesh' o
+                         'fancymesh'. Valor por defecto: surface
                          
-        :resolution: The resolution of the glyph created. For spheres, for
-                     instance, this is the number of divisions along theta and
-                     phi. Must be an integer. Default: 8
+        :resolution: La resolución del glyph creado. Para esferas, por
+                     ejemplo, este es el número de divisiones a lo largo de theta y
+                     de phi. Debe ser un entero. Valor por defecto: 8
                      
-        :scalars: optional scalar data.
+        :scalars: datos escalares opcionales.
                   
-        :scale_factor: scale factor of the glyphs used to represent
-                       the vertices, in fancy_mesh mode. Must be a float.
-                       Default: 0.05
+        :scale_factor: factor de escala de los glyphs usados para representar
+                       los vértices, en modo fancy_mesh. Debe ser un valor decimal.
+                       Valor por defecto: 0.05
                        
-        :scale_mode: the scaling mode for the glyphs
-                     ('vector', 'scalar', or 'none').
+        :scale_mode: el modo de escalado de los glyphs
+                     ('vector', 'scalar' o 'none').
                      
-        :transparent: make the opacity of the actor depend on the
-                      scalar.
+        :transparent: hace que la transparencia del actor dependa de un escalar.
                       
-        :tube_radius: radius of the tubes used to represent the
-                      lines, in mesh mode. If None, simple lines are used.
+        :tube_radius: radio de los tubos usedos para representar las
+                      líneas, en modo mesh. Si se usa None, se usarán líneas simples.
                       
         :tube_sides: number of sides of the tubes used to
                      represent the lines. Must be an integer. Default: 6
