@@ -1,4 +1,3 @@
-
 .. TODO: bench and fit in 1:30
 
 .. TODO: plotting <- broken in OSX
@@ -6,49 +5,48 @@
 .. _sympy:
 
 ======================================
-Sympy : Symbolic Mathematics in Python
+Sympy : Matemáticas simbólicas en Python
 ======================================
 
-:author: Fabian Pedregosa
+:autor: Fabian Pedregosa
 
-.. topic:: Objectives
+.. topic:: Objetivos
 
-    1. Evaluate expressions with arbitrary precision.
-    2. Perform algebraic manipulations on symbolic expressions.
-    3. Perform basic calculus tasks (limits, differentiation and
-        integration) with symbolic expressions.
-    4. Solve polynomial and transcendental equations.
-    5. Solve some differential equations.
+    1. Evaluar expresiones con precisión arbitraria.
+    2. Ejecutar manipulaciones algebráicas en expresiones simbólicas.
+    3. Ejecutar tareas básicas de cálculo (límites, diferenciación e integración) 
+       con expresiones simbólicas.
+    4. Resolver ecuaciones polinómicas y transcendentales.
+    5. Resolver algunas ecuaciones diferenciales.
 
 .. role:: input(strong)
 
-**What is SymPy?** SymPy is a Python library for symbolic mathematics. It
-aims become a full featured computer algebra system that can compete
-directly with commercial alternatives (Mathematica, Maple) while keeping
-the code as simple as possible in order to be comprehensible and easily
-extensible.  SymPy is written entirely in Python and does not require any
-external libraries.
+**¿Qué es SymPy?** SymPy es una biblioteca Python para matemática simbólica. Su
+propósito es convertirse en un completo sistema de álgebra computacional que pueda
+competir directamente con alternativas comerciales (Mathematica, Maple) manteniendo,
+a la vez, el código tan simple como sea posible para hacerlo extensible de manera fácil
+e integral. SymPy está escrito completamente en Python y no necesita usar otras bibliotecas.
 
-Sympy documentation and packages for installation can be found on
+La documentación y los paquetes Sympy para instalarlo pueden encontrarse en:
 http://sympy.org/
 
-.. contents:: Chapters contents
+.. contents:: Contenidos de los capítulos
    :local:
    :depth: 4
 
 
-First Steps with SymPy
-======================
+Primeros pasos con SymPy
+========================
 
 
-Using SymPy as a calculator
----------------------------
+Usando SymPy como una calculadora
+---------------------------------
 
-SymPy defines three numerical types: Real, Rational and Integer.
+SymPy define tres tipos numéricos: Real, Racional y Entero.
 
-The Rational class represents a rational number as a pair of two
-Integers: the numerator and the denominator, so Rational(1,2)
-represents 1/2, Rational(5,2) 5/2 and so on::
+La clase Racional representa un número racional como una pareja de números
+Enteros: el numerador y el denominador, de esta forma Rational(1,2)
+representa 1/2, Rational(5,2) 5/2, etcétera::
 
     >>> from sympy import *
     >>> a = Rational(1,2)
@@ -59,10 +57,10 @@ represents 1/2, Rational(5,2) 5/2 and so on::
     >>> a*2
     1
 
-SymPy uses mpmath in the background, which makes it possible to
-perform computations using arbitrary-precision arithmetic. That
-way, some special constants, like e, pi, oo (Infinity), are treated as
-symbols and can be evaluated with arbitrary precision::
+SymPy usa mpmath en segundo plano (background), lo que hace posible
+ejecutar cálculos usando aritmética con precisión arbitraria. De
+esta forma, algunas constantes especiales como e, pi, oo (Infinito), son tratadas como
+símbolos y pueden ser evaluadas con precisión arbitraria::
 
     >>> pi**2
     pi**2
@@ -73,9 +71,9 @@ symbols and can be evaluated with arbitrary precision::
     >>> (pi+exp(1)).evalf()
     5.85987448204884
 
-as you see, evalf evaluates the expression to a floating-point number.
+como puedes ver, evalf evalua la expresión como un número decimal.
 
-There is also a class representing mathematical infinity, called
+También existe una clase para representar el infinito (matemático) llamada
 ``oo``::
 
     >>> oo > 99999
@@ -84,24 +82,24 @@ There is also a class representing mathematical infinity, called
     oo
 
 
-Exercises
----------
+Ejercicios
+----------
 
-1. Calculate :math:`\sqrt{2}` with 100 decimals.
-2. Calculate :math:`1/2 + 1/3` in rational arithmetic.
+1. Calcular :math:`\sqrt{2}` con 100 decimales.
+2. Calcular :math:`1/2 + 1/3` en aritmética racional.
 
 
-Symbols
--------
+Símbolos
+--------
 
-In contrast to other Computer Algebra Systems, in SymPy you have to declare
-symbolic variables explicitly::
+En contraste a otros sistemas de álgebra computacional, en SymPy hay que declarar
+las variables simbólicas de forma explícita::
 
     >>> from sympy import *
     >>> x = Symbol('x')
     >>> y = Symbol('y')
 
-Then you can manipulate them::
+Después de declararlas podrán ser usadas::
 
     >>> x+y+x-y
     2*x
@@ -109,27 +107,27 @@ Then you can manipulate them::
     >>> (x+y)**2
     (x + y)**2
 
-Symbols can now be manipulated using some of python operators: +, -, \*, \*\* 
+Los símbolos, ahora, pueden ser manipulados usando algunos de los operadores python: +, -, \*, \*\* 
 (arithmetic), &, |, ~ , >>, << (boolean).
 
 
 
-Algebraic manipulations
-=======================
+Manipulaciones algebráicas
+==========================
 
-SymPy is capable of performing powerful algebraic manipulations. We'll
-take a look into some of the most frequently used: expand and simplify.
+SymPy es capaz de ejecutar potentes manipulaciones algebráicas. Echaremos un vistazo
+a algunas de las más usadas: expandir y simplificar.
 
-Expand
-------
+Expandir
+--------
 
-Use this to expand an algebraic expression. It will try to denest
-powers and multiplications::
+Usa lo siguiente para expandir una expresión algebráica. Tratará de expandir
+las potencias y multiplicaciones::
 
     In [23]: expand((x+y)**3)
     Out[23]: 3*x*y**2 + 3*y*x**2 + x**3 + y**3
 
-Further options can be given in form on keywords::
+Se pueden usar diferentes opciones a partir de palabras clave (keywords)::
 
     In [28]: expand(x+y, complex=True)
     Out[28]: I*im(x) + I*im(y) + re(x) + re(y)
@@ -138,42 +136,41 @@ Further options can be given in form on keywords::
     Out[30]: cos(x)*cos(y) - sin(x)*sin(y)
 
 
-Simplify
---------
+Simplificación
+--------------
 
-Use simplify if you would like to transform an expression into a
-simpler form::
+Usa simplify si quieres transformar una expresión en algo más sencillo::
 
     In [19]: simplify((x+x*y)/x)
     Out[19]: 1 + y
 
 
-Simplification is a somewhat vague term, and more precises
-alternatives to simplify exists: powsimp (simplification of
-exponents), trigsimp (for trigonometric expressions) , logcombine,
+Simplificación es un término vago, es por ello que existen alternativas
+más precisas que simplify: powsimp (simplificación de
+exponentes), trigsimp (para expresiones trigonométricas) , logcombine,
 radsimp, together.
 
-Exercises
----------
+Ejercicios
+----------
 
-1. Calculate the expanded form of :math:`(x+y)^6`.
-2. Simplify the trigonometric expression sin(x) / cos(x)
+1. Calcular la forma expandida de :math:`(x+y)^6`.
+2. Simplificar la expresión trigonométrica sin(x) / cos(x)
 
   
-Calculus
-========
+Cálculo
+=======
 
-Limits
-------
+Límites
+-------
 
-Limits are easy to use in SymPy, they follow the syntax limit(function,
-variable, point), so to compute the limit of f(x) as x -> 0, you would issue
-limit(f, x, 0)::
+Los límites son fáciles de usar en SymPy, siguen la sintáxis limit(función,
+variable, punto). Así, para calcular el límite de f(x) como x -> 0, deberías
+usar la siguiente expresión limit(f, x, 0)::
 
    >>> limit(sin(x)/x, x, 0)
    1
 
-you can also calculate the limit at infinity::
+también puedes calcular el límite en el infinito::
 
    >>> limit(x, x, oo)
    oo
@@ -187,8 +184,8 @@ you can also calculate the limit at infinity::
 
 .. index:: differentiation, diff
 
-Differentiation
----------------
+Diferenciación/Derivación
+-------------------------
 
 You can differentiate any SymPy expression using ``diff(func,
 var)``. Examples::
