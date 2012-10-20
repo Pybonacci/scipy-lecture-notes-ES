@@ -112,7 +112,7 @@ Los símbolos, ahora, pueden ser manipulados usando algunos de los operadores py
 
 
 
-Manipulaciones algebráicas
+Manipulaciones algebraicas
 ==========================
 
 SymPy es capaz de ejecutar potentes manipulaciones algebráicas. Echaremos un vistazo
@@ -187,8 +187,8 @@ también puedes calcular el límite en el infinito::
 Diferenciación/Derivación
 -------------------------
 
-You can differentiate any SymPy expression using ``diff(func,
-var)``. Examples::
+Puedes derivar cualquier expresión SymPy usando ``diff(func,
+var)``. Ejemplos::
 
     >>> diff(sin(x), x)
     cos(x)
@@ -198,12 +198,12 @@ var)``. Examples::
     >>> diff(tan(x), x)
     1 + tan(x)**2
 
-You can check, that it is correct by::
+Puedes comprobar que esto es correcto mediante::
 
     >>> limit((tan(x+y)-tan(x))/y, y, 0)
     1 + tan(x)**2
 
-Higher derivatives can be calculated using the ``diff(func, var, n)`` method::
+Se pueden obtener derivadas de orden superior mediante el método ``diff(func, var, n)``::
 
     >>> diff(sin(2*x), x, 1)
     2*cos(2*x)
@@ -215,11 +215,11 @@ Higher derivatives can be calculated using the ``diff(func, var, n)`` method::
     -8*cos(2*x)
 
 
-Series expansion
-----------------
+Expansión de series
+-------------------
 
-SymPy also knows how to compute the Taylor series of an expression at
-a point. Use ``series(expr, var)``::
+SymPy también permite computar la serie de Taylor de una expresión en un
+punto. Usa ``series(expr, var)``::
 
     >>> series(cos(x), x)
     1 - x**2/2 + x**4/24 + O(x**6)
@@ -227,21 +227,21 @@ a point. Use ``series(expr, var)``::
     1 + x**2/2 + 5*x**4/24 + O(x**6)
 
 
-Exercises
----------
+Ejercicios
+----------
 
-1. Calculate :math:`\lim{x->0, sin(x)/x}`
-2. Calulate the derivative of log(x) for x.
+1. Calcular :math:`\lim{x->0, sin(x)/x}`
+2. Calcular la derivada de log(x) para x.
 
 .. index:: integration
 
-Integration
+Integración
 -----------
 
-SymPy has support for indefinite and definite integration of transcendental
-elementary and special functions via `integrate()` facility, which uses
-powerful extended Risch-Norman algorithm and some heuristics and pattern
-matching. You can integrate elementary functions::
+SymPy ofrece soporte para integrales definidas o indefinidas de funciones transcendentes elementales
+y de funciones especiales via `integrate()`, que usa una potente extensión del algoritmo Risch-Norman 
+y algo de heurística y de reconocimiento de patrones. Puedes integrar funciones elementales
+de la siguiente forma::
 
     >>> integrate(6*x**5, x)
     x**6
@@ -252,12 +252,12 @@ matching. You can integrate elementary functions::
     >>> integrate(2*x + sinh(x), x)
     cosh(x) + x**2
 
-Also special functions are handled easily::
+También se pueden manejar funciones especiales de forma sencilla::
 
     >>> integrate(exp(-x**2)*erf(x), x)
     pi**(1/2)*erf(x)**2/4
 
-It is possible to compute definite integral::
+Es posible calcular integrales definidas::
 
     >>> integrate(x**3, (x, -1, 1))
     0
@@ -266,7 +266,7 @@ It is possible to compute definite integral::
     >>> integrate(cos(x), (x, -pi/2, pi/2))
     2
 
-Also improper integrals are supported as well::
+También están soportadas las integrales impropias::
 
     >>> integrate(exp(-x), (x, 0, oo))
     1
@@ -277,38 +277,36 @@ Also improper integrals are supported as well::
 .. index:: equations; algebraic, solve
 
 
-Exercises
----------
+Ejercicios
+----------
 
   
 
-Equation solving
-================
+Resolución de ecuaciones
+========================
 
-SymPy is able to solve algebraic equations, in one and several
-variables::
+SymPy es capaz de resolver ecuaciones algebraicas de una o varias variables::
 
     In [7]: solve(x**4 - 1, x)
     Out[7]: [I, 1, -1, -I]
 
-As you can see it takes as first argument an expression that is
-supposed to be equaled to 0. It is able to solve a large part of
-polynomial equations, and is also capable of solving multiple
-equations with respect to multiple variables giving a tuple as second
-argument::
+Como has visto anteriormente, toma una expresión como primer argumento
+que se supone que es igual a 0. Es capaz de resolver una gran parte de
+ecuaciones polinómicas. Además, es capar de resolver múltiples ecuaciones 
+respecto a múltiples variables (sistemas de ecuaciones) proporcionando 
+una tupla como segundo argumento::
 
     In [8]: solve([x + 5*y - 2, -3*x + 6*y - 15], [x, y])
     Out[8]: {y: 1, x: -3}
 
-It also has (limited) support for trascendental equations::
+También tiene capacidad (limitada) de resolver ecuaciones transcendentales::
 
    In [9]: solve(exp(x) + 1, x)
    Out[9]: [pi*I]
 
-Another alternative in the case of polynomial equations is
-`factor`. `factor` returns the polynomial factorized into irreducible
-terms, and is capable of computing the factorization over various
-domains::
+Otra alternativa, en el caso de ecuaciones polinómicas, es
+`factor`. `factor` devuelve el polinomio factorizado en términos irreducibles
+y es capaz de calcular la factorización sobre varios dominios::
 
    In [10]: f = x**4 - 3*x**2 + 1
    In [11]: factor(f)
@@ -319,36 +317,36 @@ domains::
 
 
 
-SymPy is also able to solve boolean equations, that is, to decide if a
-certain boolean expression is satisfiable or not. For this, we use the
-function satisfiable::
+SymPy también resuelve ecuaciones booleanas, esto es, decide si una
+determinada expresión booleana se cumple o no. Para ello se usa la
+función satisfiable::
 
    In [13]: satisfiable(x & y)
    Out[13]: {x: True, y: True}
 
-This tells us that (x & y) is True whenever x and y are both True. If
-an expression cannot be true, i.e. no values of its arguments can make
-the expression True, it will return False::
+Lo anterior nos dice que (x & y) es True (verdadero) siempre que ambas variables, x e y, sean True. 
+Si una expresión no puede ser verdadera, i.e. los valores de sus argumentos no pueden hacer
+que la expresión sea True (verdadera), obtendremos el resultado False (Falso)::
 
    In [14]: satisfiable(x & ~x)
    Out[14]: False
 
 
-Exercises
----------
+Ejercicios
+----------
 
-1. Solve the system of equations :math:`x + y = 2`, :math:`2\cdot x + y = 0`
-2. Are there boolean values ``x``, ``y`` that make ``(~x | y) & (~y | x)`` true?
-
-
-.. Polynomial computations
-.. =======================
-
-.. SymPy has a rich module of efficient polynomial routines. Some of the
-.. most commonly used methods are factor, gcd
+1. Resuelve el sistema de ecuaciones :math:`x + y = 2`, :math:`2\cdot x + y = 0`
+2. ¿Hay expresiones booleanas ``x``, ``y`` que hacen que ``(~x | y) & (~y | x)`` sea verdadero?
 
 
-Linear Algebra
+.. Computaciones polinomiales
+.. ==========================
+
+.. SymPy posee un completo módulo de eficientes rutinas polinomiales. Algunos de
+.. los métodos más comúnmente usados son factor, gcd
+
+
+Álgebra Lineal
 ==============
 
 .. index:: Matrix
@@ -356,14 +354,14 @@ Linear Algebra
 Matrices
 --------
 
-Matrices are created as instances from the Matrix class::
+Las Matrices se crean como instancias de la clase Matrix::
 
     >>> from sympy import Matrix
     >>> Matrix([[1,0], [0,1]])
     [1, 0]
     [0, 1]
 
-unlike a NumPy array, you can also put Symbols in it::
+A diferencia de un NumPy array, en una matriz (de Sympy) se pueden incluir también símbolos::
 
     >>> x = Symbol('x')
     >>> y = Symbol('y')
@@ -379,11 +377,11 @@ unlike a NumPy array, you can also put Symbols in it::
 
 .. index:: equations; differential, diff, dsolve
 
-Differential Equations
-----------------------
+Ecuaciones diferenciales
+------------------------
 
-SymPy is capable of solving (some) Ordinary Differential
-Equations. sympy.ode.dsolve works like this::
+SymPy es capaz de resolver (algunas) ecuaciones diferenciales ordinarias. 
+sympy.ode.dsolve funciona de la siguiente forma::
 
     In [4]: f(x).diff(x, x) + f(x)
     Out[4]:
@@ -395,22 +393,22 @@ Equations. sympy.ode.dsolve works like this::
     In [5]: dsolve(f(x).diff(x, x) + f(x), f(x))
     Out[5]: C₁*sin(x) + C₂*cos(x)
 
-Keyword arguments can be given to this function in order to help if
-find the best possible resolution system. For example, if you know
-that it is a separable equations, you can use keyword hint='separable'
-to force dsolve to resolve it as a separable equation.
+Se pueden usar argumentos en las keywords para ayudar a encontrar el
+mejor sistema de resolución posible. Por ejemplo, si a priori conoces
+que estás tratando con ecuaciones separables, puedes usar la palabra clave (keyword) hint='separable'
+para forzar a dsolve a que lo resuelva como una ecuación separable.
 
    In [6]: dsolve(sin(x)*cos(f(x)) + cos(x)*sin(f(x))*f(x).diff(x), f(x), hint='separable')
    Out[6]: -log(1 - sin(f(x))**2)/2 == C1 + log(1 - sin(x)**2)/2
 
 
-Exercises
----------
+Ejercicios
+----------
 
-1. Solve the Bernoulli differential equation x*f(x).diff(x) + f(x) - f(x)**2
+1. Resolver la ecuación diferencial de Bernoulli x*f(x).diff(x) + f(x) - f(x)**2
 
 .. warning::
 
    TODO: correct this equation and convert to math directive!
 
-2. Solve the same equation using hint='Bernoulli'. What do you observe ?
+2. resuelve la misma ecuación usando hint='Bernoulli'. ¿Qué observas?
