@@ -1,29 +1,29 @@
-Interactive work
-=================
+Trabajo interactivo
+===================
 
 .. only:: latex
 
-    The quicket way to create beautiful visualization with Mayavi is
-    probably to interactivly tweak the various settings.
+    La forma más rápida de crear bellas visualizaciones con Mayavi es,
+    probablemente, modificar interactivamente los distintos settings.
 
-The "pipeline dialog"
+El "pipeline dialog"
 ----------------------
 
-Click on the 'Mayavi' button in the scene, and you can control properties
-of objects with dialogs.
+Pulsa sobre el botón 'Mayavi' en la escena para controlar las propiedades
+de los objetos mediante ventanas de diálogos.
 
 .. image:: pipeline.png
     :align: center
     :scale: 80
 
-* Set the background of the figure in the `Mayavi Scene` node
-* Set the colormap in the `Colors and legends` node
-* Right click on the node to add modules or filters
+* Establece el fondo en el nodo `Mayavi Scene`
+* Establece el colormap en el nodo `Colors and legends`
+* Pulsa en el botón derecho del ratón sobre el nodo para añadir módulos o filtros
 
 The script recording button
 -----------------------------
 
-To find out what code can be used to program these changes, click on the 
-red button as you modify those properties, and it will generate the
-corresponding lines of code.
+Para conocer qué código hay que usar para programar los cambios, pulsa 
+sobre el botón rojo a medida que vas modificando las propiedades y se irán
+generando las correspondientes líneas de código.
 
