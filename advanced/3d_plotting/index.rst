@@ -1,9 +1,9 @@
 .. _mayavi-label:
 
-3D plotting with Mayavi
+Gráficas 3D con Mayavi
 ========================
 
-:author: Gaël Varoquaux
+:autor: Gaël Varoquaux
 
 .. only:: html
 
