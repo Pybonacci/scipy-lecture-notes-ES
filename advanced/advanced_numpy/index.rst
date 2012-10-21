@@ -7,43 +7,40 @@
 .. _advanced_numpy:
 
 ==============
-Advanced Numpy
+Numpy avanzado
 ==============
 
-:author: Pauli Virtanen
+:autor: Pauli Virtanen
 
-Numpy is at the base of Python's scientific stack of tools.
-Its purpose is simple: implementing efficient operations on
-many items in a block of memory.  Understanding how it works
-in detail helps in making efficient use of its flexibility,
-taking useful shortcuts, and in building new work based on
-it.
+Numpy se encuentra en la base del montón de herramientas científicas de Python.
+Su propósito es simple: implementar operaciones eficientes sobre muchos
+items en un bloque de memoria.  Entender detalladamente como funciona
+sirve de ayuda para poder hacer un uso más eficiente de su flexibilidad,
+usando útiles atajos y creando nuevo trabajo basado en él.
 
-This tutorial aims to cover:
+Este tutorial pretende cubrir:
 
-- Anatomy of Numpy arrays, and its consequences. Tips and
-  tricks.
+- Anatomía de los Numpy arrays y sus consecuencias. Consejos y trucos.
 
-- Universal functions: what, why, and what to do if you want
-  a new one.
+- Funciones universales: qué, porqué y qué hacer si quieres una nueva.
 
-- Integration with other tools: Numpy offers several ways to
-  wrap any data in an ndarray, without unnecessary copies.
+- Integración con otras herramientas: Numpy ofrece varias formas para
+  'meter' cualquier dato en un ndarray, sin crear copias innecesarias.
 
-- Recently added features, and what's in them for me: PEP
-  3118 buffers, generalized ufuncs, ...
+- Características añadidas recientemente y qué hay en ellas para mí: 
+  PEP 3118 buffers, ufuncs generalizadas, ...
 
 .. currentmodule:: numpy
 
 .. time limit: 1.5 hours; probably ~ 2 x 45 min
 
-.. topic:: Prerequisites
+.. topic:: Preerequisitos
 
-    * Numpy (>= 1.2; preferably newer...)
-    * Cython (>= 0.12, for the Ufunc example)
-    * PIL (used in a couple of examples)
+    * Numpy (>= 1.2; preferiblemente versiones más nuevas...)
+    * Cython (>= 0.12, para el ejemplo con Ufunc)
+    * PIL (usado en un par de ejemplos)
 
-In this section, numpy will be imported as follows::
+En esta sección numpy será importado de la siguiente forma::
 
     >>> import numpy as np
 
@@ -52,19 +49,19 @@ In this section, numpy will be imported as follows::
    :depth: 2
 
 
-Life of ndarray
-===============
+Vida de un ndarray
+==================
 
-It's...
--------
+Esto es...
+----------
 
 **ndarray** =
 
-    block of memory + indexing scheme + data type descriptor
+    bloque de memoria + esquema de indexación + descriptor del tipo de dato
 
-    - raw data
-    - how to locate an element
-    - how to interpret an element
+    - Dato bruto (raw data)
+    - Cómo localizar un elemento
+    - Cómo interpretar un elemento
 
 .. image:: threefundamental.png
 
@@ -91,8 +88,8 @@ It's...
    } PyArrayObject;
 
 
-Block of memory
----------------
+Bloque de memoria
+-----------------
 
 >>> x = np.array([1, 2, 3, 4], dtype=np.int32)
 >>> x.data      # doctest: +SKIP
@@ -100,12 +97,12 @@ Block of memory
 >>> str(x.data)
 '\x01\x00\x00\x00\x02\x00\x00\x00\x03\x00\x00\x00\x04\x00\x00\x00'
 
-Memory address of the data:
+Dirección en memoria de los datos:
 
 >>> x.__array_interface__['data'][0] # doctest: +SKIP
 64803824
 
-Reminder: two :class:`ndarrays <ndarray>` may share the same memory::
+Recordatorio: dos :class:`ndarrays <ndarray>` deben compartir la misma memoria::
 
     >>> x = np.array([1, 2, 3, 4])
     >>> y = x[:-1]
@@ -113,7 +110,7 @@ Reminder: two :class:`ndarrays <ndarray>` may share the same memory::
     >>> y
     array([9, 2, 3])
 
-Memory does not need to be owned by an :class:`ndarray`::
+La memoria no tiene que pertenecer a un :class:`ndarray`::
 
     >>> x = '1234'
     >>> y = np.frombuffer(x, dtype=np.int8)
@@ -130,29 +127,28 @@ Memory does not need to be owned by an :class:`ndarray`::
       ALIGNED : True
       UPDATEIFCOPY : False
 
-The ``owndata`` and ``writeable`` flags indicate status of the memory
-block.
+Los flags ``owndata`` y ``writeable`` indican el estátus de la memoria.
 
 
-Data types
-----------
+Tipos de datos
+--------------
 
-The descriptor
-^^^^^^^^^^^^^^
+El descriptor
+^^^^^^^^^^^^^
 
-:class:`dtype` describes a single item in the array:
+:class:`dtype` describe un único item en el array:
 
 =========   ===================================================
-type        **scalar type** of the data, one of:
+type        **scalar type** de los datos, puede ser uno de:
 
-            int8, int16, float64, *et al.*  (fixed size)
+            int8, int16, float64, *et al.*  (tamaño fijo)
 
-            str, unicode, void   (flexible size)
+            str, unicode, void   (tamaño flexible)
 
-itemsize    **size** of the data block
+itemsize    **tamaño** del bloque de datos
 byteorder   **byte order**: big-endian ``>`` / little-endian ``<`` / not applicable ``|``
-fields      sub-dtypes, if it's a **structured data type**
-shape       shape of the array, if it's a **sub-array**
+fields      sub-dtypes, si es un **tipo de datos estructurados**
+shape       forma del array, si es un **sub-array**
 =========   ===================================================
 
 >>> np.dtype(int).type
@@ -163,10 +159,10 @@ shape       shape of the array, if it's a **sub-array**
 '='
 
 
-Example: reading ``.wav`` files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Ejemplo: leyendo ficheros ``.wav``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The ``.wav`` file header:
+El cabecero del fichero ``.wav``:
 
 ================   ==========================================
 chunk_id           ``"RIFF"``
@@ -184,10 +180,10 @@ data_id            ``"data"``
 data_size          4-byte unsigned little-endian integer
 ================   ==========================================
 
-- 44-byte block of raw data (in the beginning of the file)
-- ... followed by ``data_size`` bytes of actual sound data.
+- bloque de 44-byte de datos brutos (raw data) (al comienzo del fichero)
+- ... seguido de ``data_size`` bytes de datos de sonido.
 
-The ``.wav`` file header as a Numpy *structured* data type:
+El cabecero del fichero ``.wav`` como un tipo de datos *estructurados* Numpy:
 
 >>> wav_header_dtype = np.dtype([
 ...     ("chunk_id", (str, 4)),   # flexible-sized scalar type, item size 4
@@ -217,16 +213,16 @@ dtype('|S4')
 >>> wav_header_dtype.fields['format']
 (dtype('|S4'), 8)
 
-- The first element is the sub-dtype in the structured data, corresponding
-  to the name ``format``
+- El primer elemento en el sub-dtype del dato estructurado, correspondiendo
+  al nombre ``format``
 
-- The second one is its offset (in bytes) from the beginning of the item
+- El segundo es su offset (en bytes) desde el inicio del item
 
-.. topic:: Exercise
+.. topic:: Ejercicio
    :class: green
 
-   Mini-exercise, make a "sparse" dtype by using offsets, and only some
-   of the fields::
+   Mini-ejercicio, hacer un dtype "disperso" usando offsets y solo algunos
+   de los campos::
 
     >>> wav_header_dtype = np.dtype(dict(
     ...   names=['format', 'sample_rate', 'data_id'],
@@ -234,7 +230,7 @@ dtype('|S4')
     ...   formats=list of dtypes for each of the fields,
     ... ))  # doctest: +SKIP
 
-   and use that to read the sample rate, and ``data_id`` (as sub-array).
+   y usar eso para leer la tasa de muestreo (sample rate) y ``data_id`` (como sub-array).
 
 >>> f = open('data/test.wav', 'r')
 >>> wav_header = np.fromfile(f, dtype=wav_header_dtype, count=1)
@@ -244,7 +240,7 @@ dtype('|S4')
 >>> wav_header['sample_rate']
 array([16000], dtype=uint32)
 
-Let's try accessing the sub-array:
+Vamos a intentar acceder al sub-array:
 
 >>> wav_header['data_id']
 array([[['d', 'a'],
@@ -255,42 +251,42 @@ array([[['d', 'a'],
 >>> wav_header['data_id'].shape
 (1, 2, 2)
 
-When accessing sub-arrays, the dimensions get added to the end! 
+¡Cuando accedemos a sub-arrays las dimensiones se añaden al final! 
 
 .. note::
 
-   There are existing modules such as ``wavfile``, ``audiolab``,
-   etc. for loading sound data...
+   Existen módulos como ``wavfile``, ``audiolab``,
+   etc. para leer datos de sonido...
 
 
-Casting and re-interpretation/views
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Casting y re-interpretación/vistas
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**casting**
+**casting (o transformación de tipo)**
 
-    - on assignment
-    - on array construction
-    - on arithmetic
+    - al asignar
+    - en la construcción de arrays
+    - en aritmética
     - etc.
-    - and manually: ``.astype(dtype)``
+    - y manualmente: ``.astype(dtype)``
 
-**data re-interpretation**
+**re-interpretación de dato**
 
-    - manually: ``.view(dtype)``
+    - manualmente: ``.view(dtype)``
 
 
-Casting
-........
+Casting (o transformación de tipo)
+..................................
 
-- Casting in arithmetic, in nutshell:
+- Casting en aritmética, resumiendo:
 
-  - only type (not value!) of operands matters
+  - solo tipo (¡y no valor!) de los operandos importan
 
-  - largest "safe" type able to represent both is picked
+  - el tipo que sea más "seguro" capaz de representar a ambos será el seleccionado
 
-  - scalars can "lose" to arrays in some situations
+  - los escalares pueden "perderse" en los arrays en algunas situaciones
 
-- Casting in general copies data::
+- Casting en copias generales de datos::
 
     >>> x = np.array([1, 2, 3, 4], dtype=np.float)
     >>> x
@@ -307,7 +303,7 @@ Casting
     >>> y + np.array([256], dtype=np.int32)
     array([257, 258, 259, 260], dtype=int32)
 
-- Casting on setitem: dtype of the array is not changed on item assignment::
+- Casting en setitem: dtype del array no cambia al asignar al item::
 
     >>> y[:] = y + 1.5
     >>> y
@@ -315,14 +311,14 @@ Casting
 
 .. note::
 
-   Exact rules: see documentation:
+   Para conocer las reglas exactas: ver la documentación:
    http://docs.scipy.org/doc/numpy/reference/ufuncs.html#casting-rules
 
 
-Re-interpretation / viewing
-............................
+Re-interpretación / vistas
+..........................
 
-- Data block in memory (4 bytes)
+- Bloques de datos en memoria (4 bytes)
 
   ==========  ====  ========== ====  ==========  ====  ==========
    ``0x01``    ||    ``0x02``   ||    ``0x03``    ||    ``0x04``
@@ -335,9 +331,9 @@ Re-interpretation / viewing
   - 1 of float32, OR,
   - ...
 
-  How to switch from one to another?
+  ¿Cómo cambiar de uno a otro?
 
-1. Switch the dtype:
+1. Cambiando el dtype:
 
    >>> x = np.array([1, 2, 3, 4], dtype=np.uint8)
    >>> x.dtype = "<i2"
@@ -351,10 +347,10 @@ Re-interpretation / viewing
   ==========  ========== ====  ==========  ==========
 
 
-   .. note:: little-endian: least significant byte is on the *left* in memory
+   .. note:: little-endian: el byte menos significativo se encuentra a la *izquierda* en memoria
 
 
-2. Create a new view:
+2. Creando una nueva vista:
 
    >>> y = x.view("<i4")
    >>> y
@@ -369,8 +365,8 @@ Re-interpretation / viewing
 
 .. note::
 
-   - ``.view()`` makes *views*, does not copy (or alter) the memory block
-   - only changes the dtype (and adjusts array shape)::
+   - ``.view()`` crea *vistas*, no copia (o altera) el bloque de memoria
+   - solo cambia el dtype (y ajusta la forma del array)::
 
       >>> x[1] = 5
       >>> y
@@ -378,11 +374,11 @@ Re-interpretation / viewing
       >>> y.base is x
       True
 
-.. rubric:: Mini-exercise: data re-interpretation
+.. rubric:: Mini-ejercicio: re-interpretación de datos
 
 .. seealso:: view-colors.py
 
-You have RGBA data in an array::
+Tenemos datos RGBA en un array::
 
     >>> x = np.zeros((10, 10, 4), dtype=np.int8)
     >>> x[:, :, 0] = 1
@@ -390,10 +386,10 @@ You have RGBA data in an array::
     >>> x[:, :, 2] = 3
     >>> x[:, :, 3] = 4
 
-where the last three dimensions are the R, B, and G, and alpha channels.
+donde la tercera dimensión indica cada uno de los canales R, B, and G y alpha.
 
-How to make a (10, 10) structured array with field names 'r', 'g', 'b', 'a'
-without copying data? ::
+¿Cómo hacer un array estructurado (10, 10) con los field names 'r', 'g', 'b', 'a'
+sin crear una copia de los datos? ::
 
     >>> y = ...                     # doctest: +SKIP
 
@@ -402,7 +398,7 @@ without copying data? ::
     >>> assert (y['b'] == 3).all()  # doctest: +SKIP
     >>> assert (y['a'] == 4).all()  # doctest: +SKIP
 
-*Solution*
+*Solución*
 
     .. raw:: html
 
@@ -421,7 +417,7 @@ without copying data? ::
 
 .. warning::
 
-   Another array taking exactly 4 bytes of memory:
+   Otro array tomando, exactamente, 4 bytes de memoria:
 
    >>> y = np.array([[1, 3], [2, 4]], dtype=np.uint8).transpose()
    >>> x = y.copy()
@@ -439,20 +435,20 @@ without copying data? ::
    >>> y.view(np.int16)
    array([[ 769, 1026]], dtype=int16)
 
-   - What happened?
-   - ... we need to look into what ``x[0,1]`` actually means
+   - ¿Qué ha pasado?
+   - ... debemos mirar qué significa ``x[0,1]`` en realidad
 
    >>> 0x0301, 0x0402
    (769, 1026)
 
 
-Indexing scheme: strides
-------------------------
+Esquema de indexación: strides (pasos)
+--------------------------------------
 
-Main point
-^^^^^^^^^^
+Punto principal
+^^^^^^^^^^^^^^^
 
-**The question**
+**La pregunta**
 
   >>> x = np.array([[1, 2, 3], 
   ...	           [4, 5, 6], 
@@ -460,12 +456,12 @@ Main point
   >>> str(x.data)
   '\x01\x02\x03\x04\x05\x06\x07\x08\t'
 
-  At which byte in ``x.data`` does the item ``x[1,2]`` begin?
+  ¿En qué byte en ``x.data`` commienza el item ``x[1,2]``?
 
-**The answer** (in Numpy)
+**La respuesta** (en Numpy)
 
-  - **strides**: the number of bytes to jump to find the next element
-  - 1 stride per dimension
+  - **strides (o pasos)**: El número de bytes a saltar para encontrar el siguiente elemento
+  - 1 stride por dimensión
 
   >>> x.strides
   (3, 1)
@@ -478,8 +474,8 @@ Main point
   - simple, **flexible**
 
 
-C and Fortran order
-.....................
+Orden C y Fortran
+.................
 
 >>> x = np.array([[1, 2, 3], 
 ...               [4, 5, 6], 
@@ -489,8 +485,8 @@ C and Fortran order
 >>> str(x.data)
 '\x01\x00\x02\x00\x03\x00\x04\x00\x05\x00\x06\x00\x07\x00\x08\x00\t\x00'
 
-* Need to jump 6 bytes to find the next row
-* Need to jump 2 bytes to find the next column 
+* Necesita saltar 6 bytes para encontrar la siguiente fila
+* Necesita saltar 2 bytes para encontrar la siguiente columna
 
 
 >>> y = np.array(x, order='F')
@@ -499,14 +495,14 @@ C and Fortran order
 >>> str(y.data)
 '\x01\x00\x04\x00\x07\x00\x02\x00\x05\x00\x08\x00\x03\x00\x06\x00\t\x00'
 
-* Need to jump 2 bytes to find the next row
-* Need to jump 6 bytes to find the next column 
+* Necesita saltar 2 bytes para encontrar la siguiente fila
+* Necesita saltar 6 bytes para encontrar la siguiente columna 
 
 
-- Similarly to higher dimensions:
+- De forma similar para dimensiones mayores:
 
-  - C: last dimensions vary fastest (= smaller strides)
-  - F: first dimensions vary fastest
+  - C: últimas dimensiones varían más rápido (= strides más pequeños)
+  - F: primeras dimensiones varían más rápido
 
   .. math::
 
@@ -521,12 +517,12 @@ C and Fortran order
 
 .. note::
 
-   Now we can understand the behavior of ``.view()``:
+   Ahora podemos entender el comportamiento de ``.view()``:
    
    >>> y = np.array([[1, 3], [2, 4]], dtype=np.uint8).transpose()
    >>> x = y.copy()
 
-   Transposition does not affect the memory layout of the data, only strides
+   La transposición no afecta al layout de memoria de los datos, solo a los strides
 
    >>> x.strides
    (2, 1)
@@ -538,12 +534,18 @@ C and Fortran order
    >>> str(y.data)
    '\x01\x03\x02\x04'
 
-   - the results are different when interpreted as 2 of int16
-   - ``.copy()`` creates new arrays in the C order (by default)
+   - los resultados son diferentes cuando son interpretados como 2 de int16
+   - ``.copy()`` crea nuevos arrays ordenados en forma C order (por defecto)
 
 
-Slicing with integers
+Slicing con enteros
 .......................
+
+.. note::
+   
+   NdT: Slicing, traducido literalmente, significa rebanada, rodaja. Con este término nos referimos a
+   tomar una porción/rodaja/rebanada de los datos, es decir, usar un subconjunto de los datos disponibles
+   en el array
 
 - *Everything* can be represented by changing only ``shape``, ``strides``, 
   and possibly adjusting the ``data`` pointer!
