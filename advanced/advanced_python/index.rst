@@ -2,43 +2,43 @@
 
 .. default-role:: py:obj
 
-==========================
-Advanced Python Constructs
-==========================
-:author: Zbigniew Jędrzejewski-Szmek
+============================================================
+Expresiones avanzadas en python (Advanced Python Constructs)
+============================================================
+:autor: Zbigniew Jędrzejewski-Szmek
 
-This chapter is about some features of the Python language which can
-be considered advanced --- in the sense that not every language has
-them, and also in the sense that they are more useful in more
-complicated programs or libraries, but not in the sense of being
-particularly specialized, or particularly complicated.
+En este capítulo se tratan algunas características de Python que se 
+podrían considerar como avanzadas --- en el sentido en que no todos los lenguajes
+las tienen y, también, en el sentido en que son más útiles en bibliotecas y programas
+más complejos pero no en el sentido de ser particularmente especialzadas o particularmente
+complicadas.
 
-It is important to underline that this chapter is purely about the
-language itself --- about features supported through special syntax
-complemented by functionality of the Python stdlib, which could not be
-implemented through clever external modules.
+Es importante subrayar que este capítulo trata, puramente, sobre el lenguaje en sí mismo
+--- acerca de características soportadas a través de sintaxis especial complementada
+por funcionalidad de la biblioteca estándar (stdlib) de Python la cual 
+no podría ser implementada a través de inteligentes módulos externos.
 
-The process of developing the Python programming language, its syntax,
-is unique because it is very transparent, proposed changes are
-evaluated from various angles and discussed on public mailing lists,
-and the final decision takes into account the balance between the
-importance of envisioned use cases, the burden of carrying more
-language features, consistency with the rest of the syntax, and
-whether the proposed variant is the easiest to read, write, and
-understand. This process is formalised in Python Enhancement
-Proposals --- PEPs_. As a result, features described in this chapter
-were added after it was shown that they indeed solve real problems and
-that their use is as simple as possible.
+El proceso de desarrollar el lenguaje de programación Python, su sintaxis,
+es único porque es muy transparente, los cambios propuestos son evaluados
+desde diferentes ángulos y discutidos de forma pública en listas de correo
+y la decisión final trata de encontrar un balance entre la importancia de
+los casos de uso previstos, la carga de incluir más características al lenguaje,
+la consistencia con el resto de la sintaxis y si la variante propuesta es la
+sencilla de leer, escribir y entender. Este proceso se encuentra formalizado
+en las propuestas de mejora de Python (PEP_, de ahora en adelante, por sus
+siglas en inglés, 'Python Enhanced Proposals'). Como resultado, las características descritas
+en este capítulo fueron añadidas posteriormente después de comprobar que
+sirven para resolver problemas reales y de que su uso es lo más simple posible.
 
-.. _PEPs: http://www.python.org/dev/peps/
+.. _PEP: http://www.python.org/dev/peps/
 
-.. contents:: Chapters contents
+.. contents:: Contenidos del capítulo
    :local:
    :depth: 4
 
 
 
-Iterators, generator expressions and generators
+Iteradores, expresiones generadoras y generadores
 ===============================================
 
 Iterators
