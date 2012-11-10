@@ -24,7 +24,7 @@ desde diferentes ángulos y discutidos de forma pública en listas de correo
 y la decisión final trata de encontrar un balance entre la importancia de
 los casos de uso previstos, la carga de incluir más características al lenguaje,
 la consistencia con el resto de la sintaxis y si la variante propuesta es la
-sencilla de leer, escribir y entender. Este proceso se encuentra formalizado
+más sencilla de leer, escribir y entender. Este proceso se encuentra formalizado
 en las propuestas de mejora de Python (PEP_, de ahora en adelante, por sus
 siglas en inglés, 'Python Enhanced Proposals'). Como resultado, las características descritas
 en este capítulo fueron añadidas posteriormente después de comprobar que
@@ -41,42 +41,42 @@ sirven para resolver problemas reales y de que su uso es lo más simple posible.
 Iteradores, expresiones generadoras y generadores
 ===============================================
 
-Iterators
+Iteradores
 ^^^^^^^^^
 
-.. sidebar:: Simplicity
+.. sidebar:: Simplicidad
 
-   Duplication of effort is wasteful, and replacing the various
-   home-grown approaches with a standard feature usually ends up
-   making things more readable, and interoperable as well.
+   La duplicación del esfuerzo es un derroche y reemplazar
+   varios de los enfoques propios con una característica estándar,
+   normalmente, deriva en hacer las cosas más legibles además de más
+   interoperable.
 
-                 *Guido van Rossum* --- `Adding Optional Static Typing to Python`_
+                 *Guido van Rossum* --- `Añadiendo typado estático opcional a Python` (`Adding Optional Static Typing to Python`_)
 
 .. _`Adding Optional Static Typing to Python`:
    http://www.artima.com/weblogs/viewpost.jsp?thread=86641
 
 
-An iterator is an object adhering to the `iterator protocol`_
---- basically this means that it has a `next <iterator.next>` method,
-which, when called, returns the next item in the sequence, and when
-there's nothing to return, raises the
-`StopIteration <exceptions.StopIteration>` exception.
+Un iterador es un objeto adherido al 'protocolo de iterador' (`iterator protocol`_)
+--- basicamente esto significa que tiene un método `next <iterator.next>` ('next' por siguiente),
+el cual, cuando se le llama, devuelve la siguiente 'pieza' (o 'item') en la secuencia y, cuando
+no queda nada para ser devuelto, lanza la excepción 
+`StopIteration <exceptions.StopIteration>`.
 
 .. _`iterator protocol`: http://docs.python.org/dev/library/stdtypes.html#iterator-types
 
-An iterator object allows to loop just once. It
-holds the state (position) of a single iteration, or from the other
-side, each loop over a sequence requires a single iterator
-object. This means that we can iterate over the same sequence more
-than once concurrently. Separating the iteration logic from the
-sequence allows us to have more than one way of iteration.
+Un objeto iterador permite hacer bucles una única vez. Mantiene
+el estado (posición) de una iteración individual o, explicado
+de otra forma, cada bucle sobre una secuencia requiere un objeto
+iterador individual. Esto significa que podemos iterar sobre la misma secuencia
+más de una vez de forma concurrente. Separar la lógica de la iteración de la secuencia
+permite tener más de una forma diferente de iterar.
 
-Calling the `__iter__ <object.__iter__>` method on a container to
-create an iterator object is the most straightforward way to get hold
-of an iterator. The `iter` function does that for us, saving a few
-keystrokes.
+La llamada del método `__iter__ <object.__iter__>` en un contenedor es 
+la forma más sencilla de tener un objeto iterador. La función `iter` 
+hace eso por nosotros ahorrándonos tiempo de tecleado.
 
->>> nums = [1,2,3]      # note that ... varies: these are different objects
+>>> nums = [1,2,3]      # notas que ... varía: son objetos diferentes
 >>> iter(nums)                           # doctest: +ELLIPSIS
 <listiterator object at ...>
 >>> nums.__iter__()                      # doctest: +ELLIPSIS
@@ -85,7 +85,7 @@ keystrokes.
 <listreverseiterator object at ...>
 
 >>> it = iter(nums)
->>> next(it)            # next(obj) simply calls obj.next()
+>>> next(it)            # next(obj) simplemente llama a obj.next()
 1
 >>> it.next()
 2
@@ -96,30 +96,30 @@ Traceback (most recent call last):
   File "<stdin>", line 1, in <module>
 StopIteration
 
-When used in a loop, `StopIteration <exceptions.StopIteration>` is
-swallowed and causes the loop to finish. But with explicit invocation,
-we can see that once the iterator is exhausted, accessing it raises an
-exception.
+Cuando se usa en un bucle, finalmente se llama a 
+`StopIteration <exceptions.StopIteration>` y se provoca la finalización
+del bucle. Pero si se invoca de forma explícita podemos ver que, una vez
+que el iterador está 'agotado', al invocarlo nuevamente veremos que se lanza
+la excepción comentada anteriormente.
 
-Using the :compound:`for..in <for>` loop also uses the ``__iter__``
-method. This allows us to transparently start the iteration over a
-sequence. But if we already have the iterator, we want to be able to
-use it in an ``for`` loop in the same way. In order to achieve this,
-iterators in addition to ``next`` are also required to have a method
-called ``__iter__`` which returns the iterator (``self``).
+La forma compuesta de bucle `for..in <for>` también usa el método
+``__iter__``. Esto nos permite iniciar de forma transparente la 
+iteración sobre la secuencia. Pero si ya disponemos del iterador podemos
+usarlo en el bucle ``for`` de la misma forma. Para conseguir esto, los iteradores
+disponen del método ``__iter__``, además del método ``next``, el cual
+devuelve el iterador (``self``).
 
-Support for iteration is pervasive in Python:
-all sequences and unordered containers in the standard library allow
-this. The concept is also stretched to other things:
-e.g. ``file`` objects support iteration over lines.
+El soporte para la iteración es dominante en Python:
+todas las secuencias y contenedores desordenados que se encuentran
+en la biblioteca estándar permiten esto. Este concepto se amplía
+a otras cosas: e.g. los objetos ``fichero`` soporta la iteración sobre líneas.
 
 >>> f = open('/etc/fstab')
 >>> f is f.__iter__()
 True
 
-The ``file`` is an iterator itself and it's ``__iter__`` method
-doesn't create a separate object: only a single thread of sequential
-access is allowed.
+El ``fichero`` es un iterador en sí mismo y su método ``__iter__`` no crea un objeto separado: 
+solo se crea un hilo (thread) de acceso secuencial.
 
 Generator expressions
 ^^^^^^^^^^^^^^^^^^^^^
