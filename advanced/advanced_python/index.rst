@@ -251,39 +251,32 @@ sea usado por el siguiente valor.
 sobre iteradores, una función generadora es únicamente una forma 
 diferente de crear un objeto iterador. Todo lo que se puede hacer
 con instrucciones ``yield`` se puede hacer también con métodos ``next``.
+Sin embargo, usar una función y dejar que el intérprete haga su magia para
+crear un iterador tiene sus ventajas. Una función puede ser mucho más
+corta que tener que definir una clase con los métodos requeridos ``next``
+e ``__iter__``. Y lo que es más importante, para el creador del
+generador es más fácil entender el estado en el cual se mantienen
+las variables locales en contraposición a atributos instanciados,
+los cuales deben ser usados para pasar datos entre las invocaciones
+consecutivas de ``next`` en el objeto iterador.
 
+¿Una pregunta más amplia sería saber por qué los iteradores son útiles?
+Cuando un iterador se usa en un bucle, el bucle se convierte en algo muy
+simple. El código para inicializar el estado, para decidir si el bucle 
+se ha acabado y para encontrar el siguiente valor se extrae de forma
+separada. Esto permite destacar el cuerpo del bucle --- la parte interesante.
+Además, es posible reusar el código del iterador en otras partes del código.
 
-Why are generators useful? As noted in the parts about iterators, a
-generator function is just a different way to create an iterator
-object. Everything that can be done with ``yield`` statements, could
-also be done with ``next`` methods. Nevertheless, using a
-function and having the interpreter perform its magic to create an
-iterator has advantages. A function can be much shorter
-than the definition of a class with the required ``next`` and
-``__iter__`` methods. What is more important, it is easier for the author
-of the generator to understand the state which is kept in local
-variables, as opposed to instance attributes, which have to be
-used to pass data between consecutive invocations of ``next`` on
-an iterator object.
-
-A broader question is why are iterators useful? When an iterator is
-used to power a loop, the loop becomes very simple. The code to
-initialise the state, to decide if the loop is finished, and to find
-the next value is extracted into a separate place. This highlights the
-body of the loop --- the interesting part. In addition, it is possible
-to reuse the iterator code in other places.
-
-Bidirectional communication
+Comunicación bidireccional
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Each ``yield`` statement causes a value to be passed to the
-caller. This is the reason for the introduction of generators
-by :pep:`255` (implemented in Python 2.2).  But communication in the
-reverse direction is also useful. One obvious way would be some
-external state, either a global variable or a shared mutable
-object. Direct communication is possible thanks to :pep:`342`
-(implemented in 2.5). It is achieved by turning the previously boring
-``yield`` statement into an expression. When the generator resumes
+Cada declaración ``yield`` provoca que un valor sea pasado al cliente ('caller').
+Esta es la razón para la introducción de los generadores por el :pep:`255` 
+(implementado en Python 2.2).  Pero la comunicación en el sentido contrario
+también es útil. Una forma obvia sería algún estado externo,
+variable global o un objeto mutable compartido. La comunicación
+directa es posible gracias al :pep:`342` (implementado in 2.5). Se logró
+cambiando la antigua y aburrida declaración ``yield`` a una expresión. When the generator resumes
 execution after a ``yield`` statement, the caller can call a method on
 the generator object to either pass a value **into** the generator,
 which then is returned by the ``yield`` statement, or a
