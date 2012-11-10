@@ -51,7 +51,7 @@ Iteradores
    normalmente, deriva en hacer las cosas más legibles además de más
    interoperable.
 
-                 *Guido van Rossum* --- `Añadiendo typado estático opcional a Python` (`Adding Optional Static Typing to Python`_)
+                 *Guido van Rossum* --- `Añadiendo tipado estático opcional a Python` (`Adding Optional Static Typing to Python`_)
 
 .. _`Adding Optional Static Typing to Python`:
    http://www.artima.com/weblogs/viewpost.jsp?thread=86641
@@ -121,15 +121,15 @@ True
 El ``fichero`` es un iterador en sí mismo y su método ``__iter__`` no crea un objeto separado: 
 solo se crea un hilo (thread) de acceso secuencial.
 
-Generator expressions
+Expresiones generadoras
 ^^^^^^^^^^^^^^^^^^^^^
 
-A second way in which iterator objects are created is through
-**generator expressions**, the basis for **list comprehensions**. To
-increase clarity, a generator expression must always be enclosed in
-parentheses or an expression. If round parentheses are used, then a
-generator iterator is created.  If rectangular parentheses are used,
-the process is short-circuited and we get a ``list``. ::
+Una segunda forma en la cual son creados objetos iteradores es a través de
+**expresiones generadoras**, que son la base de la 'comprensión de listas'
+(**list comprehensions**). Para aumentar la claridad sobre el tema, una expresión generadora
+siempre debe estar encerrada entre paréntesis('()'), corchetes ('[]') o mediante una expresión.
+Si se usan paréntesis se crea un generador iterador. En cambio, si se usan corchetes, el proceso
+se 'cortocircuita' y obtenemos una ``lista``. ::
 
     >>> (i for i in nums)                    # doctest: +ELLIPSIS
     <generator object <genexpr> at 0x...>
@@ -138,58 +138,60 @@ the process is short-circuited and we get a ``list``. ::
     >>> list(i for i in nums)
     [1, 2, 3]
 
-In Python 2.7 and 3.x the list comprehension syntax was extended to
-**dictionary and set comprehensions**.
-A ``set`` is created when the generator expression is enclosed in curly
-braces. A ``dict`` is created when the generator expression contains
-"pairs" of the form ``key:value``::
+En Python 2.7 y 3.x la sintaxis de la comprension de listas se extendió a
+**comprensión de diccionarios y conjuntos (sets)**.
+Se crea un ``conjunto`` cuando la expresión generadora se encuentra encerrada
+por llaves ('{}'). Se crea un ``diccionario`` cuando la expresión generadora
+contiene "pares" de la forma ``clave:valor``::
 
     >>> {i for i in range(3)}   # doctest: +SKIP
     set([0, 1, 2])
     >>> {i:i**2 for i in range(3)}   # doctest: +SKIP
     {0: 0, 1: 1, 2: 4}
 
-If you are stuck at some previous Python version, the syntax is only a
-bit worse: ::
+Si todavía estás usando alguna de las versiones previas de Python,
+la sintaxis es un poco 'peor': ::
 
     >>> set(i for i in 'abc')
     set(['a', 'c', 'b'])
     >>> dict((i, ord(i)) for i in 'abc')
     {'a': 97, 'c': 99, 'b': 98}
 
-Generator expression are fairly simple, not much to say here. Only one
-*gotcha* should be mentioned: in old Pythons the index variable
-(``i``) would leak, and in versions >= 3 this is fixed.
+Las expresiones generadoras son bastante sencillas, no hay mucho más
+que decir sobre ellas excepto un pequeño añadido: en versiones antiguas de Python
+la variable de índexación (``i``) se filtrará (in old Pythons the index variable (i) would leak), 
+esto ha sido corregido en versiones >= 3.
 
-Generators
+Generadores
 ^^^^^^^^^^
 
-.. sidebar:: Generators
+.. sidebar:: Generadores
 
-  A generator is a function that produces a
-  sequence of results instead of a single value.
+  Un generador es una función que crea una 
+  secuencia de resultados en lugar de una valor individual.
 
           *David Beazley* --- `A Curious Course on Coroutines and Concurrency`_
 
 .. _`A Curious Course on Coroutines and Concurrency`:
    http://www.dabeaz.com/coroutines/
 
-A third way to create iterator objects is to call a generator function.
-A **generator** is a function containing the keyword :simple:`yield`. It must be
-noted that the mere presence of this keyword completely changes the
-nature of the function: this ``yield`` statement doesn't have to be
-invoked, or even reachable, but causes the function to be marked as a
-generator. When a normal function is called, the instructions
-contained in the body start to be executed. When a generator is
-called, the execution stops before the first instruction in the body.
-An invocation of a generator function creates a generator object,
-adhering to the iterator protocol. As with normal function
-invocations, concurrent and recursive invocations are allowed.
+Una tercera manera de crear objetos iteradores es llamando a la función
+generador. Un **generador** es una función que contiene la palabra clave
+:simple:`yield`. Hay que destacar que la mera presencia de esta palabra
+clave cambia completamente la naturaleza de esta función: esta declaración
+``yield`` no debe ser invocada, o incluso alcanzada, pero provoca que la
+función sea clasificada como un generador. Cuando se llama a una función
+normal se empiezan a ejecutar las instrucciones contenidas en el cuerpo
+de esa misma función. Cuando se llama a un generador la ejecución para
+después de la primera instrucción contenida en el cuerpo. Una invocación
+de una función generadora crea un objeto generador, adheriéndose al 
+protocolo del iterador. De la misma forma que en las invocaciones a
+funciones normales, se permiten invocaciones concurrentes y recursivas.
 
-When ``next`` is called, the function is executed until the first ``yield``.
-Each encountered ``yield`` statement gives a value becomes the return
-value of ``next``. After executing the ``yield`` statement, the
-execution of this function is suspended. ::
+Cuando se llama a ``next`` la función se ejecuta hasta el primer ``yield``.
+Cada vez que una instrucción ``yield`` da un valor éste se convierte en
+el valor de retorno de ``next``. Después de ejecutar la instrucción
+``yield``, la ejecución de la función se suspende. ::
 
     >>> def f():
     ...   yield 1
@@ -206,8 +208,7 @@ execution of this function is suspended. ::
      File "<stdin>", line 1, in <module>
     StopIteration
 
-Let's go over the life of the single invocation of the generator
-function. ::
+Vamos a ver la vida de una invocación individual de una función generadora. ::
 
     >>> def f():
     ...   print("-- start --")
@@ -228,21 +229,29 @@ function. ::
      ...
     StopIteration
 
-Contrary to a normal function, where executing ``f()`` would
-immediately cause the first ``print`` to be executed, ``gen`` is
-assigned without executing any statements in the function body. Only
-when ``gen.next()`` is invoked by ``next``, the statements up to
-the first ``yield`` are executed. The second ``next`` prints
-``-- middle --`` and execution halts on the second ``yield``.  The third
-``next`` prints ``-- finished --`` and falls of the end of the
-function. Since no ``yield`` was reached, an exception is raised.
+Contrariamente a una función normal, donde la ejecución de
+``f()`` provocaría la inmediata ejecución del primer ``print``,
+``gen`` se asigna sin ejecutar ninguna de las instrucciones 
+presentes en el cuerpo de la función. Solo cuando se invoca
+``gen.next()`` por ``next``, se ejecuta la instrucción por encima del primer
+``yield``. El segundo ``next`` muestra ``-- middle --`` y la ejecución
+se detiene en el segundo ``yield``. El tercer ``next`` muestra
+``-- finished --`` y se alcanza el final de la función. Debido a que
+no se alcanza un nuevo ``yield`` se lanza una excepción.
 
-What happens with the function after a yield, when the control passes
-to the caller? The state of each generator is stored in the generator
-object. From the point of view of the generator function, is looks
-almost as if it was running in a separate thread, but this is just an
-illusion: execution is strictly single-threaded, but the interpreter
-keeps and restores the state in between the requests for the next value.
+¿Qué sucede con la función después de yield, cuando el control pasa al
+cliente ('caller')? El estado de cada generador se almacena en el objeto
+generador. Desde el punto de vista de la función generadora, casi parece que
+esté corriendo en un hilo ('thread') separado pero esto es solo una iusión.:
+la ejecución es estrictamente mono-hilo ('single-threaded') pero el intérprete
+mantiene y restablece el estado entre las peticiones para que
+sea usado por el siguiente valor.
+
+¿Por qué son útiles los generadores? Como se ha visto en las partes 
+sobre iteradores, una función generadora es únicamente una forma 
+diferente de crear un objeto iterador. Todo lo que se puede hacer
+con instrucciones ``yield`` se puede hacer también con métodos ``next``.
+
 
 Why are generators useful? As noted in the parts about iterators, a
 generator function is just a different way to create an iterator
