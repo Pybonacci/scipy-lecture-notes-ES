@@ -276,47 +276,49 @@ Esta es la razón para la introducción de los generadores por el :pep:`255`
 también es útil. Una forma obvia sería algún estado externo,
 variable global o un objeto mutable compartido. La comunicación
 directa es posible gracias al :pep:`342` (implementado in 2.5). Se logró
-cambiando la antigua y aburrida declaración ``yield`` a una expresión. When the generator resumes
-execution after a ``yield`` statement, the caller can call a method on
-the generator object to either pass a value **into** the generator,
-which then is returned by the ``yield`` statement, or a
-different method to inject an exception into the generator.
+cambiando la antigua y aburrida declaración ``yield`` a una expresión. 
+Cuando el renerador continua la ejecución después de una declaración
+``yield``, el cliente ('caller') puede hacer una llamada a un método en
+el objeto generador para pasar un valor **hacia** el generador, el cual es
+devuelto después por la declaración ``yield``, o un método diferente para
+inyectar una excepción al generador.
 
-The first of the new methods is `send(value) <generator.send>`, which
-is similar to `next() <generator.next>`, but passes ``value`` into
-the generator to be used for the value of the ``yield`` expression. In
-fact, ``g.next()`` and ``g.send(None)`` are equivalent.
+El primero de los nuevos métodos es `send(value) <generator.send>`, el cual
+es similar a `next() <generator.next>`, pero pasa un ``valor`` al generador
+que será usado por el valor de la expresión ``yield``. De hecho, ``g.next()`` 
+y ``g.send(None)`` son equivalentes.
 
-The second of the new methods is
-`throw(type, value=None, traceback=None) <generator.throw>`
-which is equivalent to::
+El segundo de los nuevos métodos es `throw(type, value=None, traceback=None) <generator.throw>`
+que es equivalente a::
 
   raise type, value, traceback
 
-at the point of the ``yield`` statement.
+en el lugar de la declaración ``yield``.
 
-Unlike :simple:`raise` (which immediately raises an exception from the
-current execution point), ``throw()`` first resumes the generator, and
-only then raises the exception.  The word throw was picked because
-it is suggestive of putting the exception in another location, and is
-associated with exceptions in other languages.
+A diferencia de :simple:`raise` (que lanza una excepción desde el lugar actual
+de ejecución), ``throw()`` primero reanuda el generador y solo entonces lanza 
+una excepción. La palabra throw (lanzar, tirar,...) fue seleccionada porque
+sería indicativa de colocar la excepción en otro lugar y se asocia con excepciones
+en otros lenguajes de programación.
 
-What happens when an exception is raised inside the generator? It can
-be either raised explicitly or when executing some statements or it
-can be injected at the point of a ``yield`` statement by means of the
-``throw()`` method. In either case, such an exception propagates in the
-standard manner: it can be intercepted by an ``except`` or ``finally``
-clause, or otherwise it causes the execution of the generator function
-to be aborted and propagates in the caller.
+¿Qué sucede cuando una excepción es lanzada dentro del generador?
+Puede ser lanzada explícitamente o puede ser lanzada cuando se está 
+ejecutando alguna declaración o puede ser inyectada en el lugar de 
+una declaración ``yield`` mediante el método ``throw()``. En
+cualquier caso, cuando una excepción se propaga de la manera estándar:
+podría ser interceptada por una cláusula ``except`` o ``finally`` o, si no,
+provoca que se aborte la ejecución de la función generadora y se propaga
+en el cliente (caller).
 
-For completeness' sake, it's worth mentioning that generator iterators
-also have a `close() <generator.close>` method, which can be used to
-force a generator that would otherwise be able to provide more values
-to finish immediately. It allows the generator `__del__ <object.__del__>`
-method to destroy objects holding the state of generator.
+Para completar la sección, merece la pena mencionar que los iteradores
+generadores también disponen de un método `close() <generator.close>`, 
+el cual puede ser usado para forzar a un generador que de otra manera 
+sería capaz de proporcionar más valores
+para terminar inmediatamente. Permite al método del generador `__del__ <object.__del__>`
+destruir objetos manteniendo el estado del generador.
 
-Let's define a generator which just prints what is passed in through
-send and throw. ::
+Vamos a definir un generador que muestra lo que se pasa a través
+de send y throw. ::
 
     >>> import itertools
     >>> def g():
@@ -349,22 +351,23 @@ send and throw. ::
     >>> it.close()
     --closing--
 
-.. note:: ``next`` or ``__next__``?
+.. note:: ``next`` o ``__next__``?
 
-  In Python 2.x, the iterator method to retrieve the next value is
-  called `next <iterator.next>`. It is invoked implicitly through the
-  global function `next`, which means that it should be called ``__next__``.
-  Just like the global function `iter` calls `__iter__ <iterator.__iter__>`.
-  This inconsistency is corrected in Python 3.x, where ``it.next``
-  becomes ``it.__next__``.  For other generator methods --- ``send``
-  and ``throw`` --- the situation is more complicated, because they
-  are not called implicitly by the interpreter. Nevertheless, there's
-  a proposed syntax extension to allow ``continue`` to take an
-  argument which will be passed to `send <generator.send>` of the
-  loop's iterator. If this extension is accepted, it's likely that
-  ``gen.send`` will become ``gen.__send__``. The last of generator
-  methods, `close <generator.close>`, is pretty obviously named
-  incorrectly, because it is already invoked implicitly.
+  En Python 2.x, el método iterador para recuperarel siguiente valor
+  se llama `next <iterator.next>`. Es invocado de forma explícita a 
+  través del a función global `next`, lo que significa que debería
+  ser llamado``__next__``. Al igual que la función global `iter` llama
+  a `__iter__ <iterator.__iter__>`. Esta inconsistencia se ha corregido
+  en Python 3.x, donde ``it.next`` se convierte en ``it.__next__``.  
+  Para otros métodos del generador --- ``send`` y ``throw`` --- la
+  situación es más compleja because debido a que estos métodos no son
+  llamados implícitamente por el intérprete. No obstante, hay una propuesta
+  de extensión de la sintaxis que permite a ``continue`` tomar un 
+  argumento que será pasado a `send <generator.send>` en el iterador
+  del bucle. Si esta extensión es aceptada, es probable que 
+  ``gen.send`` se convierta en ``gen.__send__``. El último de los métodos
+  de un generador, `close <generator.close>`, ha sido nombrado de forma
+  incorrecta de forma obvia ya que es invocado de forma implícita.
 
 Chaining generators
 ^^^^^^^^^^^^^^^^^^^
