@@ -458,38 +458,37 @@ para funciones::
   definido como único parámetro. El valor devuelto por el decorador
   se adjunta al nombre original de la función.
 
-Decorators can be applied to functions and to classes. For
-classes the semantics are identical --- the original class definition
-is used as an argument to call the decorator and whatever is returned
-is assigned under the original name.
+Los decoradores pueden aplicarse a funciones y clases. Para las clases, la semántica
+es la misma --- la definición de la clase original se usa como un argumento para llamar
+al decorator y lo que sea que devuelva es asignado bajo el nombre original.
 
-Before the decorator syntax was implemented (:pep:`318`), it was
-possible to achieve the same effect by assigning the function or class
-object to a temporary variable and then invoking the decorator
-explicitly and then assigning the return value to the name of the
-function. This sounds like more typing, and it is, and also the name of
-the decorated function doubling as a temporary variable must be used
-at least three times, which is prone to errors. Nevertheless, the
-example above is equivalent to::
+Antes de que fuera implementada la sintaxis del decorador (:pep:`318`), era
+posible conseguir el mismo efecto asignando la función o la clase o una variable
+temporal para después invocar al decorador explícitamente que, finalmente, 
+asignaba el valor devuelto al nombre de la función. Esto parece que implica
+mucho tecleo, como realmente sucede, además de tener que repetir la función decorada
+como una variable temporal al menos tres veces, lo que puede provocar errores.
+El ejemplo anterior es equivalente a::
 
     def function():                  # ①
         pass
     function = decorator(function)   # ②
 
-Decorators can be stacked --- the order of application is
-bottom-to-top, or inside-out. The semantics are such that the originally
-defined function is used as an argument for the first decorator,
-whatever is returned by the first decorator is used as an argument for
-the second decorator, ..., and whatever is returned by the last
-decorator is attached under the name of the original function.
+Los decoradores puden ser apilados --- el orden de aplicación es de abajo a arriba
+o de dentro hacia afuera. La semántica sería de la siguiente forma, la
+función originalmente definida se usa como argumento para el primer decorador,
+lo que sea que devuelva el primer decorador se usa como argumento para el
+segundo decorador, ..., y lo que sea que devuelva el último decorador se
+adjunta bajo el nombre de la función original.
 
-The decorator syntax was chosen for its readability. Since the
-decorator is specified before the header of the function, it is
-obvious that its is not a part of the function body and its clear that
-it can only operate on the whole function. Because the expression is
-prefixed with ``@`` is stands out and is hard to miss ("in your face",
-according to the PEP :) ). When more than one decorator is applied,
-each one is placed on a separate line in an easy to read way.
+La sintaxis de los decoradores fue elegida por su legibilidad.
+Debido a que el decorador se especifica antes que la cabecera de 
+la función, resulta obvio que no es parte del cuerpo de la función
+y está claro que solo puede operar sobre la función completa.
+Ya que la expresión está prefijada con ``@`` se encuentra resaltada
+y es difícil pasarla por alto ("en tu cara",
+de acuerdo al PEP :) ). Cuando se aplica más de un decorador,
+cada uno se emplaza en una línea para que sea de fácil lectura.
 
 
 Replacing or tweaking the original object
