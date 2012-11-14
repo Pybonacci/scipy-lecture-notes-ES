@@ -402,17 +402,17 @@ sección para "depurar" la función generadora. Este código se encuentra en
 
    yield from some_other_generator()
 
-Esto secomporta como el bucle explícito mostrado más arriba, arrojando repetidamente
+Esto se comporta como el bucle explícito mostrado más arriba, arrojando repetidamente
 valores desde ``some_other_generator`` hasta que se agota, pero también transmite
 ``send``, ``throw`` y ``close`` al subgenerador.
 
-Decorators
+Decoradores
 ==========
 
-.. sidebar:: Summary
+.. sidebar:: Resumen
 
-   This amazing feature appeared in the language almost apologetically
-   and with concern that it might not be that useful.
+   Esta maravillosa característica del lenguaje apareció casi pidiendo disculpas
+   y con la preocupación de que podría resultar poco útil.
 
                    *Bruce Eckel* --- An Introduction to Python Decorators
 
@@ -430,31 +430,33 @@ Decorators
 .. >>> print(A)
 .. None
 
-Since a function or a class are objects, they can be passed
-around. Since they are mutable objects, they can be modified.  The act
-of altering a function or class object after it has been constructed
-but before is is bound to its name is called decorating.
+Debido a que las funciones y clases son objetos, pueden ser distribuidos.
+Debido a que son objetos mutables, pueden ser modificados. El acto de 
+alterar un objeto función o un objeto clase después de haber sido 
+construido pero antes de haber sido delimitado a su nombre se conoce como
+decorador.
 
-There are two things hiding behind the name "decorator" --- one is the
-function which does the work of decorating, i.e. performs the real
-work, and the other one is the expression adhering to the decorator
-syntax, i.e. an at-symbol and the name of the decorating function.
+Hay dos cosas escondidas detrás de un "decorador" --- una es la
+función que se encarga de hacer el trabajo de decorador, i.e., la
+que realiza el trabajo, y la otra es la expresión que se adhiere a
+la sintaxis del decorador, i.e. una @ y el nombre de la función
+decoradora.
 
-Function can be decorated by using the decorator syntax for
-functions::
+Una función puede ser decorada usando la sintaxis de los decoradores
+para funciones::
 
     @decorator             # ②
     def function():        # ①
         pass
 
-- A function is defined in the standard way. ①
-- An expression starting with ``@`` placed before the function
-  definition is the decorator ②. The part after ``@`` must be a simple
-  expression, usually this is just the name of a function or class. This
-  part is evaluated first, and after the function defined below is
-  ready, the decorator is called with the newly defined function object
-  as the single argument. The value returned by the decorator is
-  attached to the original name of the function.
+- Una función se define de la forma estándar. ①
+- Una expresión qu comienza con ``@`` colocada antes de la definición
+  de la función es el decorador ②. TLa parte después de ``@`` mdebe  ser 
+  una expresión simple, normalmente será solo el nombre de una función
+  o de una clase. Esta parte será evaluada primero y, después, la función
+  definida debajo está lista, el decorador será llamado con objeto función recién
+  definido como único parámetro. El valor devuelto por el decorador
+  se adjunta al nombre original de la función.
 
 Decorators can be applied to functions and to classes. For
 classes the semantics are identical --- the original class definition
