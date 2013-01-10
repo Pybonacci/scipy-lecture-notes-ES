@@ -63,7 +63,7 @@ En nuestro caso nos vamos a focalizar en pyflakes, la cual es la herramienta má
 
     * **Rápido, simple**
 
-    * Detecta errores de sintáxis, *import*s ausentes, errores en nombres.
+    * Detecta errores de sintaxis, *import*s ausentes, errores en nombres.
 
 La integración de pyflakes en tu editor sería altamente recomendable.
 **Provoca que aumente tu productividad**.
