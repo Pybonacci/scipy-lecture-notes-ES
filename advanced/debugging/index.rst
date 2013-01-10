@@ -1,34 +1,34 @@
-================
-Debugging code 
-================
+=====================================
+Debugging code / Código de depuración
+=====================================
 
-:author: Gaël Varoquaux
+:autor: Gaël Varoquaux
 
-This tutorial explores tool to understand better your code base:
-debugging, to find and fix bugs.
+En este tutorial se exploran herramientas que ayudan a entender tu código:
+depuración para encontrar y corregir *bugs* (errores).
 
-It is not specific to the scientific Python community, but the strategies
-that we will employ are tailored to its needs.
+Esto no es específico de la comunidad científica Python pero las estrategias que vamos a emplear
+se ajustan a sus necesidades.
 
-.. topic:: Prerequisites
+.. topic:: Prerrequisitos
 
     * Numpy
     * IPython
     * nosetests (http://readthedocs.org/docs/nose/en/latest/)
     * line_profiler (http://packages.python.org/line_profiler/)
     * pyflakes (http://pypi.python.org/pypi/pyflakes)
-    * gdb for the C-debugging part.
+    * gdb para la parte de *C-debugging* (depurado de C).
 
-.. contents:: Chapters contents
+.. contents:: Contenido de los capítulos
    :local:
    :depth: 4
 
 
-Avoiding bugs
-=============
+Evitando *bugs*
+===============
 
-Coding best practices to avoid getting in trouble
---------------------------------------------------
+Buenas prácticas para evitar tener problemas al escribir código
+---------------------------------------------------------------
 
 .. sidebar:: Brian Kernighan
 
@@ -36,44 +36,45 @@ Coding best practices to avoid getting in trouble
    program in the first place. So if you're as clever as you can be
    when you write it, how will you ever debug it?”*
 
-* We all write buggy code.  Accept it.  Deal with it.
-* Write your code with testing and debugging in mind.
-* Keep It Simple, Stupid (KISS).
+* Todos nosotros escribimos código con errores. Acéptalo. Habrá que lidiar con ello.
+* Escribe tu código con *testing* (las pruebas) y *debugging* (la depuración) en mente.
+* Keep It Simple, Stupid (KISS). Mantenlo simple, estúpido.
 
-  * What is the simplest thing that could possibly work?
+  * ¿Cuál es la cosa más simple que podría funcionar?
 
-* Don't Repeat Yourself (DRY).
+* Don't Repeat Yourself (DRY). No te repitas.
 
-  * Every piece of knowledge must have a single, unambiguous,
-    authoritative representation within a system.
-  * Constants, algorithms, etc...
+  * Cada pieza de conocimiento debe tener una única, inequívoca y acreditada
+    representación dentro del sistema.
+  * Constantes, algoritmos, etc...
 
-* Try to limit interdependencies of your code. (Loose Coupling)
-* Give your variables, functions and modules meaningful names (not
-  mathematics names)
+* Intenta limitar la cantidad de interdependencias de tu código (*Loose Coupling* / acoplamiento simple)
+* Nombra a tus variables, funciones y módulos de forma significativa y explicativa (no usar
+  nombres matemáticos)
 
-pyflakes: fast static analysis
--------------------------------
+pyflakes: Análisis estático veloz
+---------------------------------
 
-They are several static analysis tools in Python; to name a few: 
+Existen varias herramientas de análisis estático en Python; algunas de ellas son: 
 `pylint <http://www.logilab.org/857>`_, 
-`pychecker <http://pychecker.sourceforge.net/>`_, and 
+`pychecker <http://pychecker.sourceforge.net/>`_, y 
 `pyflakes <http://pypi.python.org/pypi/pyflakes>`_.
-Here we focus on pyflakes, which is the simplest tool.
+En nuestro caso nos vamos a focalizar en pyflakes, la cual es la herramienta más simple.
 
-    * **Fast, simple**
+    * **Rápido, simple**
 
-    * Detects syntax errors, missing imports, typos on names.
+    * Detecta errores de sintáxis, *import*s ausentes, errores en nombres.
 
-Integrating pyflakes in your editor is highly recommended, it **does
-yield productivity gains**.
+La integración de pyflakes en tu editor sería altamente recomendable.
+**Provoca que aumente tu productividad**.
 
-Running pyflakes on the current edited file
-............................................
+Corriendo pyflakes en el fichero que estamos editando
+.....................................................
 
-You can bind a key to run pyflakes in the current buffer.
+Puedes crear una forma rápida (acceso rápido) para correr pyflakes en el
+fichero que estemos editando.
 
-* **In kate**
+* **En kate**
   Menu: 'settings -> configure kate 
   
     * In plugins enable 'external tools'
