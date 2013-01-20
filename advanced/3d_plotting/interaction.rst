@@ -20,7 +20,7 @@ de los objetos mediante ventanas de diálogos.
 * Establece el colormap en el nodo `Colors and legends`
 * Pulsa en el botón derecho del ratón sobre el nodo para añadir módulos o filtros
 
-The script recording button
+El botón de grabación del script
 -----------------------------
 
 Para conocer qué código hay que usar para programar los cambios, pulsa 

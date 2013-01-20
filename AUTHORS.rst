@@ -34,6 +34,8 @@ Listados por orden alfabético.
 
 - Didrik Pinte
 
+- Nicolas Rougier
+
 - Gaël Varoquaux
 
 - Pauli Virtanen
@@ -45,13 +47,19 @@ Contribuciones adicionales
 
 Fixes:
 
-- egens
+- Akihiro Uchida
 
 - Corey Farwell
 
+- egens
+
+- Lars Buitinck
+
 - Olivier Verdier
 
-- Akihiro Uchida
+- Virgile Fritsch
+
+- Ozan Çağlayan
 
 Traductores al español
 ======================
