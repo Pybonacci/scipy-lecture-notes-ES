@@ -114,7 +114,7 @@ genera la/s figura/s debería encontrarse en el mismo directorio que el script.
 NB: el código para proporcionar este estilo de inclusión de figuras ha sido
 adoptado del proyecto scikits.learn y puede ser encontrado en ``sphinxext/gen_rst.py``.
 
-.. topic:: Guía decontribución y capítulo ejemplo
+.. topic:: Guía de contribución y capítulo ejemplo
 
    El directorio `guide` contiene un capítulo de ejemplo con instrucciones específicas
    sobre como contribuir:
