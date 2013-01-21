@@ -235,8 +235,8 @@ Obteniendo ayuda usando el operador **?** después de un objeto:
 	end:  string appended after the last value, default a newline.
 
 
-Elaboration of the algorithm in an editor
-..........................................
+Elaboración del algoritmo en un editor
+......................................
 
 Crea un archivo `my_file.py` en un editor de texto. En EPD (Enthought Python
 Distribution), puedes usar `Scite`, disponible en el menú de inicio. En
