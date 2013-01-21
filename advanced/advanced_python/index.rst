@@ -491,146 +491,148 @@ de acuerdo al PEP :) ). Cuando se aplica más de un decorador,
 cada uno se emplaza en una línea para que sea de fácil lectura.
 
 
-Replacing or tweaking the original object
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Reemplazando o modificando el objeto original
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Decorators can either return the same function or class object or they
-can return a completely different object. In the first case, the
-decorator can exploit the fact that function and class objects are
-mutable and add attributes, e.g. add a docstring to a class. A
-decorator might do something useful even without modifying the object,
-for example register the decorated class in a global registry. In the
-second case, virtually anything is possible: when something
-different is substituted for the original function or class, the new
-object can be completely different. Nevertheless, such behaviour is
-not the purpose of decorators: they are intended to tweak the
-decorated object, not do something unpredictable. Therefore, when a
-function is "decorated" by replacing it with a different function, the
-new function usually calls the original function, after doing some
-preparatory work. Likewise, when a class is "decorated" by replacing
-if with a new class, the new class is usually derived from the
-original class. When the purpose of the decorator is to do something
-"every time", like to log every call to a decorated function, only the
-second type of decorators can be used. On the other hand, if the first
-type is sufficient, it is better to use it, because it is simpler.
+Los decoradores pueden devolver tanto el mismo objeto función u objeto clase
+como pueden devolver un objeto completamente diferente. En el primer caso,
+el decorador puede aprovecharse del hecho de que un objeto función o un objeto clase
+son mutables y se les pueden añadir atributos, e.g. se le podría añadir documentación
+(`docstring`) a una clase. Un decorador podría hacer algo útil incluso sin llegar
+a modificar el objeto, por ejemplo, registrar la clase decorada en un registro global.
+En el segundo caso, cualquier cosa es posible a priori: cuando algo diferente 
+es sustituido por la función o clase original, el nuevo objeto puede ser totalmente
+diferente. Sin embargo, este comportamiento no refleja el propósito de los decoradores:
+El objetivo principal de un decorador es alterar el objeto decorado, no realizar 
+algo impredecible. Por tanto, cuando una función se encuentra "decorada", siendo reemplazada
+con una función diferente, la nueva función, normalmente, llama a la función original, después
+de realizar algo de trabajo de preparación. De la misma forma, cuando una clase ha sido 
+"decorada", siendo reemplazado con otra clase, la nueva clase, normalmente, deriva de la 
+clase original. Cuando el propósito de la función decoradora (o decorador) es hacer algo
+"siempre que se llama a la función decorada", como por ejemplo registrar cada llamada
+a la función decorada, solo podrían ser usados el segundo tipo de decoradores. Por otra
+parte, si el primer caso es suficiente, sería recomendable usarlo puesto que es más
+simple.
 
-Decorators implemented as classes and as functions
+Decoradores implementados como clases y funciones
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The only *requirement* on decorators is that they can be called with a
-single argument. This means that decorators can be implemented as
-normal functions, or as classes with a `__call__ <object.__call__>`
-method, or in theory, even as lambda functions.
+El único requerimiento de los decoradores es el siguiente, solo pueden ser
+llamados con un único argumento. Esto significa que los decoradores pueden
+ser implementados como funciones normales o como clases con un método
+`__call__ <object.__call__>` o, en teoría, incluso como funciones lambda.
 
-Let's compare the function and class approaches. The decorator
-expression (the part after ``@``) can be either just a name, or a
-call. The bare-name approach is nice (less to type, looks cleaner,
-etc.), but is only possible when no arguments are needed to customise
-the decorator. Decorators written as functions can be used in those
-two cases:
+Vamos a comparar los usos de decorador como función o como clase. 
+La expresión decoradora (la parte que se encuentra inmediatamente
+después de ``@``) puede ser solo un nombre o puede ser una llamada. 
+La forma de uso con solo el nombre es mejor (menos a escribir, 
+queda más limpio) pero solo es posible usarla cuando no se necesitan
+argumentos para personalizar el decorador. Los decoradores escritos
+como funciones pueden ser usados en los dos siguientes casos:
 
 >>> def simple_decorator(function):
-...   print "doing decoration"
+...   print u"haciendo una decoración"
 ...   return function
 >>> @simple_decorator
 ... def function():
-...   print "inside function"
-doing decoration
+...   print u"dentro de la función"
+haciendo una decoración
 >>> function()
-inside function
+dentro de la función
 
->>> def decorator_with_arguments(arg):
-...   print "defining the decorator"
-...   def _decorator(function):
-...       # in this inner function, arg is available too
-...       print "doing decoration,", arg
+>>> def decorador_con_argumentos(arg):
+...   print u"definiendo un decorador"
+...   def _decorador(function):
+...       # en esta función interna, arg también está disponible
+...       print u"haciendo una decoración,", arg
 ...       return function
-...   return _decorator
->>> @decorator_with_arguments("abc")
+...   return _decorador
+>>> @decorador_con_argumentos("abc")
 ... def function():
-...   print "inside function"
-defining the decorator
-doing decoration, abc
+...   print u"dentro de la función"
+definiendo un decorador
+haciendo una decoración, abc
 >>> function()
-inside function
+dentro de la función
 
-The two trivial decorators above fall into the category of decorators
-which return the original function. If they were to return a new
-function, an extra level of nestedness would be required.
-In the worst case, three levels of nested functions.
+Los dos ejemplos de decoradores triviales mostrados en el código de más arriba
+se encuentran en la categoría de decoradores que devuelven la función original.
+Si tuvieran que devolver otra función, sería necesario otro nivel extra 
+de anidameniento. En el peor de los casos, tres niveles de funciones anidadas.
 
->>> def replacing_decorator_with_args(arg):
-...   print "defining the decorator"
-...   def _decorator(function):
-...       # in this inner function, arg is available too
-...       print "doing decoration,", arg
-...       def _wrapper(*args, **kwargs):
-...           print "inside wrapper,", args, kwargs
+>>> def reemplazando_decorador_con_argumentos(arg):
+...   print u"definiendo el decorador"
+...   def _decorador(function):
+...       # en esta función interna, arg también está disponible
+...       print u"haciendo una decoración,", arg
+...       def _envoltorio(*args, **kwargs):
+...           print u"dentro del envoltorio,", args, kwargs
 ...           return function(*args, **kwargs)
-...       return _wrapper
-...   return _decorator
->>> @replacing_decorator_with_args("abc")
+...       return _envoltorio
+...   return _decorador
+>>> @reemplazando_decorador_con_argumentos("abc")
 ... def function(*args, **kwargs):
-...     print "inside function,", args, kwargs
+...     print u"dentro de la función,", args, kwargs
 ...     return 14
-defining the decorator
-doing decoration, abc
+definiendo el decorador
+haciendo la decoración, abc
 >>> function(11, 12)
-inside wrapper, (11, 12) {}
-inside function, (11, 12) {}
+dentro del envoltorio, (11, 12) {}
+dentro de la función, (11, 12) {}
 14
 
-The ``_wrapper`` function is defined to accept all positional and
-keyword arguments. In general we cannot know what arguments the
-decorated function is supposed to accept, so the wrapper function
-just passes everything to the wrapped function. One unfortunate
-consequence is that the apparent argument list is misleading.
+La función ``_envoltorio`` (``_wrapper`` en inglés) se defina para que
+acepte todos los argumentos de las palabras clave (`keywords`) posicionales. 
+En general, desconocemos los argumentos que podría aceptar la función decorada, 
+por tanto, la función envoltorio lo único que hacer es pasar todos los argumentos
+a la función envuelta. Una consecuencia desafortunada es que la aparente lista
+de argumentos es poco orientativa.
 
-Compared to decorators defined as functions, complex decorators
-defined as classes are simpler.  When an object is created, the
-`__init__ <object.__init__>` method is only allowed to return `None`,
-and the type of the created object cannot be changed. This means that
-when a decorator is defined as a class, it doesn't make much sense to
-use the argument-less form: the final decorated object would just be
-an instance of the decorating class, returned by the constructor call,
-which is not very useful. Therefore it's enough to discuss class-based
-decorators where arguments are given in the decorator expression and
-the decorator ``__init__`` method is used for decorator construction.
+Comparados con los decoradores que se definen como una función, complejos decoradores
+definidos como clases son más simples. Cuando se crea un objeto, al método
+`__init__ <object.__init__>` solo se le permite devolver `None`
+y el tipo del objeto creado no puede ser modificado. Esto significa que
+cuando un decorador se encuentra definido como una clase, no tiene mucho
+sentido usar la forma sin argumentos: el objeto final decorado sería solamente
+una instancia de la clase decorada, devuelto por la llamada al constructor,
+lo cual no es muy útil. Por tanto, sería suficiente que discutiéramos decoradores
+basados en clases en los que los argumentos son dados en la expresión decoradora
+ y el método decorador ``__init__`` se usa para la construcción del decorador.
 
->>> class decorator_class(object):
+>>> class clase_decoradora(object):
 ...   def __init__(self, arg):
-...       # this method is called in the decorator expression
-...       print "in decorator init,", arg
+...       # este método será llamado en la expresión decoradora
+...       print "in decorador init,", arg
 ...       self.arg = arg
 ...   def __call__(self, function):
-...       # this method is called to do the job
+...       # Este método será llamado para que haga el trabajo
 ...       print "in decorator call,", self.arg
 ...       return function
->>> deco_instance = decorator_class('foo')
+>>> deco_instance = clase_decoradora('foo')
 in decorator init, foo
 >>> @deco_instance
 ... def function(*args, **kwargs):
-...   print "in function,", args, kwargs
-in decorator call, foo
+...   print u"en la función,", args, kwargs
+en la función call, foo
 >>> function()
 in function, () {}
 
-Contrary to normal rules (:PEP:`8`) decorators written as classes
-behave more like functions and therefore their name often starts with a
-lowercase letter.
+Al contrario que lo que establecen las reglas normales (:PEP:`8`), 
+los decoradores escritos como clases se comportan más como funciones y,
+por tanto, su nombre, a veces, comienza con una letra minúscula.
 
-In reality, it doesn't make much sense to create a new class just to
-have a decorator which returns the original function. Objects are
-supposed to hold state, and such decorators are more useful when the
-decorator returns a new object.
+En realidad, no tiene mucho sentido crear una clase nueva solo para tener
+un decorador que devuelve la función original. Se supone que los objetos
+mantienen el estado y estos decoradores son más útiles cuando el decorador
+devuelve un nuevo objeto.
 
 >>> class replacing_decorator_class(object):
 ...   def __init__(self, arg):
-...       # this method is called in the decorator expression
+...       # Este método será llamado en la expresión decoradora
 ...       print "in decorator init,", arg
 ...       self.arg = arg
 ...   def __call__(self, function):
-...       # this method is called to do the job
+...       # este método será llamado para hacer el trabajo
 ...       print "in decorator call,", self.arg
 ...       self.function = function
 ...       return self._wrapper
@@ -647,9 +649,10 @@ in decorator call, foo
 in the wrapper, (11, 12) {}
 in function, (11, 12) {}
 
-A decorator like this can do pretty much anything, since it can modify
-the original function object and mangle the arguments, call the
-original function or not, and afterwards mangle the return value.
+Un decorador
+Un decorador como este puede hacer casi cualquier cosa, ya que puede modificar
+el objeto función original y 'machacar' los argumentos, llamar a la función
+original o no y, después, 'machacar' el valor de retorno.
 
 Copying the docstring and other attributes of the original function
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
