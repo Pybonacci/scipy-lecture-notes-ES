@@ -649,7 +649,6 @@ in decorator call, foo
 in the wrapper, (11, 12) {}
 in function, (11, 12) {}
 
-Un decorador
 Un decorador como este puede hacer casi cualquier cosa, ya que puede modificar
 el objeto función original y 'machacar' los argumentos, llamar a la función
 original o no y, después, 'machacar' el valor de retorno.
