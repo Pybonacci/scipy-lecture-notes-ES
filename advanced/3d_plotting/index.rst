@@ -1,7 +1,7 @@
 .. _mayavi-label:
 
 ========================
-3D plotting with Mayavi
+Gráficos 3D con Mayavi
 ========================
 
 .. only:: html
@@ -9,24 +9,24 @@
     .. image:: mayavi-logo.png
         :align: right
 
-:author: Gaël Varoquaux
+:autor: Gaël Varoquaux
 
-.. contents:: Chapters contents
+.. contents:: Contenidos de los capítulos
     :local:
     :depth: 3
 
 
-Mlab: the scripting interface
+Mlab: la interfaz de scripting
 ==============================
 
-The :mod:`mayavi.mlab` module provides simple plotting functions to apply
-to numpy arrays. Try them using in IPython, by starting IPython with the
-switch ``--gui=wx``.
+El módulo :mod:`mayavi.mlab` proporciona funciones simples para hacer gráficas
+aplicables a arrays numpy. Puedes probar las funciones usando IPython inicializando IPython con la
+opción ``--gui=wx``.
 
-3D plotting functions
-----------------------
+Funciones para gráficos 3D
+---------------------------
 
-Points
+Puntos
 ......
  
 .. image:: examples/points3d.png
@@ -37,7 +37,7 @@ Points
     :start-after: ### begin points3d example
     :end-before: ### end points3d example
 
-Lines
+Líneas
 ......
 
 .. image:: examples/plot3d.png
@@ -48,8 +48,8 @@ Lines
     :start-after: ### begin plot3d example
     :end-before: ### end plot3d example
 
-Elevation surface
-.................
+Superficies de elevación
+........................
 
 .. image:: examples/surf.png
     :align: right
@@ -59,8 +59,8 @@ Elevation surface
     :start-after: ### begin surf example
     :end-before: ### end surf example
 
-Arbitrary regular mesh
-.......................
+Mallas arbitrariamente irregulares
+..................................
 
 .. image:: examples/mesh.png
     :align: right
@@ -72,15 +72,15 @@ Arbitrary regular mesh
 
 .. note:: 
 
-    A surface is defined by points **connected** to form triangles or
-    polygones. In `mlab.surf` and `mlab.mesh`, the connectivity is
-    implicity given by the layout of the arrays. See also
+    Una superficie se encuentra definida por puntos **connectados** formando triángulos o
+    polígonos. En `mlab.surf` y `mlab.mesh`, el layout de los arrays proporciona de
+    forma implícita las conexiones y la conectividad. Ver también
     `mlab.triangular_mesh`.
 
-**Our data is often more than points and values: it needs some
-connectivity information**
+**Nuestros datos suelen ser algo más que puntos y valores: necesitan información de la 
+conectividad**
 
-Volumetric data
+Datos volumétricos
 ................
 
 .. _mayavi-voldata-label: 
@@ -97,43 +97,44 @@ Volumetric data
     :align: right
     :scale: 50
 
-**This function works with a regular orthogonal grid:** the `value` array
-is a 3D array that gives the shape of the grid.
+**Esta función funciona con un grid ortogonal regular:** El array de `valores` es un array
+3D que proporciona la forma del grid.
 
-Figures and decorations
+Figuras y decoraciones
 -------------------------
 
-Figure management
+Gestión de figuras
 ..................
 
 .. only:: latex
 
-    Here is a list of functions useful to control the current figure
+    Aquí se puede ver una lista de funciones útiles para el control de la figura en uso
 
 
-================================ ==============================================================
-Get the current figure:		  `mlab.gcf()`
--------------------------------- --------------------------------------------------------------
-Clear the current figure:	  `mlab.clf()`
--------------------------------- --------------------------------------------------------------
-Set the current figure:		  `mlab.figure(1, bgcolor=(1, 1, 1), fgcolor=(0.5, 0.5, 0.5)`
--------------------------------- --------------------------------------------------------------
-Save figure to image file:	  `mlab.savefig('foo.png', size=(300, 300))`
--------------------------------- --------------------------------------------------------------
-Change the view:		  mlab.view(azimuth=45, elevation=54, distance=1.)
-================================ ==============================================================
+====================================== ==============================================================
+Obtener la figura en uso:		       `mlab.gcf()`
+-------------------------------------- --------------------------------------------------------------
+Limpiar la figura en uso:	            `mlab.clf()`
+-------------------------------------- --------------------------------------------------------------
+Establecer la figura a usar:		    `mlab.figure(1, bgcolor=(1, 1, 1), fgcolor=(0.5, 0.5, 0.5)`
+-------------------------------------- --------------------------------------------------------------
+Guardar la figura a un fichero imagen: `mlab.savefig('foo.png', size=(300, 300))`
+-------------------------------------- --------------------------------------------------------------
+Cambiar la vista:		               `mlab.view(azimuth=45, elevation=54, distance=1.)`
+====================================== ==============================================================
 
-Changing plot properties
+Cambiando las propiedades del gráfico
 .........................
 
 .. only:: latex
 
-    In general, many properties of the various objects on the figure can
-    be changed. If these visualization are created via `mlab` functions, 
-    the easiest way to change them is to use the keyword arguments of
-    these functions, as described in the docstrings.
+    En general, muchas propiedades de los distintos objetos presentes en la figura
+    podrían cambiarse. Si las visualizaciones son creadas via funciones presentes en el módulo `mlab`, 
+    la forma más sencilla de modificar estas visualizaciones sería modificando los argumentos de las
+    palabras clave (`keywords`) de cada función usada tal como se describe en la documentación (`docstrings`).
 
-.. topic:: **Example docstring:** `mlab.mesh`
+.. topic:: **Ejemplo de documentación (`docstring`, lo dejamos en inglés puesto que es
+             como te aparecerá cuando lo veas en el código):** `mlab.mesh`
 
     Plots a surface using grid-spaced data supplied as 2D arrays.
     
@@ -215,7 +216,7 @@ Changing plot properties
                If None, the min of the data will be used
     
 
-Example:
+Ejemplo:
 
 .. sourcecode:: ipython
 
@@ -242,20 +243,20 @@ Example:
     :align: center
     :scale: 70
 
-Decorations
+Decoraciones
 ............
 
 .. only:: latex
 
-    Different items can be added to the figure to carry extra
-    information, such as a colorbar or a title.
+    Se pueden añadir piezas extra en la figura para mostrar información de interés,
+    como una barra de colores o un título.
 
 .. sourcecode:: ipython
 
     In [9]: mlab.colorbar(Out[7], orientation='vertical')
     Out[9]: <tvtk_classes.scalar_bar_actor.ScalarBarActor object at 0xd897f8c>
 
-    In [10]: mlab.title('polar mesh')
+    In [10]: mlab.title('Malla polar')
     Out[10]: <enthought.mayavi.modules.text.Text object at 0xd8ed38c>
 
     In [11]: mlab.outline(Out[7])
@@ -268,42 +269,41 @@ Decorations
     :align: center
     :scale: 80
 
-.. warning:: 
+.. Advertencia:: 
 
-    **extent:** If we specified extents for a plotting object,  
-    `mlab.outline' and `mlab.axes` don't get them by default.
+    **extensión:** Si especificamos la extensión de un objeto gráfico,  
+    `mlab.outline' y `mlab.axes` no tendrán esa extensión por defecto y habría que especificarla.
 
 
     mlab_scripting_interface.rst
     interaction.rst
 
 
-Interactive work
+Trabajo interactivo
 =================
 
 .. only:: latex
 
-    The quicket way to create beautiful visualization with Mayavi is
-    probably to interactivly tweak the various settings.
+    Probablemente, la manera más rápida y efectiva de crear visualizaciones bonitas con Mayavi sería 
+    interactuando y modificando los distintos ajustes de forma interactiva.
 
-The "pipeline dialog"
+El "pipeline dialog"
 ----------------------
 
-Click on the 'Mayavi' button in the scene, and you can control properties
-of objects with dialogs.
+Pulsa en el botón 'Mayavi' que se encuentra en la figura para poder controlar las propiedades
+de los objetos con la ayuda de ventanas de diálogos.
 
 .. image:: pipeline.png
     :align: center
     :scale: 80
 
-* Set the background of the figure in the `Mayavi Scene` node
-* Set the colormap in the `Colors and legends` node
-* Right click on the node to add modules or filters
+* Establece el fondo de la figura en el nodo de las `Mayavi Scene`
+* Establece el mapa de colores en el nodo `Colors and legends`
+* Se pueden añadir módulos y/o filtras pulsando en el botón derecho del ratón
 
-The script recording button
+El botón de grabación del script
 -----------------------------
 
-To find out what code can be used to program these changes, click on the 
-red button as you modify those properties, and it will generate the
-corresponding lines of code.
-
+Para descubrir con qué códifo podríamos modificar los cambios realizados de forma interactiva
+podemos pulsar sobre el botón rojo cuando vayamos a realizar las modificaciones y se generarán
+las correspondientes líneas de código.
