@@ -173,7 +173,7 @@ de desarrollo para cálculo científico:
         :scale: 40
         :align: right
 
-* **Matplotlib** : visualización bidimensional, graficos "listos para publicar"
+* **Matplotlib** : visualización bidimensional, gráficos "listos para publicar"
   http://matplotlib.sourceforge.net/
 
   |clear-floats|
@@ -397,12 +397,15 @@ los alias disponibles cuando se escribe ``alias``:
     ('rm', 'rm -i'),
     ('rmdir', 'rmdir')]
 
-Finalmente, nos gustaría mencionar la característica de *autocompletado con tabulador*, cuya descripción citamos diréctamente desde el manual de IPython:
+Finalmente, nos gustaría mencionar la característica de *autocompletado con
+tabulador*, cuya descripción citamos diréctamente desde el manual de IPython:
 
 *El autocompletado con tabulador, especialmente para atributos, es una
 manera conveniente de explorar la estructura de cualquier objeto con el
 que estés tratando. Simplemente escribe nombre_del_objeto.<TAB> para ver
-los atributos del objeto. Además de objetos y palabras claves de Python, el autocompletado con tabulador también funciona para nombres de archivos y directorios.*
+los atributos del objeto. Además de objetos y palabras claves de Python,
+el autocompletado con tabulador también funciona para nombres de archivos
+y directorios.*
 
 .. sourcecode:: ipython
 
