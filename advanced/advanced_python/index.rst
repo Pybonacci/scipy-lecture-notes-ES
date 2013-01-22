@@ -653,8 +653,13 @@ Un decorador como este puede hacer casi cualquier cosa, ya que puede modificar
 el objeto función original y 'machacar' los argumentos, llamar a la función
 original o no y, después, 'machacar' el valor de retorno.
 
-Copying the docstring and other attributes of the original function
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Copiando el docstring (documentación) y otros atributos de la función original
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Cuando un decorador devuelve una nueva función que reemplaza a
+la función original nos encontramos como consecuencia que, desafortunadamente,
+hemos perdido el nombre original de la función, el docstring original y la lista 
+de argumentos originales. Podríamos traspasar todos esos atributos de la función original
 
 When a new function is returned by the decorator to replace the
 original function, an unfortunate consequence is that the original
