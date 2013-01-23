@@ -1,5 +1,5 @@
-Getting started with Python for science
-===================================================================
+Para empezar con Python para fines científicos
+==============================================
 
 .. include:: ../includes/big_toc_css.rst
 

@@ -1,174 +1,179 @@
-Scientific computing with tools and workflow
-=============================================
+Computación científica con herramientas y flujos de trabajo
+===========================================================
 
-:authors: Fernando Perez, Emmanuelle Gouillart, Gaël Varoquaux, Valentin Haenel
+:autores: Fernando Perez, Emmanuelle Gouillart, Gaël Varoquaux, Valentin Haenel
 
 ..
     .. image:: phd053104s.png
       :align: center
 
-Why Python?
-------------
+¿Por qué Python?
+----------------
 
-The scientist's needs
-.......................
+Las necesidades de los científicos
+..................................
 
-* Get data (simulation, experiment control)
+* Obtener datos (simulación, experimentos)
 
-* Manipulate and process data.
+* Manipular y procesar datos.
 
-* Visualize results... to understand what we are doing!
+* Visualizar resultados... ¡para ver que estamos haciendo!
 
-* Communicate results: produce figures for reports or publications,
-  write presentations.
+* Presentar resultados: generar figuras para reportes o publicaciones y
+  hacer presentaciones.
 
-Specifications
+Especificaciones
 ................
 
-* Rich collection of already existing **bricks** corresponding to classical
-  numerical methods or basic actions: we don't want to re-program the
-  plotting of a curve, a Fourier transform or a fitting algorithm. Don't
-  reinvent the wheel!
+* Conjunto rico de **ladrillos** correspondientes a métodos numéricos
+  clásicos o acciones básicas: no queremos re-programar el gráfico de una
+  curva, una transformada de Fourier o un algoritmo de ajuste. ¡No
+  reinventes la rueda!
 
-* Easy to learn: computer science is neither our job nor our education. We
-  want to be able to draw a curve, smooth a signal, do a Fourier transform
-  in a few minutes.
+* Fácil de aprender: las ciencias de la computación no son ni nuestro trabajo
+  ni nuestra educación. Queremos ser capaces de graficar una curva, suavizar
+  una señal o hacer una transformada de Fourier en pocos minutos.
 
-* Easy communication with collaborators, students, customers, to make the code
-  live within a lab or a company: the code should be as readable as a book.
-  Thus, the language should contain as few syntax symbols or unneeded routines
-  as possible that would divert the reader from the mathematical or scientific
-  understanding of the code.
+* Fácil comunicación con colaboradores, estudiantes y clientes para hacer del
+  código algo vivo dentro de un laboratorio o una compañía: el código debería
+  ser tan entendible como un libro. El lenguaje debería contener la menor
+  cantidad de sintaxis simbólica o rutinas innecesarias que puedan distraer
+  al lector del entendimiento matemático o científico del código.
 
-* Efficient code that executes quickly... but needless to say that a very fast
-  code becomes useless if we spend too much time writing it. So, we need both a
-  quick development time and a quick execution time.
+* Código eficiente que se ejecute rápido... pero no es necesario decir que un
+  código muy rápido se vuelve inútil si ocupamos mucho tiempo en escribirlo.
+  Por lo tanto, necesitamos rapidez tanto en el desarrollo como en el tiempo
+  de ejecución.
 
-* A single environment/language for everything, if possible, to avoid learning
-  a new software for each new problem.
+* Un ambiente/lenguaje para todo si es posible, para evitar aprender un nuevo
+  software para cada problema nuevo.
 
-Existing solutions
-...................
+Soluciones existentes
+.....................
 
-Which solutions do scientists use to work?
+¿Qué soluciones usan los científicos para trabajar?
 
-**Compiled languages: C, C++, Fortran, etc.**
+**Lenguajes compilados: C, C++, Fortran, etc.**
 
-* Advantages:
+* Ventajas:
 
-  * Very fast. Very optimized compilers. For heavy computations, it's difficult
-    to outperform these languages.
+  * Muy rápidos. Compiladores muy optimizados. Para cálculos intensivos es
+    difícil escapar de estos lenguajes.
 
-  * Some very optimized scientific libraries have been written for these
-    languages. Example: BLAS (vector/matrix operations)
+  * Algunas bibliotecas científicas muy optimizadas han sido escritas para
+    estos lenguajes. Ejemplo: BLAS (operaciones vectoriales y matriciales)
 
-* Drawbacks:
+* Desventajas:
 
-  * Painful usage: no interactivity during development,
-    mandatory compilation steps, verbose syntax (&, ::, }}, ; etc.),
-    manual memory management (tricky in C). These are **difficult
-    languages** for non computer scientists.
+  * Difícil uso: no hay interactividad durante el desarrollo,
+    pasos de compilación obligatorios, sintaxis compleja (&, ::, }}, ;, etc.),
+    manejo de uso de memoria manual (difícil en C). Estos son **lenguajes
+    difíciles** para científicos ajenos a las ciencias de la computación.
 
-**Scripting languages: Matlab**
+**Lenguajes de script: Matlab**
 
-* Advantages:
+* Ventajas:
 
-  * Very rich collection of libraries with numerous algorithms, for many
-    different domains. Fast execution because these libraries are often written
-    in a compiled language.
+  * Conjunto de bibliotecas muy completas con numerosos algoritmos para variados
+    tópicos. Rápida ejecución debido a que estas bibliotecas por lo general
+    están escritas en un lenguaje compilado.
 
-  * Pleasant development environment: comprehensive and well organized help,
-    integrated editor, etc.
+  * Ambiente placentero de desarrollo: ayuda completa y bien organizada, editor
+    integrado, etc.
 
-  * Commercial support is available.
+  * Soporte comercial disponible.
 
-* Drawbacks:
+* Desventajas:
 
-  * Base language is quite poor and can become restrictive for advanced users.
+  * El lenguaje es pobre y puede llegar a ser restrictivo para usuarios
+    avanzados.
 
-  * Not free.
+  * No es gratuito.
 
-**Other scripting languages: Scilab, Octave, Igor, R, IDL, etc.**
+**Otros lenguajes de script: Scilab, Octave, Igor, R, IDL, etc.**
 
-* Advantages:
+* Ventajas:
 
-  * Open-source, free, or at least cheaper than Matlab.
+  * Son de código abierto, gratuitos o al menos más baratos que Matlab.
 
-  * Some features can be very advanced (statistics in R, figures in Igor, etc.)
+  * Algunas características pueden ser muy avanzadas (estadísticas en R,
+    figuras en Igor, etc.).
 
-* Drawbacks:
+* Desventajas:
 
-  * Fewer available algorithms than in Matlab, and the language
-    is not more advanced.
+  * Menos algoritmos disponibles que Matlab y el lenguaje no es más avanzado.
 
-  * Some software are dedicated to one domain. Ex: Gnuplot or xmgrace
-    to draw curves. These programs are very powerful, but they are
-    restricted to a single type of usage, such as plotting.
+  * Algunos softwares están dedicados a un solo tópico. Por ejemplo, Gnuplot o
+    xmgrace para graficar curvas. Estos programas son muy poderosos, pero están
+    restringidos a un solo tipo de uso, como gráficos.
 
-**What about Python?**
+**¿Qué hay de Python?**
 
-* Advantages:
+* Ventajas:
 
-  * Very rich scientific computing libraries (a bit less than Matlab,
-    though)
+  * Bibliotecas de cálculo científico muy completas (aunque un poco menos que
+    en Matlab).
 
-  * Well thought out language, allowing to write very readable and well
-    structured code: we "code what we think".
+  * Lenguaje bien pensado, lo que permite escribir código muy legible y bien
+    estructurado: "escribimos el código que pensamos".
 
-  * Many libraries for other tasks than scientific computing (web server
-    management, serial port access, etc.)
+  * Existen muchas bibliotecas para otras tareas aparte de cálculo científico
+    (administración de servidores web, acceso al puerto serial, etc.).
 
-  * Free and open-source software, widely spread, with a vibrant community.
+  * Software libre y de acceso abierto, ampliamente difundido con una
+    comunidad activa.
 
-* Drawbacks:
+* Desventajas:
 
-  * less pleasant development environment than, for example, Matlab. (More
-    geek-oriented).
+  * Ambiente de desarrollo menos placentero que, por ejemplo, Matlab.
+    (Más orientado a los geeks).
 
-  * Not all the algorithms that can be found in more specialized
-    software or toolboxes.
+  * No se pueden encontrar todos los algoritmos en softwares o toolboxes más
+    especializados.
 
-Scientific Python building blocks
------------------------------------
+Bloques de construcción para Python científico
+----------------------------------------------
 
-Unlike Matlab, Scilab or R, Python does not come with a pre-bundled set
-of modules for scientific computing. Below are the basic building blocks
-that can be combined to obtain a scientific computing environment:
+Al contrario de Matlab, Scilab o R, Python no viene con un conjunto de
+módulos para cálculo científico. Más adelante están los bloques de
+construcción básicos que pueden ser combinados para obtener un ambiente
+de desarrollo para cálculo científico:
 
-* **Python**, a generic and modern computing language
+* **Python**, un lenguaje computacional genérico y moderno
 
-    * Python language: data types (``string``, ``int``), flow control,
-      data collections (lists, dictionaries), patterns, etc.
+    * Lenguaje Python: tipos de datos (``string``, ``int``), control de flujo,
+      estructuras de datos (listas, diccionarios), patrones, etc.
 
-    * Modules of the standard library.
+    * Módulos de la biblioteca estándar.
 
-    * A large number of specialized modules or applications written in
-      Python: web protocols, web framework, etc. ... and scientific
-      computing.
+    * Un gran número de módulos especializados o aplicaciones escritas en
+      Python: protocolos web, framework para aplicaciones web, etc. ... y
+      cálculo científico.
 
-    * Development tools (automatic testing, documentation generation)
+    * Herramientas de desarrollo (pruebas automáticas, generación de
+      documentación)
 
   .. image:: snapshot_ipython.png
         :align: right
         :scale: 40
 
-* **IPython**, an advanced **Python shell** http://ipython.scipy.org/moin/
+* **IPython**, una **consola de Python** avanzada http://ipython.org/
 
-* **Numpy** : provides powerful **numerical arrays** objects, and routines to
-  manipulate them. http://www.numpy.org/
+* **Numpy** : provee poderosos objetos de **arreglos numéricos** y rutinas
+  para manipularlos. http://www.numpy.org/
 
 ..
     >>> import numpy as np
     >>> np.random.seed(4)
 
-* **Scipy** : high-level data processing routines.
-  Optimization, regression, interpolation, etc http://www.scipy.org/
+* **Scipy** : rutinas de alto nivel para procesamiento de datos.
+  Optimización, regresión, interpolación, etc. http://www.scipy.org/
 
   .. image:: random_c.jpg
         :scale: 40
         :align: right
 
-* **Matplotlib** : 2-D visualization, "publication-ready" plots
+* **Matplotlib** : visualización bidimensional, gráficos "listos para publicar"
   http://matplotlib.sourceforge.net/
 
   |clear-floats|
@@ -177,7 +182,7 @@ that can be combined to obtain a scientific computing environment:
         :scale: 60
         :align: right
 
-* **Mayavi** : 3-D visualization
+* **Mayavi** : visualización tridimensional
   http://code.enthought.com/projects/mayavi/
 
   |clear-floats|
@@ -186,31 +191,32 @@ that can be combined to obtain a scientific computing environment:
 The interactive workflow: IPython and a text editor
 -----------------------------------------------------
 
-**Interactive work to test and understand algorithms:** In this section, we
-describe an interactive workflow with `IPython <http://ipython.org>`__ that is
-handy to explore and understand algorithms.
+**Trabajo interactivo para probar y entender algoritmos**: En esta
+sección, describiremos un flujo de trabajo interactivo con
+`IPython <http://ipython.org>`__ que es práctico para explorar y
+entender algoritmos.
 
-Python is a general-purpose language. As such, there is not one blessed
-environment to work in, and not only one way of using it. Although
-this makes it harder for beginners to find their way, it makes it
-possible for Python to be used to write programs, in web servers, or
-embedded devices.
+Python es un lenguaje multipropósito. Como tal, no existe un ambiente
+bendito para trabajar ni hay una sola manera de usarlo. Aunque esto hace
+que sea más difícil para principiantes encontrar su propio camino, esto hace
+posible que Python sea usado para escribir programas, en servidores web o
+dispositivos embebidos.
 
-.. note:: Reference document for this section:
+.. note:: Documento de referencia para esta sección:
 
     **IPython user manual:** http://ipython.org/ipython-doc/dev/index.html
 
-Command line interaction
-..........................
+Interacción en la línea de comandos
+...................................
 
-Start `ipython`:
+Iniciar `ipython`:
 
 .. sourcecode:: ipython
 
     In [1]: print('Hello world')
     Hello world
 
-Getting help by using the **?** operator after an object:
+Obteniendo ayuda usando el operador **?** después de un objeto:
 
 .. sourcecode:: ipython
 
@@ -229,19 +235,19 @@ Getting help by using the **?** operator after an object:
 	end:  string appended after the last value, default a newline.
 
 
-Elaboration of the algorithm in an editor
-..........................................
+Elaboración del algoritmo en un editor
+......................................
 
-Create a file `my_file.py` in a text editor. Under EPD (Enthought Python
-Distribution), you can use `Scite`, available from the start menu. Under
-Python(x,y), you can use Spyder. Under Ubuntu, if you don't already have your
-favorite editor, we would advise installing `Stani's Python editor`. In the
-file, add the following lines::
+Crea un archivo `my_file.py` en un editor de texto. En EPD (Enthought Python
+Distribution), puedes usar `Scite`, disponible en el menú de inicio. En
+Python(x,y) puedes usar Spyder. En Ubuntu, si todavía no tienes tu editor
+favorito, te aconsejamos instalar `Stani's Python editor`. En el archivo,
+agrega las siguientes líneas::
 
     s = 'Hello world'
     print(s)
 
-Now, you can run it in IPython and explore the resulting variables:
+Ahora, puedes ejecutarlo en IPython y explorar las variables resultantes:
 
 .. sourcecode:: ipython
 
@@ -257,27 +263,28 @@ Now, you can run it in IPython and explore the resulting variables:
     s          str     Hello world
 
 
-.. topic:: **From a script to functions**
+.. topic:: **De un script a funciones**
 
-    While it is tempting to work only with scripts, that is a file full
-    of instructions following each other, do plan to progressively evolve
-    the script to a set of functions:
+    Si bien es tentador trabajar solo con scripts, que es un archivo lleno
+    de instrucciones a seguirque se siguen una tras otra, planea evolucionar
+    progresivamente del script a un conjunto de funciones:
 
-    * A script is not reusable, functions are.
+    * Un script no es reutilizable, las funciones sí.
 
-    * Thinking in terms of functions helps breaking the problem in small
-      blocks.
+    * Pensar en términos de funcionas ayuda a dividir el problema en
+      pequeños bloques.
 
 
-IPython Tips and Tricks
-.......................
+Consejos y trucos de IPython
+............................
 
-The IPython user manual contains a wealth of information about using IPython,
-but to get you started we want to give you a quick introduction to three useful
-features: *history*, *magic functions*, *aliases* and *tab completion*.
+El manual de usuario de IPython contiene mucha información sobre usar
+IPython, pero para iniciarte queremos darte una breve introducción a tres
+características útiles: *historial*, *funciones mágicas* y *autocompletado
+con tabulador*.
 
-Like a UNIX shell, IPython supports command history. Type *up* and *down* to
-navigate previously typed commands:
+Como una consola UNIX, IPython soporta comandos de historial. Teclea *arriba*
+y *abajo* para navegar en los comandos anteriormente ejecutados:
 
 .. sourcecode:: ipython
 
@@ -287,32 +294,33 @@ navigate previously typed commands:
 
     In [2]: x = 10
 
-IPython supports so called *magic* functions by prefixing a command with the
-``%`` character. For example, the ``run`` and ``whos`` functions from the
-previous section are magic functions. Note that, the setting ``automagic``,
-which is enabled by default, allows you to omit the preceding ``%`` sign. Thus,
-you can just type the magic function and it will work.
+IPython soporta las llamadas funciones *mágicas* anteponiendo a  un comando
+el caracter ``%``. Por ejemplo, las funciones ``run`` y ``whos`` de la
+sección anterior son funciones mágicas. Ten en cuenta que, el ajuste
+``automagic``, que está activado por defecto, te permite omitir el signo ``%``
+predecesor al comando. De esta forma, puedes solo escribir la función
+mágica y funcionará.
 
-Other useful magic functions are:
+Otras funciones mágicas útiles son:
 
-* ``%cd`` to change the current directory.
+* ``%cd`` para cambiar el directorio actual.
 
   .. sourcecode:: ipython
 
     In [2]: cd /tmp
     /tmp
 
-* ``%timeit`` allows you to time the execution of short snippets using the
-  ``timeit`` module from the standard library:
+* ``%timeit`` permite medir el tiempo de ejecución de pequeños fragmentos de
+  código usando el módulo ``timeit`` de la biblioteca estándar:
 
   .. sourcecode:: ipython
 
       In [3]: timeit x = 10
       10000000 loops, best of 3: 39 ns per loop
 
-* ``%cpaste`` allows you to paste code, especially code from websites which has
-  been prefixed with the standard python prompt (e.g. ``>>>``) or with an ipython
-  prompt, (e.g. ``in [3]``):
+* ``%cpaste`` te permite pegar código, especialmente aquel que venga de un
+  sitio web que ha sido precedido por el promp estándar de Python (o sea
+  ``>>>``) o con un prompt de IPython (por ejemplo: ``In [3]:``):
 
   .. sourcecode:: ipython
 
@@ -327,10 +335,10 @@ Other useful magic functions are:
     :--
     10000000 loops, best of 3: 86 ns per loop
 
-
-* ``%debug`` allows you to enter post-mortem debugging. That is to say, if the
-  code you try to execute, raises an exception, using ``%debug`` will enter the
-  debugger at the point where the exception was thrown.
+.. TODO: Mejorar traducción de "post-mortem debugging". Traducido como "depurado post-mortem".
+* ``%debug`` te permite entrar en depuración post-mortem. Esto quiere decir
+  que si el código que intentas ejecutar lanza una excepción, usando ``%debug``
+  entrarás al depurador en el punto donde ocurrió la excepción.
 
   .. sourcecode:: ipython
 
@@ -354,19 +362,18 @@ Other useful magic functions are:
 
 .. note::
 
+    El ayuda memoria incorporado en IPython es accesible a través de la
+    función mágica ``%quickref``.
 
 .. note::
 
-    The built-in IPython cheat-sheet is accessible via the ``%quickref`` magic
-    function.
+    Se muestra una lista de todas las funciones mágicas disponibles cuando
+    se escribe ``%magic``.
 
-.. note::
-
-    A list of all available magic functions is shown when typing ``%magic``.
-
-Furthermore IPython ships with various *aliases* which emulate common UNIX
-command line tools such as ``ls`` to list files, ``cp`` to copy files and ``rm`` to
-remove files. A list of aliases is shown when typing ``alias``:
+Además, IPython viene con diversos *alias* que emulan herramientas comunes
+de líneas de comando UNIX como ``ls`` para listar archivos, ``cp`` para
+copiar archivos y ``rm`` para eliminar archivos. Se muestra una lista de
+los alias disponibles cuando se escribe ``alias``:
 
 .. sourcecode:: ipython
 
@@ -390,13 +397,15 @@ remove files. A list of aliases is shown when typing ``alias``:
     ('rm', 'rm -i'),
     ('rmdir', 'rmdir')]
 
-Lastly, we would like to mention the *tab completion* feature, whose
-description we cite directly from the IPython manual:
+Finalmente, nos gustaría mencionar la característica de *autocompletado con
+tabulador*, cuya descripción citamos diréctamente desde el manual de IPython:
 
-*Tab completion, especially for attributes, is a convenient way to explore the
-structure of any object you’re dealing with. Simply type object_name.<TAB> to
-view the object’s attributes. Besides Python objects and keywords, tab
-completion also works on file and directory names.*
+*El autocompletado con tabulador, especialmente para atributos, es una
+manera conveniente de explorar la estructura de cualquier objeto con el
+que estés tratando. Simplemente escribe nombre_del_objeto.<TAB> para ver
+los atributos del objeto. Además de objetos y palabras claves de Python,
+el autocompletado con tabulador también funciona para nombres de archivos
+y directorios.*
 
 .. sourcecode:: ipython
 
