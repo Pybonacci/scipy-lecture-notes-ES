@@ -11,23 +11,22 @@ Manipulación y procesamiento de imágenes usando Numpy y Scipy
 
 
 .. topic:: 
-    Imagen = arreglo numérico en 2-D 
+    Imagen = array numérico en 2-D 
 
     (o 3-D: TC, IRM, 2D + tiempo; 4-D, ...)
 
-    Aquí, **imagen == arreglo Numpy** ``np.array``
+    Aquí, **imagen == array Numpy** ``np.array``
 
 **Herramientas usadas en este tutorial**:
 
-* ``numpy``: manipulación básica de arreglos
+* ``numpy``: manipulación básica de arrays
 
 * ``scipy``: ``scipy.ndimage`` submódulo dedicado a procesamiento de imágenes
   (imágenes n-dimensionales). Ver http://docs.scipy.org/doc/scipy/reference/tutorial/ndimage.html ::
 
     >>> from scipy import ndimage
 
-* unos pocos ejemplos de toolkits especializadas que trabajan
-  con ``np.array``:
+* algunos ejemplos usan librerías especializadas que hacen uso de ``np.array``:
 
     * `Scikit Image <http://scikits-image.org/>`_
     
@@ -37,18 +36,22 @@ Manipulación y procesamiento de imágenes usando Numpy y Scipy
 
 * Entrada, salida y presentación de imágenes
 
-* Manipulación básica: recortar, voltear, rotar, ...
+* Manipulación básica: recortar, girar, rotar, ...
 
-* Filtrado de imágenes: reducción de ruido, afilamiento
+* Filtrado de imágenes: reducción de ruido, enfoque/refinamiento (`sharpening`)
 
-* Segmentación de imágenes: etiquetando pixeles de aceuerdo a los diferentes objetos a que puedan pertenecer
+* Segmentación de imágenes: etiquetado de píxeles de acuerdo a los diferentes objetos a que puedan pertenecer
 
 * Clasificación
+
+* Extracción/identificación de patrones
+
+* `Registro <http://es.wikipedia.org/wiki/Registro_de_la_imagen>`_
 
 * ...
 
 
-Módulos más potentes y completos:
+Existen módulos más potentes y completos:
 
 * `OpenCV <http://opencv.willowgarage.com/documentation/python/cookbook.html>`_ 
   (bindings Python)
@@ -68,7 +71,7 @@ Módulos más potentes y completos:
 Abriendo y escribiendo archivos de imágenes
 ===========================================
 
-Escribiendo un arreglo a un archivo:
+Escribiendo un array a un archivo:
 
 .. literalinclude:: examples/plot_lena.py
    :lines: 2-
@@ -78,7 +81,7 @@ Escribiendo un arreglo a un archivo:
     :scale: 50
 
 
-Creando un arreglo numpy desde un archivo de imagen::
+Creando un array numpy desde un archivo de imagen::
 
     >>> lena = misc.imread('lena.png')
     >>> type(lena)
@@ -88,9 +91,9 @@ Creando un arreglo numpy desde un archivo de imagen::
 
 dtype es uint8 para imágenes de 8-bits (0-255)
 
-Abriendo archivos raw (de cámara, imágenes 3-D) ::
+Abriendo archivos `raw` (de cámara, imágenes 3-D) ::
 
-    >>> l.tofile('lena.raw') # Create raw file
+    >>> l.tofile('lena.raw') # Creación de un fichero raw
     >>> lena_from_raw = np.fromfile('lena.raw', dtype=np.int64)
     >>> lena_from_raw.shape
     (262144,)
@@ -98,14 +101,15 @@ Abriendo archivos raw (de cámara, imágenes 3-D) ::
     >>> import os
     >>> os.remove('lena.raw')
 
-Necesitas saber la forma y el dtype de la imagen (cómo separar los bytes
+Necesitas saber la forma y el dtype (tipo de dato) de la imagen (de qué forma separar los bytes
 de datos).
 
-Para datos grandes, usa ``np.memmap`` para mapeo de memoria::
+Para conjuntos de datos de gran tamaño se puede usar ``np.memmap``, que 
+sirve para `mapear` en memoria estos datos::
 
     >>> lena_memmap = np.memmap('lena.raw', dtype=np.int64, shape=(512, 512))
 
-(los datos son leídos desde el archivo, no cargados en la memoria)
+(los datos son leídos desde el archivo, pero no son cargados en la memoria)
 
 Trabajando en una lista de archivos de imágenes::
 
@@ -119,15 +123,15 @@ Trabajando en una lista de archivos de imágenes::
 Mostrando imágenes
 ==================
 
-Usa ``matplotlib`` e ``imshow`` para mostrar una imagen dentro de una
-``matplotlib figure``::
+Se puede usar ``matplotlib`` e ``imshow`` para mostrar una imagen dentro de una
+``figura matplotlib``::
 
     >>> l = scipy.lena()
     >>> import matplotlib.pyplot as plt
     >>> plt.imshow(l, cmap=plt.cm.gray)
     <matplotlib.image.AxesImage object at 0x3c7f710>
 
-Incrementa el contraste ajustando los valores mínimos y máximos::
+Podemos incrementar el contraste ajustando los valores mínimos y máximos::
 
     >>> plt.imshow(l, cmap=plt.cm.gray, vmin=30, vmax=200)
     <matplotlib.image.AxesImage object at 0x33ef750>
@@ -135,7 +139,7 @@ Incrementa el contraste ajustando los valores mínimos y máximos::
     >>> plt.axis('off')
     (-0.5, 511.5, 511.5, -0.5)
 
-Grafica las líneas de contorno::
+Podemos dibujar las líneas de contorno::
 
     >>> plt.contour(l, [60, 211])
     <matplotlib.contour.ContourSet instance at 0x33f8c20>
@@ -149,7 +153,7 @@ Grafica las líneas de contorno::
 
     [:ref:`Python source code <example_plot_display_lena.py>`]
 
-Para inspección detallada de variaciones de intensidad, usa
+Para hacer una inspección detallada de variaciones de intensidad podemos usar
 ``interpolation='nearest'``::
 
     >>> plt.imshow(l[200:220, 200:220], cmap=plt.cm.gray)
@@ -163,7 +167,7 @@ Para inspección detallada de variaciones de intensidad, usa
 
     [:ref:`Python source code <example_plot_interpolation_lena.py>`]
 
-A veces, otros paquetes usan toolkits para visualización (GTK, Qt)::
+A veces, otros paquetes usan paquetes o `toolkits` para visualización (GTK, Qt)::
 
     >>> import scikits.image.io as im_io
     >>> im_io.use_plugin('gtk', 'imshow')
@@ -187,7 +191,7 @@ A veces, otros paquetes usan toolkits para visualización (GTK, Qt)::
 Manipulaciones básicas
 ======================
 
-Las imágenes son arreglos: usan toda la maquinaria ``numpy``.
+Las imágenes las leemos usando arrays numpy: ¡Podemos usar toda la maquinaria ``numpy``!
 
 .. image:: axis_convention.png
     :align: center
@@ -221,7 +225,8 @@ Las imágenes son arreglos: usan toda la maquinaria ``numpy``.
 
     [:ref:`Python source code <example_plot_numpy_array.py>`]
 
-Statistical information
+
+Información estadística
 -----------------------
 
 ::
@@ -235,17 +240,43 @@ Statistical information
 
 ``np.histogram``
 
-Geometrical transformations
----------------------------
+.. topic::
+    **Ejercicio 1**
+
+    * Abrimos el logo ``scikit-image`` como imagen
+      (http://scikit-image.org/_static/scikits_image_logo.png), o una
+      imagen que tengas en tu computadora.
+
+    * Recortar una parte significativa de la imagen, por ejemplo, el círculo 
+      con la python en el logo.
+
+    * Mostrar el array de la imagen usando ``matlplotlib``. Cambia el método de interpolación
+      y haz zoom para ver la diferencia.
+
+    * Transforma tu imagen a escala de grises.
+
+    * Incrementa el contraste de la imagen cambiando sus valores máximo y mínimo. 
+      **Optional**: usa ``scipy.stats.scoreatpercentile``
+      (¡lee el docstring!) para saturar un 5% los píxeles más oscuros y un 5%
+      los píxeles más claros.
+
+    * Guarda el array a los diferentes formatos de imagen (png, jpg, tiff)
+
+    .. image:: scikits_image_logo.png
+        :align: center
+
+
+Transformaciones geométricas
+----------------------------
 ::
 
     >>> lena = scipy.lena()
     >>> lx, ly = lena.shape
-    >>> # Cropping
+    >>> # Recorte de la imagen
     >>> crop_lena = lena[lx/4:-lx/4, ly/4:-ly/4]
     >>> # up <-> down flip
     >>> flip_ud_lena = np.flipud(lena)
-    >>> # rotation
+    >>> # rotación
     >>> rotate_lena = ndimage.rotate(lena, 45)
     >>> rotate_lena_noreshape = ndimage.rotate(lena, 45, reshape=False)
 
@@ -263,12 +294,12 @@ Filtrado de imágenes
 **Filtros locales**: reemplaza el valor de los pixeles por una función de los
 valores de los pixeles vecinos. 
 
-Vecindad: cuadrado (se elige el tamaño), disco o *elementos estructurantes* más complejos*.
+Vecindad: cuadrado (selecciona el tamaño), círculo o *elementos estructurados* más complejos*.
 
 .. image:: kernels.png
     :align: center
 
-Distorsión/suavizado
+Desenfoque/suavizado
 --------------------
 
 **Filtro gaussiano** de ``scipy.ndimage``::
@@ -290,16 +321,16 @@ Distorsión/suavizado
 
     [:ref:`Python source code <example_plot_blur.py>`]
 
-Afilamiento
------------
+enfoque/refinamiento (`sharpening`)
+-----------------------------------
 
-Afilar una imagen borrosa::
+Enfocar una imagen borrosa::
 
     >>> from scipy import misc
     >>> lena = misc.lena()
     >>> blurred_l = ndimage.gaussian_filter(lena, 3)
 
-incrementa el peso de los bordes agregando una aproximación del laplaciano::
+Incrementamos el peso de los bordes agregando una aproximación del laplaciano::
 
     >>> filter_blurred_l = ndimage.gaussian_filter(blurred_l, 1)
     >>> alpha = 30
@@ -317,19 +348,19 @@ incrementa el peso de los bordes agregando una aproximación del laplaciano::
 Reduciendo ruido
 ----------------
 
-Lena ruidosa::
+Imagen de Lena con ruido::
 
     >>> from scipy import misc
     >>> l = misc.lena()
     >>> l = l[230:310, 210:350]
     >>> noisy = l + 0.4*l.std()*np.random.random(l.shape)
 
-Un **filtro gaussiano** suaviza el ruido... y los bordes::
+Un **filtro gaussiano** suaviza la imagen `eliminando` el ruido... además de los bordes::
 
     >>> gauss_denoised = ndimage.gaussian_filter(noisy, 2)
 
 La mayoría de los filtros lineales isotrópicos locales
-(``ndimage.uniform_filter``) distorsionan la imagen.
+(``ndimage.uniform_filter``) desenfocan la imagen.
 
 Un **filtro de mediana** conserva mejor los bordes::
 
@@ -343,7 +374,7 @@ Un **filtro de mediana** conserva mejor los bordes::
 
     [:ref:`Python source code <example_plot_lena_denoise.py>`]
 
-Filtro de mediana: mejor resultado para límites rectos (**baja curvatura**)::
+Filtro de mediana: mejor resultado para zonas de frontera rectas (**baja curvatura**)::
 
     >>> im = np.zeros((20, 20))
     >>> im[5:-5, 5:-5] = 1
@@ -367,22 +398,15 @@ Otros filtros no lineales locales: Wiener (``scipy.signal.wiener``), etc.
 
 **Filtros no locales**
 
-**Reducción de ruido de variación total**. Encuentra una nueva imagen
+**Reducción de ruido de variación total (TV, Total Variation)**. Encuentra una nueva imagen
 donde la variación total de la imagen (integral de la norma L1 del
-gradiente) es minimizada, mientras el resultado se acerca a la imagen
-original sin ruido::
+gradiente) es minimizada al avez que el resultado se mantiene cercano a la imagen
+medida::
 
-    >>> # from scikits.image.filter import tv_denoise
-    >>> from tv_denoise import tv_denoise
+    >>> from skimage.filter import tv_denoise
     >>> tv_denoised = tv_denoise(noisy, weight=10)
     >>> # More denoising (to the expense of fidelity to data)
     >>> tv_denoised = tv_denoise(noisy, weight=50)
-
-El filtro de variación total ``tv_denoise`` está disponible en
-``scikits.image`` (doc:
-http://scikits-image.org/docs/dev/api/scikits.image.filter.html#tv-denoise),
-pero por conveniencia lo hemos integrado como un :download:`standalone module
-<../../pyplots/tv_denoise.py>` junto a este tutorial.
 
 .. figure:: auto_examples/images/plot_lena_tv_denoise_1.png
     :scale: 60
@@ -393,16 +417,31 @@ pero por conveniencia lo hemos integrado como un :download:`standalone module
     [:ref:`Python source code <example_plot_lena_tv_denoise.py>`]
 
 
+.. topic::
+    Ejercicio 2: Reducción de ruido
+
+    * Creamos una imagen binaria (de unos y ceros) con varios objetos (círculos,
+      elipses, cuadrados o formas aleatorias).
+
+    * Añadimos algo de ruido (e.g., 20% de ruido)
+
+    * Elige tres métodos para reducir el ruido de la imagen:
+      filtro gaussiano, filtro de la media y el filtro de variación
+      total.
+
+    * Compara los histogramas de las tres imágenes a las que se ha aplicado una reducción de ruido.
+      ¿Qué histograma es el más cercano al de la imagen original (imagen libre de ruido)?
+
+
 Morfología matemática
 ---------------------
 
 Ver http://en.wikipedia.org/wiki/Mathematical_morphology
 
-Prueba una imagen con una forma simple (un **elemento estructurante**) y
-modifica esta imagen de acuerdo a como se ajuste la forma localmente o
-pierde la imagen. 
+Prueba una imagen con una forma simple (un **elemento con estructura**) y
+modifica esta imagen de acuerdo a como se ajuste o no a la imagen. 
 
-**Elemento estructurante**::
+**Elemento con estructura**::
 
     >>> el = ndimage.generate_binary_structure(2, 1)
     >>> el
@@ -417,7 +456,7 @@ pierde la imagen.
 .. image:: diamond_kernel.png
     :align: center
 
-**Erosión** = filtro mínimo. Reemplaza el valor de un pixel por el valor mínimo del elemento estructurante::
+**Erosión** = filtro mínimo. Reemplaza el valor de un pixel por el valor mínimo del elemento estructurado::
 
     >>> a = np.zeros((7,7), dtype=np.int)
     >>> a[1:6, 2:5] = 1
@@ -437,7 +476,7 @@ pierde la imagen.
            [0, 0, 0, 1, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0]])
-    >>> #Erosion removes objects smaller than the structure
+    >>> #Erosion elimina objectos más pequeños que la estructura
     >>> ndimage.binary_erosion(a, structure=np.ones((5,5))).astype(a.dtype)
     array([[0, 0, 0, 0, 0, 0, 0],
            [0, 0, 0, 0, 0, 0, 0],
@@ -493,7 +532,7 @@ También funciona para imágenes en escala de grises::
 
     [:ref:`Python source code <example_plot_greyscale_dilation.py>`]
 
-**Abriendo**: erosión + dilatación::
+**Opening (Apertura)**: erosión + dilatación::
 
     >>> a = np.zeros((5,5), dtype=np.int)
     >>> a[1:4, 1:4] = 1; a[4, 4] = 1
@@ -518,7 +557,7 @@ También funciona para imágenes en escala de grises::
            [0, 0, 1, 0, 0],
            [0, 0, 0, 0, 0]])
 
-**Aplicación**: eliminar ruido::
+**Aplicación (Application)**: eliminar ruido::
 
     >>> square = np.zeros((32, 32))
     >>> square[10:-10, 10:-10] = 1
@@ -539,14 +578,17 @@ También funciona para imágenes en escala de grises::
 
     [:ref:`Python source code <example_plot_propagation.py>`]
 
-**Cerrando**: dilatación + erosió
+**Cierre (Closing)**: dilatación + erosión
 
-Hay muchas otras operaciones de morfología matemática: 
+**Esqueletización (Skeletonization)**: reduce objetos a finas líneas de un píxel de grosor
+manteniendo la misma topología
 
-Many other mathematical morphology operations: transformadas hit y miss, tophat, etc.
+Existen muchas otras operaciones matemáticas de morfología: ``hit and miss transform``, tophat,
+etc.
 
-Extracción de características
-=============================
+
+Extracción de patrones
+======================
 
 Detección de borde
 ------------------
@@ -575,12 +617,9 @@ Usa un **operador gradiente** (**Sobel**) para encontrar altas variaciones de in
 
 **Filtro de Canny**
 
-El filtro de Canny está disponible en ``scikits.image``
-(`doc <http://scikits-image.org/docs/dev/api/scikits.image.filter.html#canny>`_), pero por conveniencia conveniencia lo hemos integrado como un :download:`standalone module
-<../../pyplots/image_source_canny.py>` junto a este tutorial::
+::
 
-  >>> #from scikits.image.filter import canny
-  >>> #or use module shipped with tutorial
+  >>> from skimage.filter import canny
   >>> im += 0.1*np.random.random(im.shape)
   >>> edges = canny(im, 1, 0.4, 0.2) # not enough smoothing
   >>> edges = canny(im, 3, 0.3, 0.2) # better parameters
@@ -628,7 +667,7 @@ Segmentación
 
     [:ref:`Python source code <example_plot_histo_segmentation.py>`]
 
-Umbral automático: usa el mezcla de modelo gaussiano::
+Umbral automático: usa el modelo de mezcla gaussiano::
 
     >>> mask = (im > im.mean()).astype(np.float)
     >>> mask += 0.1 * im
@@ -639,25 +678,25 @@ Umbral automático: usa el mezcla de modelo gaussiano::
     >>> classif.fit(img.reshape((img.size, 1))) # doctest: +ELLIPSIS
     GMM(...)
 
-    >>> classif.means_
+    >>> classif.means
     array([[ 0.9353155 ],
            [-0.02966039]])
-    >>> np.sqrt(classif.covars_).ravel()
+    >>> np.sqrt(classif.covarsi).ravel()
     array([ 0.35074631,  0.28225327])
-    >>> classif.weights_
+    >>> classif.weights
     array([ 0.40989799,  0.59010201])
-    >>> threshold = np.mean(classif.means_)
+    >>> threshold = np.mean(classif.means)
     >>> binary_img = img > threshold
 
 .. image:: image_GMM.png
     :align: center
     :scale: 100
 
-Usa morfología matemática para limpiar el resultado::
+Usamos morfología matemática para limpiar el resultado::
 
-    >>> # Remove small white regions
+    >>> # Elimina pequeñas regiones blancas
     >>> open_img = ndimage.binary_opening(binary_img)
-    >>> # Remove small black hole
+    >>> # Elimina el pequeño agujero negro
     >>> close_img = ndimage.binary_closing(open_img)
 
 .. figure:: auto_examples/images/plot_clean_morpho_1.png
@@ -672,7 +711,7 @@ Usa morfología matemática para limpiar el resultado::
     :class: green
 
     Revisa que las operaciones de reconstrucción (erosión + propagación)
-    produzcan un mejor resultado que abriendo/cerrando::
+    produzcan un mejor resultado que apertura/cierre (`opening/closing`)::
 
 	>>> eroded_img = ndimage.binary_erosion(binary_img)
 	>>> reconstruct_img = ndimage.binary_propagation(eroded_img, mask=binary_img)
@@ -688,10 +727,40 @@ Usa morfología matemática para limpiar el resultado::
     :class: green
 
     Revisa cómo un primer paso de reducción de ruido (filtro de mediana,
-    variación total) modifica el histograma, y revisa que la segmentación
+    variación total) modifica el histograma y revisa que la segmentación
     basada en histograma resultante es más exacta.
 
 * Segmentación **basada en gráficos**: usa información espacial.
+
+* Segmentación de **línea divisoria** (o segmentación **watershed**)
+
+::
+
+    >>> from skimage.morphology import watershed, is_local_maximum
+    >>>
+    >>> # Generate an initial image with two overlapping circles
+    >>> x, y = np.indices((80, 80))
+    >>> x1, y1, x2, y2 = 28, 28, 44, 52
+    >>> r1, r2 = 16, 20
+    >>> mask_circle1 = (x - x1)**2 + (y - y1)**2 < r1**2
+    >>> mask_circle2 = (x - x2)**2 + (y - y2)**2 < r2**2
+    >>> image = np.logical_or(mask_circle1, mask_circle2)
+    >>> # Now we want to separate the two objects in image
+    >>> # Generate the markers as local maxima of the distance
+    >>> # to the background
+    >>> from scipy import ndimage
+    >>> distance = ndimage.distance_transform_edt(image)
+    >>> local_maxi = is_local_maximum(distance, image, np.ones((3, 3)))
+    >>> markers = ndimage.label(local_maxi)[0]
+    >>> labels = watershed(-distance, markers, mask=image)
+
+.. figure:: auto_examples/images/plot_watershed_segmentation_1.png
+    :scale: 70
+    :target: auto_examples/plot_watershed_segmentation.html
+
+
+Segmentation **Spectral clustering** (cortes normalizados) 
+
 
 ::
 
@@ -712,17 +781,17 @@ Usa morfología matemática para limpiar el resultado::
     >>> circle3 = (x - center3[0])**2 + (y - center3[1])**2 < radius3**2
     >>> circle4 = (x - center4[0])**2 + (y - center4[1])**2 < radius4**2
 
-    >>> # 4 circles
+    >>> # 4 círculos
     >>> img = circle1 + circle2 + circle3 + circle4
     >>> mask = img.astype(bool)
     >>> img = img.astype(float)
 
     >>> img += 1 + 0.2*np.random.randn(*img.shape)
-    >>> # Convert the image into a graph with the value of the gradient on
-    >>> # the edges.
+    >>> # Convierte la imagen en un gráfico con el valor del gradiente
+    >>> # en los bordes.
     >>> graph = image.img_to_graph(img, mask=mask)
 
-    >>> # Take a decreasing function of the gradient: we take it weakly
+    >>> # Usa una función decreciente del gradiente: we take it weakly
     >>> # dependant from the gradient the segmentation is close to a voronoi
     >>> graph.data = np.exp(-graph.data/graph.data.std())
 
@@ -733,7 +802,6 @@ Usa morfología matemática para limpiar el resultado::
 
 .. image:: image_spectral_clustering.png
     :align: center
-
 
 
 Midiendo propiedades de objetos: ``ndimage.measurements``
@@ -767,7 +835,7 @@ Etiqueta de componentes conectados: ``ndimage.label``::
 
     [:ref:`Python source code <example_plot_synthetic_data.py>`]
 
-Calcula tamaño, valor medio y otros de cada región::
+Calcula tamaño, valor medio, etcétera, de cada región::
 
     >>> sizes = ndimage.sum(mask, label_im, range(nb_labels + 1))
     >>> mean_vals = ndimage.sum(im, label_im, range(1, nb_labels + 1))
@@ -782,7 +850,7 @@ Limpia componentes conectados pequeños::
     >>> plt.imshow(label_im)        # doctest: +ELLIPSIS
     <matplotlib.image.AxesImage object at ...>
 
-Ahora reasigna etiquetas con ``np.searchsorted``::
+Ahora reasignamos etiquetas con ``np.searchsorted``::
 
     >>> labels = np.unique(label_im)
     >>> label_im = np.searchsorted(labels, label_im)
@@ -795,7 +863,7 @@ Ahora reasigna etiquetas con ``np.searchsorted``::
 
     [:ref:`Python source code <example_plot_measure_data.py>`]
 
-Encuentra una región de interes del objeto encerrado::
+Encuentra una región de interes del objeto::
 
     >>> slice_x, slice_y = ndimage.find_objects(label_im==4)[0]
     >>> roi = im[slice_x, slice_y]
@@ -834,7 +902,8 @@ Ejemplo: bloque promedio::
 
     [:ref:`Python source code <example_plot_block_mean.py>`]
 
-Cuando las regiones son bloques rectangulares, es más eficiente usar un pasos con trucos (:ref:`stride-manipulation-label`).
+Cuando las regiones son bloques regulares, es más eficiente usar 
+`stride tricks` (:ref:`stride-manipulation-label`).
 
 Bloques no espaciados regularmente: promedio radial::
 
@@ -852,6 +921,26 @@ Bloques no espaciados regularmente: promedio radial::
 
     [:ref:`Python source code <example_plot_radial_mean.py>`]
 
+
+.. topic::
+    Ejercicio: segmentación
+
+    * Leemos la imagen de las monedas desde skimage (skimage.data.coins) como un array
+      o desde https://github.com/scikits-image/scikits-image/raw/master/skimage/data/coins.png
+
+    * Mostramos el histograma e intentamos hacer una segmentación del histograma.
+
+    * Intenta con dos métodos de segmentación: un método basado en bordes usando
+      ``skimage.filter.canny`` y ``scipy.ndimage.binary_fill_holes``
+      y un método basado en regiones ``skimage.morphology.watershed``
+      y ``skimage.filter.sobel`` para calcular un mapa de elevaciones.
+
+    * Calcula el tamaño de las monedas.
+
+.. image:: coins.png
+    :align: center
+
+
 * **Otras mediciones** 
 
 Función de correlación, espectro de Fourier/wavelet, etc.
@@ -867,8 +956,8 @@ Un ejemplo con morfología matemática: **granulometría**
     ...     mask = (x - n)**2 + (y - n)**2 <= n**2
     ...     struct[mask] = 1
     ...     return struct.astype(np.bool)
-    ... 
-    >>> 
+    ...
+    >>>
     >>> def granulometry(data, sizes=None):
     ...     s = max(data.shape)
     ...     if sizes == None:
@@ -876,8 +965,8 @@ Un ejemplo con morfología matemática: **granulometría**
     ...     granulo = [ndimage.binary_opening(data, \
     ...         structure=disk_structure(n)).sum() for n in sizes]
     ...     return granulo
-    ... 
-    >>> 
+    ...
+    >>>
     >>> np.random.seed(1)
     >>> n = 10
     >>> l = 256
@@ -885,9 +974,9 @@ Un ejemplo con morfología matemática: **granulometría**
     >>> points = l*np.random.random((2, n**2))
     >>> im[(points[0]).astype(np.int), (points[1]).astype(np.int)] = 1
     >>> im = ndimage.gaussian_filter(im, sigma=l/(4.*n))
-    >>> 
+    >>>
     >>> mask = im > im.mean()
-    >>> 
+    >>>
     >>> granulo = granulometry(mask, sizes=np.arange(2, 19, 4))
 
 .. figure:: auto_examples/images/plot_granulo_1.png
