@@ -1,7 +1,7 @@
 Computación científica con herramientas y flujos de trabajo
 ===========================================================
 
-:autores: Fernando Perez, Emmanuelle Gouillart, Gaël Varoquaux, Valentin Haenel
+:autores: Fernando Pérez, Emmanuelle Gouillart, Gaël Varoquaux, Valentin Haenel
 
 ..
     .. image:: phd053104s.png
@@ -10,14 +10,14 @@ Computación científica con herramientas y flujos de trabajo
 ¿Por qué Python?
 ----------------
 
-Las necesidades de los científicos
-..................................
+¡Cuáles son las necesidades de los científicos?
+...............................................
 
 * Obtener datos (simulación, experimentos)
 
 * Manipular y procesar datos.
 
-* Visualizar resultados... ¡para ver que estamos haciendo!
+* Visualizar resultados... ¡para ver qué estamos haciendo!
 
 * Presentar resultados: generar figuras para reportes o publicaciones y
   hacer presentaciones.
@@ -25,14 +25,14 @@ Las necesidades de los científicos
 Especificaciones
 ................
 
-* Conjunto rico de **ladrillos** correspondientes a métodos numéricos
+* Conjunto completo de **piezas** correspondiente a métodos numéricos
   clásicos o acciones básicas: no queremos re-programar el gráfico de una
   curva, una transformada de Fourier o un algoritmo de ajuste. ¡No
   reinventes la rueda!
 
 * Fácil de aprender: las ciencias de la computación no son ni nuestro trabajo
-  ni nuestra educación. Queremos ser capaces de graficar una curva, suavizar
-  una señal o hacer una transformada de Fourier en pocos minutos.
+  ni nuestra formación. Queremos ser capaces de graficar una curva, suavizar
+  una señal o hacer una transformada de Fourier en unos pocos minutos.
 
 * Fácil comunicación con colaboradores, estudiantes y clientes para hacer del
   código algo vivo dentro de un laboratorio o una compañía: el código debería
@@ -41,12 +41,12 @@ Especificaciones
   al lector del entendimiento matemático o científico del código.
 
 * Código eficiente que se ejecute rápido... pero no es necesario decir que un
-  código muy rápido se vuelve inútil si ocupamos mucho tiempo en escribirlo.
+  código muy rápido se vuelve inútil si perdemos mucho tiempo en escribirlo.
   Por lo tanto, necesitamos rapidez tanto en el desarrollo como en el tiempo
   de ejecución.
 
-* Un ambiente/lenguaje para todo si es posible, para evitar aprender un nuevo
-  software para cada problema nuevo.
+* La idea es evitar tener que aprender un nuevo software para cada problema nuevo.
+  Un ambiente/lenguaje para todo, siempreque sea posible.
 
 Soluciones existentes
 .....................
@@ -74,11 +74,11 @@ Soluciones existentes
 
 * Ventajas:
 
-  * Conjunto de bibliotecas muy completas con numerosos algoritmos para variados
-    tópicos. Rápida ejecución debido a que estas bibliotecas por lo general
+  * Conjunto de bibliotecas muy completas con numerosos algoritmos para temáticas
+    muy diferentes. Rápida ejecución debido a que estas bibliotecas por lo general
     están escritas en un lenguaje compilado.
 
-  * Ambiente placentero de desarrollo: ayuda completa y bien organizada, editor
+  * Cómodo ambiente de desarrollo: ayuda completa y bien organizada, editor
     integrado, etc.
 
   * Soporte comercial disponible.
@@ -88,7 +88,7 @@ Soluciones existentes
   * El lenguaje es pobre y puede llegar a ser restrictivo para usuarios
     avanzados.
 
-  * No es gratuito.
+  * No es gratuito ni libre.
 
 **Otros lenguajes de script: Scilab, Octave, Igor, R, IDL, etc.**
 
@@ -96,16 +96,16 @@ Soluciones existentes
 
   * Son de código abierto, gratuitos o al menos más baratos que Matlab.
 
-  * Algunas características pueden ser muy avanzadas (estadísticas en R,
-    figuras en Igor, etc.).
+  * Algunas características pueden ser muy avanzadas (estadística en R,
+    gráficas en Igor, etc.).
 
 * Desventajas:
 
   * Menos algoritmos disponibles que Matlab y el lenguaje no es más avanzado.
 
-  * Algunos softwares están dedicados a un solo tópico. Por ejemplo, Gnuplot o
+  * Algunos softwares están muy enfocados a una temática concreta. Por ejemplo, Gnuplot o
     xmgrace para graficar curvas. Estos programas son muy poderosos, pero están
-    restringidos a un solo tipo de uso, como gráficos.
+    restringidos a un solo tipo de uso, como por ejemplo para hacer gráficos.
 
 **¿Qué hay de Python?**
 
@@ -117,11 +117,11 @@ Soluciones existentes
   * Lenguaje bien pensado, lo que permite escribir código muy legible y bien
     estructurado: "escribimos el código que pensamos".
 
-  * Existen muchas bibliotecas para otras tareas aparte de cálculo científico
-    (administración de servidores web, acceso al puerto serial, etc.).
+  * Existen muchas bibliotecas para otras tareas, además de para cálculo científico
+    (administración de servidores web, acceso al puerto serie, etc.).
 
   * Software libre y de acceso abierto, ampliamente difundido con una
-    comunidad activa.
+    comunidad activa y vibrante.
 
 * Desventajas:
 
@@ -135,9 +135,9 @@ Bloques de construcción para Python científico
 ----------------------------------------------
 
 Al contrario de Matlab, Scilab o R, Python no viene con un conjunto de
-módulos para cálculo científico. Más adelante están los bloques de
-construcción básicos que pueden ser combinados para obtener un ambiente
-de desarrollo para cálculo científico:
+módulos para cálculo científico. A continuación se muestran los bloques
+o librerías básicas que, correctamente combinados, permiten obtener un 
+completo ambiente de desarrollo para cálculo científico:
 
 * **Python**, un lenguaje computacional genérico y moderno
 
@@ -159,7 +159,7 @@ de desarrollo para cálculo científico:
 
 * **IPython**, una **consola de Python** avanzada http://ipython.org/
 
-* **Numpy** : provee poderosos objetos de **arreglos numéricos** y rutinas
+* **Numpy** : proporciona poderosos objetos de **arrays numéricos** y rutinas
   para manipularlos. http://www.numpy.org/
 
 ..
@@ -188,8 +188,8 @@ de desarrollo para cálculo científico:
   |clear-floats|
 
 
-The interactive workflow: IPython and a text editor
------------------------------------------------------
+El flujo de trabajo interactivo: IPython y un editor de textos
+--------------------------------------------------------------
 
 **Trabajo interactivo para probar y entender algoritmos**: En esta
 sección, describiremos un flujo de trabajo interactivo con
@@ -213,8 +213,8 @@ Iniciar `ipython`:
 
 .. sourcecode:: ipython
 
-    In [1]: print('Hello world')
-    Hello world
+    In [1]: print('Hola mundo')
+    Hola mundo
 
 Obteniendo ayuda usando el operador **?** después de un objeto:
 
@@ -235,39 +235,39 @@ Obteniendo ayuda usando el operador **?** después de un objeto:
 	end:  string appended after the last value, default a newline.
 
 
-Elaboración del algoritmo en un editor
-......................................
+Elaboración del algoritmo en un editor de textos
+................................................
 
-Crea un archivo `my_file.py` en un editor de texto. En EPD (Enthought Python
+Creamos un archivo `mi_fichero.py` en un editor de texto. En EPD (Enthought Python
 Distribution), puedes usar `Scite`, disponible en el menú de inicio. En
 Python(x,y) puedes usar Spyder. En Ubuntu, si todavía no tienes tu editor
 favorito, te aconsejamos instalar `Stani's Python editor`. En el archivo,
 agrega las siguientes líneas::
 
-    s = 'Hello world'
+    s = 'Hola mundo'
     print(s)
 
 Ahora, puedes ejecutarlo en IPython y explorar las variables resultantes:
 
 .. sourcecode:: ipython
 
-    In [1]: %run my_file.py
-    Hello world
+    In [1]: %run mi_fichero.py
+    Hola mundo
 
     In [2]: s
-    Out[2]: 'Hello world'
+    Out[2]: 'Hola mundo'
 
     In [3]: %whos
     Variable   Type    Data/Info
     ----------------------------
-    s          str     Hello world
+    s          str     Hola mundo
 
 
-.. topic:: **De un script a funciones**
+.. topic:: **Desde un script hasta funciones**
 
     Si bien es tentador trabajar solo con scripts, que es un archivo lleno
-    de instrucciones a seguirque se siguen una tras otra, planea evolucionar
-    progresivamente del script a un conjunto de funciones:
+    de instrucciones a seguir que se siguen una tras otra, iremos planeando
+    una evolución progresiva del script hacia un conjunto de funciones:
 
     * Un script no es reutilizable, las funciones sí.
 
@@ -278,25 +278,25 @@ Ahora, puedes ejecutarlo en IPython y explorar las variables resultantes:
 Consejos y trucos de IPython
 ............................
 
-El manual de usuario de IPython contiene mucha información sobre usar
-IPython, pero para iniciarte queremos darte una breve introducción a tres
+El manual de usuario de IPython contiene mucha información sobre cómo usar
+IPython, pero para que puedas iniciarte queremos darte una breve introducción a tres
 características útiles: *historial*, *funciones mágicas* y *autocompletado
 con tabulador*.
 
 Como una consola UNIX, IPython soporta comandos de historial. Teclea *arriba*
-y *abajo* para navegar en los comandos anteriormente ejecutados:
+y *abajo* para reutilizar los comandos anteriormente ejecutados:
 
 .. sourcecode:: ipython
 
     In [1]: x = 10
 
-    In [2]: <UP>
+    In [2]: <cursor arriba>
 
     In [2]: x = 10
 
 IPython soporta las llamadas funciones *mágicas* anteponiendo a  un comando
 el caracter ``%``. Por ejemplo, las funciones ``run`` y ``whos`` de la
-sección anterior son funciones mágicas. Ten en cuenta que, el ajuste
+sección anterior son funciones mágicas. Tened en cuenta que, el ajuste
 ``automagic``, que está activado por defecto, te permite omitir el signo ``%``
 predecesor al comando. De esta forma, puedes solo escribir la función
 mágica y funcionará.
@@ -319,7 +319,7 @@ Otras funciones mágicas útiles son:
       10000000 loops, best of 3: 39 ns per loop
 
 * ``%cpaste`` te permite pegar código, especialmente aquel que venga de un
-  sitio web que ha sido precedido por el promp estándar de Python (o sea
+  sitio web que ha sido precedido por el prompt estándar de Python (o sea
   ``>>>``) o con un prompt de IPython (por ejemplo: ``In [3]:``):
 
   .. sourcecode:: ipython
@@ -362,7 +362,7 @@ Otras funciones mágicas útiles son:
 
 .. note::
 
-    El ayuda memoria incorporado en IPython es accesible a través de la
+    La chuleta (o cheat-sheet) de IPython es accesible a través de la
     función mágica ``%quickref``.
 
 .. note::
@@ -398,7 +398,7 @@ los alias disponibles cuando se escribe ``alias``:
     ('rmdir', 'rmdir')]
 
 Finalmente, nos gustaría mencionar la característica de *autocompletado con
-tabulador*, cuya descripción citamos diréctamente desde el manual de IPython:
+tabulador*, cuya descripción la extraemos directamente del manual original de IPython:
 
 *El autocompletado con tabulador, especialmente para atributos, es una
 manera conveniente de explorar la estructura de cualquier objeto con el
