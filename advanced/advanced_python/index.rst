@@ -657,23 +657,19 @@ Copiando el docstring (documentación) y otros atributos de la función original
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Cuando un decorador devuelve una nueva función que reemplaza a
-la función original nos encontramos como consecuencia que, desafortunadamente,
+la función original nos encontramos que, desafortunadamente,
 hemos perdido el nombre original de la función, el docstring original y la lista 
 de argumentos originales. Podríamos traspasar todos esos atributos de la función original
-
-When a new function is returned by the decorator to replace the
-original function, an unfortunate consequence is that the original
-function name, the original docstring, the original argument list are
-lost. Those attributes of the original function can partially be "transplanted"
-to the new function by setting ``__doc__`` (the docstring), ``__module__``
-and ``__name__`` (the full name of the function), and
-``__annotations__`` (extra information about arguments and the return
-value of the function available in Python 3). This can be done
-automatically by using `functools.update_wrapper`.
+a la nueva función poniendo ``__doc__`` (el docstring), ``__module__``
+y ``__name__`` (el nombre completo de la función) y
+``__annotations__`` (información extra sobre los argumentos y los valores
+de retorno de la función disponible en Python 3). Esto se puede hacer de forma automática
+usando `functools.update_wrapper`.
 
 .. sidebar:: `functools.update_wrapper(wrapper, wrapped) <functools.update_wrapper>`
 
-   "Update a wrapper function to look like the wrapped function."
+   "Actualiza una función envoltorio (wrapper) para que se parezca a la función que 
+    está envolviendo (wrapped function)."
 
 >>> import functools
 >>> def better_replacing_decorator_with_args(arg):
@@ -697,39 +693,38 @@ doing decoration, abc
 >>> print function.__doc__
 extensive documentation
 
-One important thing is missing from the list of attributes which can
-be copied to the replacement function: the argument list. The default
-values for arguments can be modified through the ``__defaults__``,
-``__kwdefaults__`` attributes, but unfortunately the argument list
-itself cannot be set as an attribute. This means that
-``help(function)`` will display a useless argument list which will be
-confusing for the user of the function. An effective but ugly way
-around this problem is to create the wrapper dynamically, using
-``eval``. This can be automated by using the external ``decorator``
-module. It provides support for the ``decorator`` decorator, which takes a
-wrapper and turns it into a decorator which preserves the function
-signature.
+Una cosa importante que echamos en falta en la lista de atributos y que
+podría ser copiada en la función de reemplazo: la lista de argumentos.
+Los valores por defecto para los argumentos se pueden modificar a través
+de los atributos ``__defaults__``, ``__kwdefaults__`` pero, desafortunadamente,
+la lista de argumentos no puede ser un atributo por si misma. Esto significa que
+``help(function)`` mostrará una lista de argumentos poco útil que será confusa para
+el usuario de la función. Una forma fea pero efectiva para sortear este problema
+sería crear un ``wrapper`` de forma dinámica usando ``eval``. Esto se podría
+automatizar usando el módulo externo ``decorator``. Este módulo proporciona
+soporte para el decorador ``decorator``, que toma un ``wrapper`` y lo convierte
+en un decorador que preserva la ``firma`` de la función.
 
-To sum things up, decorators should always use ``functools.update_wrapper``
-or some other means of copying function attributes.
+Resumiendo, los decoradores deberían usar siempre ``functools.update_wrapper``
+o cualquier otra manera de poder copiar los atributos de las funciones.
 
-Examples in the standard library
+Ejemplos en la librería estándar
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-First, it should be mentioned that there's a number of useful
-decorators available in the standard library. There are three decorators
-which really form a part of the language:
+Primero de todo deberíamos destacar el hecho de que hay muchos
+decoradores útiles en la librería estándar. Hay tres decoradores
+que son parte importante del lenguaje:
 
-- `classmethod` causes a method to become a "class method",
-  which means that it can be invoked without creating an instance of
-  the class. When a normal method is invoked, the interpreter inserts
-  the instance object as the first positional parameter,
-  ``self``. When a class method is invoked, the class itself is given
-  as the first parameter, often called ``cls``.
+- `classmethod` provoca que un método se convierta en una "class method",
+  que significa que un método pueda ser invocado sin necesidad de crear
+  una instancia de la clase. Cuando se invoca un método normal, el intérprete
+  inserta el objeto instancia como el primer parámetro posicional ``self``. 
+  Cuando se invoca un ``class method``, la clase misma será el primer parámetro,
+  a menudo llamado ``cls``.
 
-  Class methods are still accessible through the class' namespace, so
-  they don't pollute the module's namespace. Class methods can be used
-  to provide alternative constructors::
+  Los ``Class methods`` siguen siendo accesibles a través del ``namespace`` de la clase
+  y de esa forma no se contamina el ``namespace`` del módulo. Los ``Class methods``
+  pueden ser usados como contructores alternativos::
 
     class Array(object):
         def __init__(self, data):
@@ -740,18 +735,18 @@ which really form a part of the language:
             data = numpy.load(file)
             return cls(data)
 
-  This is cleaner then using a multitude of flags to ``__init__``.
+  Esta forma es más limpia que usar múltiples ``flags`` para ``__init__``.
 
-- `staticmethod` is applied to methods to make them "static",
-  i.e. basically a normal function, but accessible through the class
-  namespace. This can be useful when the function is only needed
-  inside this class (its name would then be prefixed with ``_``), or when we
-  want the user to think of the method as connected to the class,
-  despite an implementation which doesn't require this.
+- `staticmethod` se aplica a métodos para convertirlos en estáticos,
+  i.e. básicamente una función normal pero accessibles a través del 
+  namespace de la clase. Esto resulta útil cuando la función solo es necesaria
+  dentro de la clase (su nombre estaría prefijado con ``_``) o cuando queremos 
+  que el usuario piense en el método conectado/relacionado con su clase, a pesar
+  de que esto no es un requerimiento de su implementación.
 
-- `property` is the pythonic answer to the problem of getters
-  and setters. A method decorated with ``property`` becomes a getter
-  which is automatically called on attribute access.
+- `property` es la respuesta pythónica al problema de los ``getters`` y los 
+  ``setters``. Un método decorado con ``property`` se convierte en un ``getter``
+  que es invocado automáticamente en el acceso al atributo.
 
   >>> class A(object):
   ...   @property
@@ -763,14 +758,14 @@ which really form a part of the language:
   >>> A().a
   'a value'
 
-  In this example, ``A.a`` is an read-only attribute. It is also
-  documented: ``help(A)`` includes the docstring for attribute ``a``
-  taken from the getter method. Defining ``a`` as a property allows it
-  to be a calculated on the fly, and has the side effect of making it
-  read-only, because no setter is defined.
+  En este ejemplo, ``A.a`` es un atributo de solo lectura. Además está documentado:
+  ``help(A)`` incluye el docstring para el atributo ``a``
+  tomado del método ``getter``. Si definimos ``a`` como una propiedad podremos calcularla
+  al vuelo y tiene el efecto colateral de hacerla de solo lectura ya que no se define
+  ningún ``setter``.
 
-  To have a setter and a getter, two methods are required,
-  obviously. Since Python 2.6 the following syntax is preferred::
+  Para disponer de un ``setter`` y un ``getter``se requieren dos métodos,
+  obviamente. A partir de Python 2.6 la sintaxis de preferencia sería la siguiente::
 
     class Rectangle(object):
         def __init__(self, edge):
@@ -788,23 +783,21 @@ which really form a part of the language:
         def area(self, area):
             self.edge = area ** 0.5
 
-  The way that this works, is that the ``property`` decorator replaces
-  the getter method with a property object. This object in turn has
-  three methods, ``getter``, ``setter``, and ``deleter``, which can be
-  used as decorators. Their job is to set the getter, setter and
-  deleter of the property object (stored as attributes ``fget``,
-  ``fset``, and ``fdel``). The getter can be set like in the example
-  above, when creating the object. When defining the setter, we
-  already have the property object under ``area``, and we add the
-  setter to it by using the ``setter`` method. All this happens when
-  we are creating the class.
+  La forma de funcionar de esto sería la siguiente: el decorador ``property`` 
+  reemplaza el método ``getter`` con un objeto ``property``. Este objeto dispone de
+  tres métodos, ``getter``, ``setter`` y ``deleter``, que podrían ser usados
+  como decoradores. Su trabajo es establecer el ``getter``, el ``setter`` 
+  y el ``deleter`` del objeto ``property`` (almacenados como los atributos ``fget``,
+  ``fset`` y ``fdel``). El ``getter`` se puede establecer como en el ejemplo
+  de más arriba, cuando se crea el objeto. Cuando se define el `` setter`` ya se dispone
+  del objeto ``property`` en ``area`` y le añadimos el ``setter`` usando el método ``setter``. 
+  Todo esto ocurre cuando estamos creando la clase.
 
-  Afterwards, when an instance of the class has been created, the
-  property object is special. When the interpreter executes attribute
-  access, assignment, or deletion, the job is delegated to the methods
-  of the property object.
+  Después de que se haya creado una instancia de la clase, el objeto ``property`` 
+  es un objeto especial. Cuando el intérprete ejecuta el acceso al atributo, la asignación o la
+  eliminación el trabajo se delega a los métodos del objeto ``property``.
 
-  To make everything crystal clear, let's define a "debug" example::
+  Para clarificar lo anterior vamos a definir un ejemplo "debug"::
 
     >>> class D(object):
     ...    @property
@@ -837,19 +830,18 @@ which really form a part of the language:
     getting 1
     1
 
-  Properties are a bit of a stretch for the decorator syntax. One of the
-  premises of the decorator syntax --- that the name is not duplicated
-  --- is violated, but nothing better has been invented so far. It is
-  just good style to use the same name for the getter, setter, and
-  deleter methods.
+  Hay que echarle un poco de imaginación para relacionar las ``Properties`` y la sintaxis de un decorador. 
+  Se viola una de las premisas de la sintaxis de los decoradores --- en donde el nombre no está duplicado
+  --- pero no se ha conseguido inventar nada mejor. Es un buen uso usar el mismo nombre para los métodos
+  ``getter``, ``setter`` y ``deleter``.
 
-  .. property documentation mentions that this only works for
-     old-style classes, but this seems to be an error.
+  .. en la documentación de ``property`` se menciona que esto solo funciona para las
+     clases antiguas (old-style) pero parece que alquien ha cometido un error.
 
-Some newer examples include:
+Algunos ejemplos más nuevos incluirían:
 
-- `functools.lru_cache` memoizes an arbitrary function
-  maintaining a limited cache of arguments:answer pairs (Python 3.2)
+- `functools.lru_cache` memoriza una función arbitraria
+  manteniendo una ``caché`` limitada de argumentos:respuesta pares (Python 3.2)
 
 - `functools.total_ordering` is a class decorator which fills in
   missing ordering methods
@@ -859,8 +851,8 @@ Some newer examples include:
 
 
 ..
-  - `packaging.pypi.simple.socket_timeout` (in Python 3.3) adds
-  a socket timeout when retrieving data through a socket.
+  - `packaging.pypi.simple.socket_timeout` (en Python 3.3) agrega un ``socket`` 
+     ``timeout`` cuando se descargan datos a través de un ``socket``.
 
 
 Deprecation of functions
