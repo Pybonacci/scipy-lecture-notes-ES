@@ -1088,22 +1088,22 @@ soporte en más lugares:
   - `nogil` |==>| evitar el problema del GIL temporalmente (solo en cython :( )
 
 
-Catching exceptions
-^^^^^^^^^^^^^^^^^^^
+Capturando excepciones
+^^^^^^^^^^^^^^^^^^^^^^
 
-When an exception is thrown in the ``with``-block, it is passed as
-arguments to ``__exit__``. Three arguments are used, the same as
-returned by :py:func:`sys.exc_info`: type, value, traceback. When no
-exception is thrown, ``None`` is used for all three arguments.  The
-context manager can "swallow" the exception by returning a true value
-from ``__exit__``. Exceptions can be easily ignored, because if
-``__exit__`` doesn't use ``return`` and just falls of the end,
-``None`` is returned, a false value, and therefore the exception is
-rethrown after ``__exit__`` is finished.
+Cuando se lanza una excepción en el bloque ``with``, es pasada como
+argumentos a ``__exit__``. Se usan tres argumentos, el mismo que es
+devuelto por :py:func:`sys.exc_info`: tipo, valor y `traceback`. Cuando no se lanza
+una excepción, se usará ``None`` para los tres argumentos.  El gestor de contexto
+puede "tragarse" la excepción devolviendo un valor real desde ``__exit__``. 
+Las excepciones son sencillas de ignorar ya que si
+``__exit__`` no usa ``return`` y llega la final se devolverá ``None``, 
+un valor falso, y, por tanto, la excepción será relanzada después de que
+finalice ``__exit__``.
 
-The ability to catch exceptions opens interesting possibilities. A
-classic example comes from unit-tests --- we want to make sure that
-some code throws the right kind of exception::
+La habilidad para capturar excepciones proporciones posibilidades muy interesantes. 
+Un ejemplo clásico proviene de ``unit-tests`` --- queremos asegurarnos que determinado
+código lanza determinada excepción de forma correcta::
 
   class assert_raises(object):
       # based on pytest and unittest.TestCase
@@ -1121,18 +1121,18 @@ some code throws the right kind of exception::
   with assert_raises(KeyError):
       {}['foo']
 
-Using generators to define context managers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Usindo generadores para definir gestores de contexto
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When discussing generators_, it was said that we prefer generators to
-iterators implemented as classes because they are shorter, sweeter,
-and the state is stored as local, not instance, variables. On the
-other hand, as described in `Bidirectional communication`_, the flow
-of data between the generator and its caller can be bidirectional.
-This includes exceptions, which can be thrown into the
-generator. We would like to implement context managers as special
-generator functions. In fact, the generator protocol was designed to
-support this use case.
+Cuando discutimos sobre los generadores_, se dijo que se se prefería los generadores
+a los iteradores implementados como clases debido a que son más cortos, más dulces
+y el estado se almacena como local, no instancias o variables.
+or otra parte, como se describió en `comunicación bidireccional`_,
+el flujo de datos entre el generador y el òbjeto`que lo llama puede ser
+bidireccional. Esto incluye las excepciones, las cuales pueden ser lanzadas
+en un generador. Nos gustaría implementar gestores de contexto como funciones generadoras
+especiales. De hecho, el protocolo de los generadores se diseño para
+soportar estos casos de uso.
 
 .. code-block:: python
 
@@ -1144,19 +1144,18 @@ support this use case.
       finally:
 	  <cleanup>
 
-The `contextlib.contextmanager` helper takes a generator and turns it
-into a context manager. The generator has to obey some rules which are
-enforced by the wrapper function --- most importantly it must
-``yield`` exactly once. The part before the ``yield`` is executed from
-``__enter__``, the block of code protected by the context manager is
-executed when the generator is suspended in ``yield``, and the rest is
-executed in ``__exit__``. If an exception is thrown, the interpreter
-hands it to the wrapper through ``__exit__`` arguments, and the
-wrapper function then throws it at the point of the ``yield``
-statement. Through the use of generators, the context manager is
-shorter and simpler.
+El `helper` `contextlib.contextmanager` toma un generador y lo convierte
+en un gestor de contenidos. El generador debe obedecer algunas normas
+forzadas por la función envoltorio (`wrapper`) --- debe usar
+``yield`` exactamente una única vez. La parte anterior al ``yield`` 
+se ejecuta a partir de ``__enter__``, el bloque de código protegido
+por el gestor de contexto se suspende en ``yield`` y el resto se
+ejecuta en ``__exit__``. Si se lanza una excepción, el intérprete se lo pasa
+al `wrapper` a través de los argumentos de ``__exit__`` y la función
+`wrapper` lo apunta hacia la declaración ``yield``. 
+A través del uso de generadores los gestores de contexto son más cortos y simples.
 
-Let's rewrite the ``closing`` example as a generator::
+Vamos a reescribir el ejemplo ``closing`` como un generador::
 
   @contextlib.contextmanager
   def closing(obj):
@@ -1165,7 +1164,7 @@ Let's rewrite the ``closing`` example as a generator::
       finally:
 	  obj.close()
 
-Let's rewrite the ``assert_raises`` example as a generator::
+Vamos a reescribir el ejemplo ``assert_raises`` como un generador::
 
   @contextlib.contextmanager
   def assert_raises(type):
@@ -1178,4 +1177,4 @@ Let's rewrite the ``assert_raises`` example as a generator::
       else:
 	  raise AssertionError('exception expected')
 
-Here we use a decorator to turn generator functions into context managers!
+¡Aquí usamos un decorador para transformar un generador en un gestor de contexto!
