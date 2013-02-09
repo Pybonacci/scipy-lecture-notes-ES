@@ -855,12 +855,12 @@ Algunos ejemplos más nuevos incluirían:
      ``timeout`` cuando se descargan datos a través de un ``socket``.
 
 
-Deprecation of functions
-^^^^^^^^^^^^^^^^^^^^^^^^
+Funciones obsoletas (Deprecation of functions)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Let's say we want to print a deprecation warning on stderr on the
-first invocation of a function we don't like anymore. If we don't want
-to modify the function, we can use a decorator::
+Digamos que queremos mostrar un aviso de que una función será discontinuada (``deprecating``)
+en ``stderr`` cuando invoquemos por primera vez una función que ya no queremos. Si no queremos
+modificar la función podríamos usar un decorador::
 
   class deprecated(object):
       """Print a deprecation warning once on first use of the function.
@@ -883,7 +883,7 @@ to modify the function, we can use a decorator::
 
 .. TODO: use update_wrapper here
 
-It can also be implemented as a function::
+Esto se puede implementar también como una función::
 
   def deprecated(func):
       """Print a deprecation warning once on first use of the function.
@@ -902,12 +902,12 @@ It can also be implemented as a function::
           return func(*args, **kwargs)
       return wrapper
 
-A ``while``-loop removing decorator
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Un decorador para eliminar bucles ``while``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Let's say we have function which returns a lists of things, and this
-list created by running a loop. If we don't know how many objects will
-be needed, the standard way to do this is something like::
+Pensemos en una función que nos devuelve una lista de cosas mediante un bucle
+while dentro de la función. Si desconocemos cuantos objetos serán necesarios, 
+una forma estándar de hacer esto sería::
 
   def find_answers():
       answers = []
@@ -918,20 +918,20 @@ be needed, the standard way to do this is something like::
 	  answers.append(ans)
       return answers
 
-This is fine, as long as the body of the loop is fairly compact. Once
-it becomes more complicated, as often happens in real code, this
-becomes pretty unreadable. We could simplify this by using ``yield``
-statements, but then the user would have to explicitly call
-``list(find_answers())``.
+Esto es correcto mientras el cuerpo del bucle sea compacto. Desde el momento en
+que el bucle se convierte en algo más complejo, como a menudo sucede en
+el código real, tendremos algo poco legible. Podríamos simplificar eso usando
+una delcaración ``yield`` pero entonces el usuario tendría que hacer una llamada
+explícita a ``list(find_answers())``.
 
-We can define a decorator which constructs the list for us::
+Podemos definir un decorador que nos contruya la lista::
 
   def vectorized(generator_func):
       def wrapper(*args, **kwargs):
 	  return list(generator_func(*args, **kwargs))
       return functools.update_wrapper(wrapper, generator_func)
 
-Our function then becomes::
+Y nuestra función se convertirá en::
 
   @vectorized
   def find_answers():
@@ -941,12 +941,12 @@ Our function then becomes::
 	      break
 	  yield ans
 
-A plugin registration system
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Un sistema de registro de ``plugins``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This is a class decorator which doesn't modify the class, but just
-puts it in a global registry. It falls into the category of decorators
-returning the original object::
+Esta es una clase decoradora que no modifica la clase, simplemente la coloca en un 
+registro global. Pertenece a la categoría de decoradores que 
+devuelven la función original::
 
   class WordProcessor(object):
       PLUGINS = []
@@ -964,24 +964,23 @@ returning the original object::
       def cleanup(self, text):
           return text.replace('&mdash;', u'\N{em dash}')
 
-Here we use a decorator to decentralise the registration of
-plugins. We call our decorator with a noun, instead of a verb, because
-we use it to declare that our class is a plugin for
-``WordProcessor``. Method ``plugin`` simply appends the class to the
-list of plugins.
+Aquí hemos usado un decorador para descentralizar el registro de 
+plugins. Llamamos a nuestro decorador con un nombre en lugar de con un verbo ya que lo usamos
+para declarar que nuestra clase es un plugin para ``WordProcessor``. El método 
+``plugin`` simplemente anexa la clase a la lista de plugins.
 
-A word about the plugin itself: it replaces HTML entity for em-dash
-with a real Unicode em-dash character. It exploits the `unicode
-literal notation`_ to insert a character by using its name in the
-unicode database ("EM DASH"). If the Unicode character was inserted
-directly, it would be impossible to distinguish it from an en-dash in
-the source of a program.
+Unas palabras acerca del propio plugin: reemplaza entidades HTML para enfatizar el texto 
+(``em-dash``) con el carácter Unicode para enfatizar. Se aprovecha de la
+'notación literal unicode'_ para insertar un carácter usando su nombre en la 
+base de datos unicode ("EM DASH"). Si el carácter Unicode fue introducido
+directamente sería imposible distinguirlo de un texto enfatizado en la fuente
+del programa.
 
-.. _`unicode literal notation`:
+.. _`notación literal unicode`:
    http://docs.python.org/2.7/reference/lexical_analysis.html#string-literals
 
-More examples and reading
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Más ejemplos y lecturas recomendadas
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * :pep:`318` (function and method decorator syntax)
 * :pep:`3129` (class decorator syntax)
@@ -999,18 +998,17 @@ More examples and reading
 .. _`Python Decorators III`: http://www.artima.com/weblogs/viewpost.jsp?thread=241209
 
 
-Context managers
-================
+Gestores de contexto (``context managers``)
+===========================================
 
-A context manager is an object with `__enter__ <object.__enter__>` and
-`__exit__ <object.__exit__>` methods which can be used in the :compound:`with`
-statement::
+Un gestor de contexto es un objeto con los métodos `__enter__ <object.__enter__>` y
+`__exit__ <object.__exit__>` los cuales pueden ser usados en la declaración
+:compound:`with`::
 
   with manager as var:
       do_something(var)
 
-is in the simplest case
-equivalent to ::
+es, en el más simple de los casos, equivalente a::
 
   var = manager.__enter__()
   try:
@@ -1018,28 +1016,27 @@ equivalent to ::
   finally:
       manager.__exit__()
 
-In other words, the context manager protocol defined in :pep:`343`
-permits the extraction of the boring part of a
-:compound:`try..except..finally <try>` structure into a separate class
-leaving only the interesting ``do_something`` block.
+En otras palabras, el protocolo de gestor de contextos definidos en el :pep:`343`
+permite la extracción de la parte aburrida de la estructura
+:compound:`try..except..finally <try>` en una clase separada manteniendo solo
+el bloque de interés ``do_something``.
 
-1. The `__enter__ <object.__enter__>` method is called first.  It can
-   return a value which will be assigned to ``var``.
-   The ``as``-part is optional: if it isn't present, the value
-   returned by ``__enter__`` is simply ignored.
-2. The block of code underneath ``with`` is executed.  Just like with
-   ``try`` clauses, it can either execute successfully to the end, or
-   it can :simple:`break`, :simple:`continue`` or :simple:`return`, or
-   it can throw an exception. Either way, after the block is finished,
-   the `__exit__ <object.__exit__>` method is called.
-   If an exception was thrown, the information about the exception is
-   passed to ``__exit__``, which is described below in the next
-   subsection. In the normal case, exceptions can be ignored, just
-   like in a ``finally`` clause, and will be rethrown after
-   ``__exit__`` is finished.
+1. Primero se llama al método `__enter__ <object.__enter__>`. Puede devolver un
+   valor que será asignado a ``var``.
+   La parte ``as`` es opcional: si no está presente, el valor devuelto
+   por ``__enter__`` será ignorado.
+2. El bloque de código bajo ``with`` se ejecutará.  Como si fueran condiciones
+   ``try``. Se podrá ejecutar con éxito hasta el final o, si algo falla, puede
+   :simple:`break`, :simple:`continue`` o :simple:`return` o
+   lanzar una excepción. Pase lo que pase, una vez que el bloque ha finalizado, se 
+   producirá una llamada al método `__exit__ <object.__exit__>`.
+   Si se lanzó una excepción, la información se manda a ``__exit__``, el cual se describe
+   en la siguiente subsección. En el caso normal, las excepciones podrían ser ignoradas
+   como si fueran una condición ``finally`` y serían relanzadas después de que
+   finalice ``__exit__``.
 
-Let's say we want to make sure that a file is closed immediately after
-we are done writing to it::
+Pensemos que nos queremos asegurar de que un fichero se ha cerrado inmediatamente
+después de que hayamos escrito en él::
 
   >>> class closing(object):
   ...   def __init__(self, obj):
@@ -1051,44 +1048,44 @@ we are done writing to it::
   >>> with closing(open('/tmp/file', 'w')) as f:
   ...   f.write('the contents\n')
 
-Here we have made sure that the ``f.close()`` is called when the
-``with`` block is exited. Since closing files is such a common
-operation, the support for this is already present in the ``file``
-class. It has an ``__exit__`` method which calls ``close`` and can be
-used as a context manager itself::
+Aquí hemos hecho que la llamada a ``f.close()`` se haga después de que se salga 
+del bloque ``with``. Ya que el cerrar ficheros es una operación tan común,
+el soporte para esto ya está presente en la clase ``file``. 
+Dispone de un método ``__exit__`` que llama a ``close`` y que podría
+ser usado como un gestor de contexto::
 
   >>> with open('/tmp/file', 'a') as f:
   ...   f.write('more contents\n')
 
-The common use for ``try..finally`` is releasing resources. Various
-different cases are implemented similarly: in the ``__enter__``
-phase the resource is acquired, in the ``__exit__`` phase it is
-released, and the exception, if thrown, is propagated. As with files,
-there's often a natural operation to perform after the object has been
-used and it is most convenient to have the support built in. With each
-release, Python provides support in more places:
+El uso común de ``try..finally`` está liberando recursos. Se han implementado
+diferentes casos: en la fase ``__enter__`` se adquiere el recurso y en la fase
+``__exit__``  se libera el recurso. La excepción, en el caso de que se lanzase,
+se propagaría. De la misma forma que lo visto para los ficheros, existen otras
+operaciones naturales a relaizar después de que el objeto haya sido usado y es más
+conveniente tener el soporte ya creado. Con cada lanzamiento, Python proporciona
+soporte en más lugares:
 
-* all file-like objects:
+* todos los objetos similares a ficheros:
 
-  - `file` |==>| automatically closed
+  - `file` |==>| cerrado automáticamente
   - `fileinput`, `tempfile` (py >= 3.2)
   - `bz2.BZ2File`, `gzip.GzipFile`,
     `tarfile.TarFile`, `zipfile.ZipFile`
-  - `ftplib`, `nntplib` |==>| close connection (py >= 3.2 or 3.3)
-* locks
+  - `ftplib`, `nntplib` |==>| cierra conexión (py >= 3.2 o 3.3)
+* cierres (`locks`)
 
-  - `multiprocessing.RLock` |==>| lock and unlock
+  - `multiprocessing.RLock` |==>| cierra y apertura
   - `multiprocessing.Semaphore`
-  - `memoryview` |==>| automatically release (py >= 3.2 and 2.7)
-* `decimal.localcontext` |==>| modify precision of computations temporarily
-* `_winreg.PyHKEY <_winreg.OpenKey>` |==>| open and close hive key
-* `warnings.catch_warnings` |==>| kill warnings temporarily
-* `contextlib.closing` |==>| the same as the example above, call ``close``
-* parallel programming
+  - `memoryview` |==>| lanzamiento automático (py >= 3.2 y 2.7)
+* `decimal.localcontext` |==>| modifica la precisión de cálculos de forma temporal
+* `_winreg.PyHKEY <_winreg.OpenKey>` |==>| abre y cierra la `hive key`
+* `warnings.catch_warnings` |==>| deshabilita temporalmente los avisos
+* `contextlib.closing` |==>| lo mismo que en el ejemplo de más arriba, llama a ``close``
+* programación paralela
 
-  - `concurrent.futures.ThreadPoolExecutor` |==>| invoke in parallel then kill thread pool (py >= 3.2)
-  - `concurrent.futures.ProcessPoolExecutor` |==>| invoke in parallel then kill process pool (py >= 3.2)
-  - `nogil` |==>| solve the GIL problem temporarily (cython only :( )
+  - `concurrent.futures.ThreadPoolExecutor` |==>| invocar en paralelo y después matar el `thread pool` (py >= 3.2)
+  - `concurrent.futures.ProcessPoolExecutor` |==>| invocar en paralelo y después matar el `process pool` (py >= 3.2)
+  - `nogil` |==>| evitar el problema del GIL temporalmente (solo en cython :( )
 
 
 Catching exceptions
