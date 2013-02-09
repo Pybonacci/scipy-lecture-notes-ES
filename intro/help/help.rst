@@ -1,19 +1,19 @@
 .. _help:
 
-Getting help and finding documentation
-=========================================
+Obteniendo ayuda y buscando en la documentación
+===============================================
 
 .. only:: latex
 
-    :author: Emmanuelle Gouillart
+    :autor: Emmanuelle Gouillart
 
-Rather than knowing all functions in Numpy and Scipy, it is important to
-find rapidly information throughout the documentation and the available
-help. Here are some ways to get information:
+Mejor que conocer todas las funciones existentes en Numpy y en Scipy sería más importante
+e interesante encontrar de forma rápida a través de la documentación y de la ayuda
+disponible. Aquí encontrarás algunas formas de encontrar información:
 
-* In Ipython, ``help function`` opens the docstring of the function. Only
-  type the beginning of the function's name and use tab completion to
-  display the matching functions.
+* En Ipython, ``help function`` abre el `docstring` de la función. Solo has de teclear el
+  principio del nombre de la función y después pulsar tab para que se muestre en pantalla
+  las posibles funciones que estamos buscando.
 
   .. sourcecode:: ipython
   
@@ -23,67 +23,66 @@ help. Here are some ways to get information:
       
       In [204]: help np.vander
 	
-In Ipython it is not possible to open a separated window for help and
-documentation; however one can always open a second ``Ipython`` shell
-just to display help and docstrings...
+En Ipython no es posible abrir una ventana aparte para mostrar la ayuda y la
+documentación; sin embargo siempre podríamos abrir una segunda consola ``Ipython``
+para mostrar únicamente la ayuda y `docstrings`...
 
-* Numpy's and Scipy's documentations can be browsed online on
-  http://docs.scipy.org/doc. The ``search`` button is quite useful inside
-  the reference documentation of the two packages
-  (http://docs.scipy.org/doc/numpy/reference/ and
+* Se puede navegar online en las documentaciones de Numpy y de Scipy en
+  http://docs.scipy.org/doc. El botón ``search`` localizado en la documentación de refencia
+  de ambos paquetes es muy útil
+  (http://docs.scipy.org/doc/numpy/reference/ y
   http://docs.scipy.org/doc/scipy/reference/). 
 
-  Tutorials on various topics as well as the complete API with all
-  docstrings are found on this website.
+  Tutoriales sobre varios temas además de la API completa con todos los
+  `docstrings` se puede encontrar en el siguiente sitio web.
 
 
   .. image:: scipy_doc.png
      :align: center
      :scale: 80
 
-* Numpy's and Scipy's documentation is enriched and updated on a regular
-  basis by users on a wiki http://docs.scipy.org/numpy/. As a result,
-  some docstrings are clearer or more detailed on the wiki, and you may
-  want to read directly the documentation on the wiki instead of the
-  official documentation website. Note that anyone can create an account on
-  the wiki and write better documentation; this is an easy way to
-  contribute to an open-source project and improve the tools you are
-  using!
+* La socumentación de Numpy y de Scipy se completa y actualiza de forma regular por 
+  los usuarios en la wiki http://docs.scipy.org/numpy/. Como resultado,
+  algunos `docstrings` están más claros y detallados en la wiki y podrías leer
+  directamente la documentación en la wiki en lugar de usar la documentación oficial. 
+  Hay que tener en cuenta que cualquiera puede crearuna cuenta en la wiki y escribir
+  mejor documentación; ¡esta es una forma sencilla de contribuir a un proyecto
+  de código libre y ayudar a mejorar las herramientas que usas!
 
   .. image:: docwiki.png
      :align: center
      :scale: 80
 
-* Scipy's cookbook http://www.scipy.org/Cookbook gives recipes on many
-  common problems frequently encountered, such as fitting data points,
-  solving ODE, etc. 
+* El recetario (`cookbook`) de Scipy http://www.scipy.org/Cookbook proporciona recetas
+  para muchos de los problemas que nos encontramos a menudo, como el ajuste de datos,
+  resolver ecuaciones diferenciales ordinarias, etc. 
 
 
-* Matplotlib's website http://matplotlib.sourceforge.net/ features a very
-  nice **gallery** with a large number of plots, each of them shows both
-  the source code and the resulting plot. This is very useful for
-  learning by example. More standard documentation is also available. 
+* La web de Matplotlib http://matplotlib.sourceforge.net/ dispone de una
+  **galeria* con un gran número de gráficos y ejemplos con el código fuente y el
+  gráfico resultante. Esto es muy útil aprender mediante ejemplos. También se encuentra 
+  disponible la documentación estándar. 
 
 
   .. image:: matplotlib.png
      :align: center
      :scale: 80
 
-* Mayavi's website
+* El sitio web de Mayavi
   http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/
-  also has a very nice gallery of examples
+  también dispone de una galería de ejemplos
   http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/auto/examples.html
-  in which one can browse for different visualization solutions.
+  en la cual podemos navegar a través de diferentes soluciones de visualización.
 
   .. image:: mayavi_website.png
      :align: center
      :scale: 80
 
-Finally, two more "technical" possibilities are useful as well:
+Finalmente, también serían útiles dos posibilidades más "técnicas":
 
-* In Ipython, the magical function ``%psearch`` search for objects
-  matching patterns. This is useful if, for example, one does not know
-  the exact name  of a function.
+* En Ipython, la función mágica ``%psearch`` busca objetos que coincidan
+  con los patrones de búsqueda. Esto es útil, por ejemplo, cuando desconocemos
+  el nombre exacto de una función.
 
 
   .. sourcecode:: ipython
@@ -94,7 +93,7 @@ Finally, two more "technical" possibilities are useful as well:
       np.diagflat
       np.diagonal
 
-* numpy.lookfor looks for keywords inside the docstrings of specified modules.
+* numpy.lookfor busca por palabras clave dentro de los `docstrings` de módulos específicos.
 
   .. sourcecode:: ipython
   
@@ -124,20 +123,19 @@ Finally, two more "technical" possibilities are useful as well:
 
 
 
-* If everything listed above fails (and Google doesn't have the
-  answer)... don't despair! Write to the mailing-list suited to your
-  problem: you should have a quick answer if you describe your problem
-  well. Experts on scientific python often give very enlightening
-  explanations on the mailing-list.
+* Si todo lo anterior falla (y Google no tiene la respuesta)... 
+  ¡no hay que desesperarse! Escribe a la lista de correo que se 
+  ajuste a tu problema: obtendrás una rápida respuesta si defines correctamente
+  tu problema. A menudo, expertos en `python científico` ofrecen explicaciones
+  muy clarificadoras en las listas de correo.
 
-    * **Numpy discussion** (numpy-discussion@scipy.org): all about numpy
-      arrays, manipulating them, indexation questions, etc.
+    * **Numpy discussion** (numpy-discussion@scipy.org): todo acerca de arrays
+      numpy, como manipularlos, preguntas sobre indexación, etc.
 
 
-    * **SciPy Users List** (scipy-user@scipy.org): scientific computing
-      with Python, high-level data processing, in particular with the
-      scipy package.
+    * **SciPy Users List** (scipy-user@scipy.org): cálculos científicos con Python, 
+      procesamiento de datos de alto nivel, en particular con el paquete scipy.
 
-    * matplotlib-users@lists.sourceforge.net for plotting with
+    * matplotlib-users@lists.sourceforge.net para hacer gráficas con
       matplotlib.                               
                                              
