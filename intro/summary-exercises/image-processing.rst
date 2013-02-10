@@ -1,6 +1,6 @@
 .. _summary_exercise_image_processing:
 
-Aplicación de proceso de imagen: counting bubbles and unmolten grains
+Aplicación de proceso de imagen: contando burbujas y granos no fundidos
 ------------------------------------------------------------------
 
 .. image:: ../image_processing/MV_HFV_012.jpg
