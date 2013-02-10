@@ -1,23 +1,23 @@
 ===========
- Solutions
+ Soluciones
 ===========
 
 
 .. _pi_wallis:
 
-The Pi Wallis Solution
+La solución Pi Wallis
 ----------------------
 
-Compute the decimals of Pi using the Wallis formula:
+Calcula los decimales de Pi usando la fórmula de Wallis:
 
 .. literalinclude:: solutions/pi_wallis.py
 
 .. _quick_sort:
 
-The Quicksort Solution
+La solución Quicksort
 ----------------------
 
-Implement the quicksort algorithm, as defined by wikipedia:
+Implementa el algoritmo quicksort tal como viene definido en la wikipedia:
 
 ::
 
@@ -35,11 +35,11 @@ Implement the quicksort algorithm, as defined by wikipedia:
 
 .. _fibonacci:
 
-Fibonacci sequence
-------------------
+Secuencia de Fibonacci
+----------------------
 
-Write a function that displays the ``n`` first terms of the Fibonacci
-sequence, defined by:
+Escribe una función que muestre los ``n`` primeros términos de la secuencia
+de Fibonacci, definidad por:
 
 * ``u_0 = 1; u_1 = 1``
 * ``u_(n+2) = u_(n+1) + u_n``
@@ -69,38 +69,38 @@ sequence, defined by:
 
 .. _dir_sort:
 
-The Directory Listing Solution
-------------------------------
+La solución del listado de un directorio
+----------------------------------------
 
-Implement a script that takes a directory name as argument, and
-returns the list of '.py' files, sorted by name length.
+Implementa un script que usa el nombre de un directorio como argumento
+y devuelva la lista de los ficheros '.py' files ordenados por la longitud del nombre.
 
-**Hint:** try to understand the docstring of list.sort
+**Truco:** intenta entender el docstring de list.sort
 
 .. literalinclude:: solutions/dir_sort.py
 
 .. _data_file:
 
-The Data File I/O Solution
---------------------------
+La solución del fichero E/S de datos
+------------------------------------
 
-Write a function that will load the column of numbers in ``data.txt``
-and calculate the min, max and sum values.
+Escribe una función que lea la columna de números en ``data.txt``
+y calcule el máximo, el mínimo y la suma de los valores.
 
-Data file:
+Fichero de datos:
 
 .. literalinclude:: solutions/data.txt
 
-Solution:
+Solución:
 
 .. literalinclude:: solutions/data_file.py
 
 .. _path_site:
 
-The PYTHONPATH Search Solution
-------------------------------
+La solución de búsqueda en el PYTHONPATH
+----------------------------------------
 
-Write a program to search your PYTHONPATH for the module ``site.py``.
+Escribe un programa que busque el módulo ``site.py`` en tu PYTHONPATH.
 
 .. literalinclude:: solutions/path_site.py
 
