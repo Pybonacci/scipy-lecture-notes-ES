@@ -15,7 +15,6 @@ se ajustan a sus necesidades.
     * Numpy
     * IPython
     * nosetests (http://readthedocs.org/docs/nose/en/latest/)
-    * line_profiler (http://packages.python.org/line_profiler/)
     * pyflakes (http://pypi.python.org/pypi/pyflakes)
     * gdb para la parte de *C-debugging* (depurado de C).
 
@@ -56,16 +55,24 @@ pyflakes: Análisis estático veloz
 ---------------------------------
 
 Existen varias herramientas de análisis estático en Python; algunas de ellas son: 
-`pylint <http://www.logilab.org/857>`_, 
-`pychecker <http://pychecker.sourceforge.net/>`_, y 
-`pyflakes <http://pypi.python.org/pypi/pyflakes>`_.
+* `pylint <http://www.logilab.org/857>`_, 
+* `pychecker <http://pychecker.sourceforge.net/>`_, y 
+* `pyflakes <http://pypi.python.org/pypi/pyflakes>`_.
+* `pep8 <http://pypi.python.org/pypi/pep8>`_
+* `flake8 <http://pypi.python.org/pypi/flake8>`_
+
 En nuestro caso nos vamos a focalizar en pyflakes, la cual es la herramienta más simple.
 
     * **Rápido, simple**
 
-    * Detecta errores de sintaxis, *import*s ausentes, errores en nombres.
+    * Detecta errores de sintaxis, *imports* ausentes, errores en nombres.
 
-La integración de pyflakes en tu editor sería altamente recomendable.
+Otra buena recomendación es la herramienta flake8 que es una combinación
+de pyflakes y de pep8. Así, además de los errores que captura pyflakes,
+flake8 detecta violaciones de la recomendación de la guía de estilo `PEP8 
+<http://www.python.org/dev/peps/pep-0008/>`_ .
+
+La integración de pyflakes (o flake8) en tu editor o IDE sería altamente recomendable.
 **Provoca que aumente tu productividad**.
 
 Corriendo pyflakes en el fichero que estamos editando
@@ -77,32 +84,32 @@ fichero que estemos editando.
 * **En kate**
   Menu: 'settings -> configure kate 
   
-    * In plugins enable 'external tools'
+    * En plugins hay que habilitar 'external tools'
 
-    * In external Tools', add `pyflakes`::
+    * En 'external Tools', añadir `pyflakes`::
 
         kdialog --title "pyflakes %filename" --msgbox "$(pyflakes %filename)"
 
-* **In TextMate**
+* **En TextMate**
 
-  Menu: TextMate -> Preferences -> Advanced -> Shell variables, add a
-  shell variable::
+  Menu: TextMate -> Preferences -> Advanced -> Shell variables, añade una
+  'shell variable'::
 
     TM_PYCHECKER=/Library/Frameworks/Python.framework/Versions/Current/bin/pyflakes
 
-  Then `Ctrl-Shift-V` is binded to a pyflakes report
+  A partir de entonces `Ctrl-Shift-V` lanzará un `report` pyflakes 
 
 
-* **In vim**
-  In your `.vimrc` (binds F5 to `pyflakes`)::
+* **En vim**
+  En tu `.vimrc` (conectará la tecla F5 a `pyflakes`)::
 
     autocmd FileType python let &mp = 'echo "*** running % ***" ; pyflakes %'
     autocmd FileType tex,mp,rst,python imap <Esc>[15~ <C-O>:make!^M
     autocmd FileType tex,mp,rst,python map  <Esc>[15~ :make!^M
     autocmd FileType tex,mp,rst,python set autowrite
 
-* **In emacs**
-  In your `.emacs` (binds F5 to `pyflakes`)::
+* **En emacs**
+  En tu `.emacs` (conectará la tecla F5 a `pyflakes`)::
 
     (defun pyflakes-thisfile () (interactive)
            (compile (format "pyflakes %s" (buffer-file-name)))
@@ -123,26 +130,32 @@ fichero que estemos editando.
     
     (add-hook 'python-mode-hook (lambda () (pyflakes-mode t)))
 
-A type-as-go spell-checker like integration
+A type-as-go spell-checker like integration (integración de un comprobador de código a medida que tecleas)
 ............................................
 
-.. image:: vim_pyflakes.png
-   :align: right
-
-* **In vim**
-  Use the pyflakes.vim plugin: 
+* **En vim**
+  * Usa el plugin pyflakes.vim: 
   
-  1. download the zip file from
-     http://www.vim.org/scripts/script.php?script_id=2441
+    #. descarga el fichero zip desde
+      http://www.vim.org/scripts/script.php?script_id=2441
   
-  2. extract the files in `~/.vim/ftplugin/python`
+    #. extrae los ficheros en ``~/.vim/ftplugin/python``
 
-  3. make sure your vimrc has "filetype plugin indent on"
+    #. comprueba que tu vimrc tiene ``filetype plugin indent on``
 
-* **In emacs**
-  Use the flymake mode with pyflakes, documented on
-  http://www.plope.com/Members/chrism/flymake-mode : add the following to
-  your .emacs file::
+    .. image:: vim_pyflakes.png
+
+  * De forma alternativa: usa el plugin `syntastic 
+    <https://github.com/scrooloose/syntastic>`. Puede ser configurado para usar
+    también ``flake8`` y además maneja la comprobación 'al vuelo' para muchos
+    otros lenguajes.
+
+    .. image:: vim_syntastic.png
+
+* **En emacs**
+  Usa el modo flymake con pyflakes, documentado en
+  http://www.plope.com/Members/chrism/flymake-mode : añade lo siguiente a tu
+  fichero .emacs::
   
     (when (load "flymake" t) 
             (defun flymake-pyflakes-init () 
@@ -158,73 +171,73 @@ A type-as-go spell-checker like integration
 
     (add-hook 'find-file-hook 'flymake-find-file-hook)
 
-Debugging workflow
+Flujo de trabajo para depuración de código
 ===================
 
-I you do have a non trivial bug, this is when debugging strategies kick
-in. There is no silver bullet. Yet, strategies help:
+Si te encuentras ante un error (`bug`) que no es trivial es cuando las estrategias
+para depurar código se hacen notar. No existe una forma inequívoca de hacer las cosas, por ello, las estrategias te pueden ayudar:
 
-   **For debugging a given problem, the favorable situation is when the
-   problem is isolated in a small number of lines of code, outside
-   framework or application code, with short modify-run-fail cycles**
+   **Para depurar un problema dado, la situación favorable se produce cuando
+   el problema se aisla en un pequeño número de líneas de código, fuera
+   del código de la aplicación completa con pequeños ciclos
+   modificar-ejecutar-fallar**
 
-#. Make it fail reliably.  Find a test case that makes the code fail
-   every time.
-#. Divide and Conquer.  Once you have a failing test case, isolate the
-   failing code.
+#. Hazlo fallar de forma confiable.  Encuentra un caso de prueba que provoque
+   que el código falle cada vez que se ejecute.
+#. Divide y ganarás.  Una vez que tienes un caso de prueba fallando, 
+   aisla el código con errores.
 
-   * Which module.
-   * Which function.
-   * Which line of code.
+   * Qué módulo.
+   * Qué función.
+   * Qué línea de código.
 
-   => isolate a small reproducible failure: a test case
+   => aisla un fallo pequeño y reproducible: un caso de prueba
 
-#. Change one thing at a time and re-run the failing test case.
-#. Use the debugger to understand what is going wrong.
-#. Take notes and be patient.  It may take a while.
+#. Cambia una cosa cada vez y vuelve a ejecutar el caso de prueba que está fallando.
+#. Usa el depurador para entender qué es lo que está fallando.
+#. Toma notas y sé paciente.  Podría llevar un rato.
 
 .. note::
 
-   Once you have gone through this process: isolated a tight piece of
-   code reproducing the bug and fix the bug using this piece of code, add
-   the corresponding code to your test suite.
+   Una vez que has pasado por este proceso: aislar la pequeña porción de código
+   que reproduce el `bug` y reparar el `bug` usando esta pieza de código
+   añade el código correspondiente a tu conjunto de pruebas.
 
-Using the Python debugger
-=========================
+Usando el depurador Python 
+==========================
 
-The python debugger, ``pdb``: http://docs.python.org/library/pdb.html,
-allows you to inspect your code interactively.
+El depurador python, ``pdb``: http://docs.python.org/library/pdb.html,
+te permite inspeccionar tu código de forma interactiva.
 
-Specifically it allows you to:
+Te permite:
 
-  * View the source code.
-  * Walk up and down the call stack.
-  * Inspect values of variables.
-  * Modify values of variables.
-  * Set breakpoints.
+  * Ver el código.
+  * Ir hacia arriba y hacia abajo del punto donde se ha producido un error.
+  * Inspeccionar valores de variables.
+  * Modificar valores de variables.
+  * Establecer `breakpoints` (punto de parada del proceso).
 
 .. topic:: **print**
 
-    Yes, ``print`` statements do work as a debugging tool. However to
-    inspect runtime, it is often more efficient to use the debugger.
+    Sí, las declaraciones ``print`` sirven como herramienta de depuración. 
+    Sin embargo, para inspeccionar en tiempo de ejecución es más
+    eficiente usar el depurador.
 
-Invoking the debugger
+Invocando al depurador
 -----------------------
 
-Ways to launch the debugger:
+Formas de lanzar el depurador:
 
-#. Postmortem, launch debugger after module errors.
-#. Launch the module with the debugger.
-#. Call the debugger inside the module
-
+#. Postmortem, lanza el depurador después de que se hayan producido errores.
+#. Lanza el módulo con el depurador.
+#. Llama al depurador desde dentro del módulo.
 
 Postmortem
 ...........
 
-**Situation**: You're working in ipython and you get a traceback.
+**Situación**: Estás trabajando en ipython y obtienes un error (`traceback`).
 
-Here we debug the file :download:`index_error.py`. When running it, an
-`IndexError` is raised. Type ``%debug`` and drop into the debugger.
+En este caso estamos depurando el fichero :download:`index_error.py`. Cuando lo ejecutes verás como se lanza un :class:`IndexError`. Escribe ``%debug`` y entrarás en el depurador.
 
 .. sourcecode:: ipython
 
@@ -271,11 +284,12 @@ Here we debug the file :download:`index_error.py`. When running it, an
 
     In [3]: 
 
-.. topic:: Post-mortem debugging without IPython
+.. topic:: Depuración post-mortem sin ipython
 
-   In some situations you cannot use IPython, for instance to debug a
-   script that wants to be called from the command line. In this case,
-   you can call the script with `python -m pdb script.py`::
+   En algunas situaciones no podrás usar IPython, por ejemplo para depurar
+   un `script` que ha sido llamado desde la línea de comandos. En este caso,
+   puedes ejecutar el `script` de la siguiente forma 
+   ``python -m pdb script.py``::
 
     $ python -m pdb index_error.py
     > /home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/index_error.py(1)<module>()
@@ -300,16 +314,17 @@ Here we debug the file :download:`index_error.py`. When running it, an
     -> print lst[len(lst)]
     (Pdb) 
  
-
-Step-by-step execution
+Ejecución paso a paso
 .......................
 
-**Situation**: You believe a bug exists in a module but are not sure where.
+**Situación**: Crees que existe un error en un módulo pero no estás seguro donde.
 
-For instance we are trying to debug :download:`wiener_filtering.py`.
-Indeed the code runs, but the filtering does not work well.
+Por ejemplo, estamos intentado depurar :download:`wiener_filtering.py`.
+A pesar de que el código se ejecuta, observamos que el filtrado no se
+está haciendo correctamente.
 
-* Run the script with the debugger:
+* Ejecuta el `script` en IPython con el depurador usando ``%run -d
+  wiener_filtering.py``:
 
   .. sourcecode:: ipython
 
@@ -321,8 +336,7 @@ Indeed the code runs, but the filtering does not work well.
     NOTE: Enter 'c' at the ipdb>  prompt to start your script.
     > <string>(1)<module>()
 
-* Enter the :download:`wiener_filtering.py` file and set a break point at line
-  34:
+* Coloca un *breakpoint* en la línea 34 usando ``b 34``:
 
   .. sourcecode:: ipython
 
@@ -335,7 +349,7 @@ Indeed the code runs, but the filtering does not work well.
     ipdb> b 34
     Breakpoint 2 at /home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/wiener_filtering.py:34
 
-* Continue execution to next breakpoint with ``c(ont(inue))``:
+* Continua la ejecución hasta el siguiente `breakpoint` con ``c(ont(inue))``:
 
   .. sourcecode:: ipython
 
@@ -345,9 +359,10 @@ Indeed the code runs, but the filtering does not work well.
     2--> 34     noisy_img = noisy_img
          35     denoised_img = local_mean(noisy_img, size=size)
 
-* Step into code with ``n(ext)`` and ``s(tep)``: ``next`` jumps to the next
-  statement in the current execution context, while ``step`` will go across
-  execution contexts, i.e. enable exploring inside function calls:
+* Da pasos hacia adelante y detrás del código con ``n(ext)`` y
+  ``s(tep)``. ``next`` salta hasta la siguiente declaración en el actual
+  contexto de ejecución mientras que ``step`` se moverá entre los contextos
+  en ejecución, i.e. permitiendo explorar dentro de llamadas a funciones:
 
   .. sourcecode:: ipython
 
@@ -364,7 +379,7 @@ Indeed the code runs, but the filtering does not work well.
          37     for i in range(3):
 
 
-* Step a few lines and explore the local variables:
+* Muévete unas pocas líneas y explora las variables locales:
 
   .. sourcecode:: ipython
 
@@ -384,111 +399,165 @@ Indeed the code runs, but the filtering does not work well.
     ipdb> print l_var.min()
     0
 
-Oh dear, nothing but integers, and 0 variation. Here is our bug, we are
-doing integer arithmetic.
+*Oh dear*, solo vemos enteror y variación 0. Aquí está nuestro error,
+estamos haciendo aritmética con enteros.
 
-.. topic:: Raising exception on numerical errors
+.. topic:: Lanzando excepciones en errores numéricos
 
-    When we run the :download:`wiener_filtering.py` file, the following
-    warnings are raised:
+    Cuando ejecutamos el fichero :download:`wiener_filtering.py`, se lanzarán
+    los siguientes avisos:
 
     .. sourcecode:: ipython
 
         In [2]: %run wiener_filtering.py
-        Warning: divide by zero encountered in divide
-        Warning: divide by zero encountered in divide
-        Warning: divide by zero encountered in divide
+        wiener_filtering.py:40: RuntimeWarning: divide by zero encountered in divide
+            noise_level = (1 - noise/l_var )
 
-    We can turn these warnings in exception, which enables us to do
-    post-mortem debugging on them, and find our problem more quickly:
+    Podemos convertir estos avisos a excepciones, lo que nos permitiría
+    hacer una depuración post-mortem sobre ellos y encontrar el problema
+    de manera más rápida:
 
     .. sourcecode:: ipython
 
         In [3]: np.seterr(all='raise')
         Out[3]: {'divide': 'print', 'invalid': 'print', 'over': 'print', 'under': 'ignore'}
+        In [4]: %run wiener_filtering.py
+        ---------------------------------------------------------------------------
+        FloatingPointError                        Traceback (most recent call last)
+        /home/esc/anaconda/lib/python2.7/site-packages/IPython/utils/py3compat.pyc in execfile(fname, *where)
+            176             else:
+            177                 filename = fname
+        --> 178             __builtin__.execfile(filename, *where)
 
-Other ways of starting a debugger
-....................................
+        /home/esc/physique-cuso-python-2013/scipy-lecture-notes/advanced/debugging/wiener_filtering.py in <module>()
+             55 pl.matshow(noisy_lena[cut], cmap=pl.cm.gray)
+             56 
+        ---> 57 denoised_lena = iterated_wiener(noisy_lena)
+             58 pl.matshow(denoised_lena[cut], cmap=pl.cm.gray)
+             59 
 
-* **Raising an exception as a poor man break point**
+        /home/esc/physique-cuso-python-2013/scipy-lecture-notes/advanced/debugging/wiener_filtering.py in iterated_wiener(noisy_img, size)
+             38         res = noisy_img - denoised_img
+             39         noise = (res**2).sum()/res.size
+        ---> 40         noise_level = (1 - noise/l_var )
+             41         noise_level[noise_level<0] = 0
+             42         denoised_img += noise_level*res
+        FloatingPointError: divide by zero encountered in divide
 
-  If you find it tedious to note the line number to set a break point,
-  you can simply raise an exception at the point that you want to
-  inspect and use ipython's `%debug`. Note that in this case you cannot
-  step or continue the execution.
+Otras formas de comenzar una depuración
+.......................................
 
-* **Debugging test failures using nosetests**
+* **Lanzar una excepción *break point* a lo pobre**
 
-  You can run `nosetests --pdb` to drop in post-mortem debugging on
-  exceptions, and `nosetests --pdb-failure` to inspect test failures
-  using the debugger.
+  Si encuentras tedioso el tener que anotar el número de línea para colocar
+  un *break point*, puedes lanzar una excepción en el punto que quieres 
+  inspeccionar y usar la 'magia' ``%debug`` de ipython. Destacar que en este
+  caso no puedes moverte por el código y continuar después la ejecución.
 
-  In addition, you can use the IPython interface for the debugger in nose
-  by installing the nose plugin 
-  `ipdbplugin <http://pypi.python.org/pypi/ipdbplugin>`_. You can than
-  pass `--ipdb` and `--ipdb-failure` options to nosetests.
+* **Depurando fallos de pruebas usando nosetests**
 
-* **Calling the debugger explicitly**
+  Podemos ejecutar ``nosetests --pdb`` para saltar a la depuración
+  post-mortem de excepciones y ``nosetests --pdb-failure`` para inspeccionar
+  los fallos de pruebas usando el depurador.
 
-  Insert the following line where you want to drop in the debugger::
+  Además, puedes usar la interfaz IPython para el depurador en **nose**
+  usando el plugin  de **nose**
+  `ipdbplugin <http://pypi.python.org/pypi/ipdbplugin>`_. Podremos, entonces,
+  pasar las opciones ``--ipdb`` y ``--ipdb-failure`` a los *nosetests*.
+
+* **Llamando explícitamente al depurador**
+
+  Inserta la siguiente línea donde quieres que salte el depurador::
 
     import pdb; pdb.set_trace()
 
 .. warning::
 
-    When running `nosetests`, the output is captured, and thus it seems
-    that the debugger does not work. Simply run the nosetests with the `-s`
-    flag.
+    Cuandos e ejecutan ``nosetests``, se captura la salida y parecerá
+    que el depurador no está funcionando. Para evitar esto simplemente ejecuta
+    los ``nosetests`` con la etiqueta ``-s``.
 
 
-.. topic:: Graphical debuggers
+.. topic:: Depuradores gráficos y alternativas
 
-    For stepping through code and inspecting variables, you might find it
-    more convenient to use a graphical debugger such as 
-    `winpdb <http://winpdb.org/>`_.
+    * Quizá encuentres más conveniente usar un depurador gráfico como  
+      `winpdb <http://winpdb.org/>`_. para inspeccionar saltas a través del 
+      código e inspeccionar las variables
 
-    Alternatively, `pudb <http://pypi.python.org/pypi/pudb>`_ is a good 
-    semi-graphical debugger with a text user interface in the console.
+    * De forma alternativa, `pudb <http://pypi.python.org/pypi/pudb>`_ es un 
+      buen depurador semi-gráfico con una interfaz de texto en la consola.
 
+    * También, estaría bien echarle un ojo al proyecto 
+      `pydbgr <http://code.google.com/p/pydbgr/>`_
 
-Debugger commands and interaction 
-----------------------------------
+Comandos del depurador e interacciones
+--------------------------------------
 
 ============ ======================================================================
-``l(list)``   Lists the code at the current position
-``u(p)``      Walk up the call stack
-``d(own)``    Walk down the call stack
-``n(ext)``    Execute the next line (does not go down in new functions)
-``s(tep)``    Execute the next statement (goes down in new functions)
-``bt``        Print the call stack
-``a``         Print the local variables
-``!command``  Exectute the given **Python** command (by opposition to pdb commands
+``l(list)``   Lista el código en la posición actual
+``u(p)``      Paso arriba de la llamada a la pila (*call stack*)
+``d(own)``    Paso abajo de la llamada a la pila ((*call stack*)
+``n(ext)``    Ejecuta la siguiente línea (no va hacia abajo en funciones nuevas)
+``s(tep)``    Ejecuta la siguiente declaración (va hacia abajo en las nuevas funciones)
+``bt``        Muestra el *call stack*
+``a``         Muestra las variables locales
+``!command``  Ejecuta el comando **Python** proporcionado (en oposición a comandos pdb)
 ============ ======================================================================
 
-.. warning:: **Debugger commands are not Python code**
+.. warning:: **Los comandos de depuración no son código Python**
 
-    You cannot name the variables the way you want. For instance, if in
-    you cannot override the variables in the current frame with the same
-    name: **use different names then your local variable when typing code
-    in the debugger**.
+    No puedes nombrar a las variables de la forma que quieras. Por ejemplo,
+    si estamos dentro del depurador no podremos sobreescribir a las variables 
+    con el mismo y, por tanto, **habrá que usar diferentes nombres para las
+    variables cuando estemos teclenado código en el depurador**.
 
-Debugging segmentation faults using gdb 
-==========================================
+Obteniendo ayuda dentro del depurador
+.....................................
 
-If you have a segmentation fault, you cannot debug it with pdb, as it
-crashes the Python interpreter before it can drop in the debugger.
-Similarly, if you have a bug in C code embedded in Python, pdb is
-useless. For this we turn to the gnu debugger, 
-`gdb <http://www.gnu.org/s/gdb/>`_, available on Linux.
+Teclea ``h`` o ``help`` para acceder a la ayuda interactiva:
 
-Before we start with gdb, let us add a few Python-specific tools to it.
-For this we add a few macros to our `~/.gbdinit`. The optimal choice of
-macro depends on your Python version and your gdb version. I have added a
-simplified version in :download:`gdbinit`, but feel free to read
+.. sourcecode:: pycon
+
+    ipdb> help
+
+    Documented commands (type help <topic>):
+    ========================================
+    EOF    bt         cont      enable  jump  pdef   r        tbreak   w
+    a      c          continue  exit    l     pdoc   restart  u        whatis
+    alias  cl         d         h       list  pinfo  return   unalias  where
+    args   clear      debug     help    n     pp     run      unt
+    b      commands   disable   ignore  next  q      s        until
+    break  condition  down      j       p     quit   step     up
+
+    Miscellaneous help topics:
+    ==========================
+    exec  pdb
+
+    Undocumented commands:
+    ======================
+    retval  rv
+
+Depurando errores de segmentación usando gdb 
+============================================
+
+Si te encuentras con un error de segmentación no podrás depurarlo con
+pdb ya que se 'romperá' antes de que se pueda lanzar el depurador.
+De la misma forma, si tienes un *bug* en un códico C empotrado en
+Python, pdb será poco útil. Por estas razones tendremos que usar el 
+gnu debugger, 
+`gdb <http://www.gnu.org/s/gdb/>`_, disponible en Linux.
+
+Antes de comenzar con gdb, permitidnos añadirle unas pocas herramientas
+específicas para Python. Para ello, añadimos unas pocas macros a nuestro
+`~/.gbdinit`. La opción óptima dependerá de tu versión de Python y de tu
+versión de gdb. Hemos añadido una versión simplificada en:download:`gdbinit`, 
+pero eres libre de leer 
 `DebuggingWithGdb <http://wiki.python.org/moin/DebuggingWithGdb>`_.
 
-To debug with gdb the Python script :download:`segfault.py`, we can run the
-script in gdb as follows::
+Para depurar con gdb el 'script' Python :download:`segfault.py`, podemos
+ejecutar el 'script' en gdb como sigue:
+
+.. sourcecode:: console
 
     $ gdb python
     ...
@@ -504,9 +573,11 @@ script in gdb as follows::
     365            _FAST_MOVE(Int32);
     (gdb)
 
-We get a segfault, and gdb captures it for post-mortem debugging in the C
-level stack (not the Python call stack). We can debug the C call stack
-using gdb's commands::
+Obtenemos un error de segmentación y gdb lo captura para depurarlo post-mortem
+en el nivel C de la pila (*stack*) (no en el *Python call stack*). Podemos 
+depurar la llamada a la pila en C usando comandos gdb:
+
+.. sourcecode:: console
 
     (gdb) up
     #1  0x004af4f5 in _copy_from_same_shape (dest=<value optimized out>, 
@@ -515,9 +586,12 @@ using gdb's commands::
     at numpy/core/src/multiarray/ctors.c:748
     748         myfunc(dit->dataptr, dest->strides[maxaxis],
 
-As you can see, right now, we are in the C code of numpy. We would like
-to know what is the Python code that triggers this segfault, so we go up
-the stack until we hit the Python execution loop::
+Como puedes ver, ahora mismo estamos en el código C de numpy. Nos gustaría
+saber cuál es el código python que desencadena este error de segmentación, 
+así que vamos hacia arriba de la pila hasta que demos con el código Python
+que buscamos:
+
+.. sourcecode:: console
 
     (gdb) up
     #8  0x080ddd23 in call_function (f=
@@ -533,15 +607,19 @@ the stack until we hit the Python execution loop::
     2412    in ../Python/ceval.c
     (gdb) 
 
-Once we are in the Python execution loop, we can use our special Python
-helper function. For instance we can find the corresponding Python code::
+Una vez que estamos en el bucle de ejecución Python, podríamos usar nuestra función especial de ayuda Python. Por ejemplo, podemos encontrar el correspondiente
+código Python:
+
+.. sourcecode:: console
 
     (gdb) pyframe
     /home/varoquau/usr/lib/python2.6/site-packages/numpy/core/arrayprint.py (158): _leading_trailing
     (gdb) 
 
-This is numpy code, we need to go up until we find code that we have
-written::
+Este es el código numpy, tenemos que ir hacia arriba hasta que encomntremos 
+el código que hemos escrito:
+
+.. sourcecode:: console
 
     (gdb) up
     ...
@@ -553,32 +631,32 @@ written::
     (gdb) pyframe
     segfault.py (12): print_big_array
 
-The corresponding code is:
+El código correspondiente es:
 
 .. literalinclude:: segfault.py
-    :linenos:
+    :language:py
     :lines: 8-14
 
-Thus the segfault happens when printing `big_array[-10:]`. The reason is
-simply that `big_array` has been allocated with its end outside the
-program memory.
+Entonces, el error de segmentación ocurre cuando mostramos `big_array[-10:]`. 
+La razón es que ``big_array`` ha sido localizado con su final fuera de la 
+memoria del programa.
 
 .. note:: 
    
-    For a list of Python-specific commands defined in the `gdbinit`, read
-    the source of this file.
+    Para ver una lista de los comandos Python específicos definidos en el
+    `gdbinit` podéis leer el código fuente de este fichero.
 
 
 ____
 
-.. topic:: **Wrap up exercise**
+.. topic:: **Ejercicio final**
     :class: green
     
-    The following script is well documented and hopefully legible. It
-    seeks to answer a problem of actual interest for numerical computing,
-    but it does not work... Can you debug it?
+    El siguiente *script* está bien documentado y es legible. Busca responder
+    un problema de interés en el mundo de la computación numérica pero no
+    funciona... ¿Lo podrías depurar?
 
-    **Python source code:** :download:`to_debug.py <to_debug.py>`
+    **Código fuente Python:** :download:`to_debug.py <to_debug.py>`
 
     .. only:: html
 
