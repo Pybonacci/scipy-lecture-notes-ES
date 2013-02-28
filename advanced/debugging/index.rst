@@ -360,7 +360,7 @@ está haciendo correctamente.
          35     denoised_img = local_mean(noisy_img, size=size)
 
 * Da pasos hacia adelante y detrás del código con ``n(ext)`` y
- ``s(tep)``. ``next`` salta hasta la siguiente declaración en el actual
+  ``s(tep)``. ``next`` salta hasta la siguiente declaración en el actual
   contexto de ejecución mientras que ``step`` se moverá entre los contextos
   en ejecución, i.e. permitiendo explorar dentro de llamadas a funciones:
 
