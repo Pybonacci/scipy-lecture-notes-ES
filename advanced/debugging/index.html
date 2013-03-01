@@ -1,0 +1,825 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>2.3. Debugging code / Código de depuración &mdash; Scipy lecture notes</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2012.3 (EuroScipy 2012)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Scipy lecture notes" href="../../index.html" />
+    <link rel="up" title="2. Temas avanzados" href="../index.html" />
+    <link rel="next" title="2.4. Optimizing code" href="../optimizing/index.html" />
+    <link rel="prev" title="2.2. Numpy avanzado" href="../advanced_numpy/index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../optimizing/index.html" title="2.4. Optimizing code"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../advanced_numpy/index.html" title="2.2. Numpy avanzado"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">Scipy lecture notes</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">2. Temas avanzados</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="debugging-code-codigo-de-depuracion">
+<h1>2.3. Debugging code / Código de depuración<a class="headerlink" href="#debugging-code-codigo-de-depuracion" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">autor:</th><td class="field-body">Gaël Varoquaux</td>
+</tr>
+</tbody>
+</table>
+<p>En este tutorial se exploran herramientas que ayudan a entender tu código:
+depuración para encontrar y corregir <em>bugs</em> (errores).</p>
+<p>Esto no es específico de la comunidad científica Python pero las estrategias que vamos a emplear
+se ajustan a sus necesidades.</p>
+<div class="topic">
+<p class="topic-title first">Prerrequisitos</p>
+<ul class="simple">
+<li>Numpy</li>
+<li>IPython</li>
+<li>nosetests (<a class="reference external" href="http://readthedocs.org/docs/nose/en/latest/">http://readthedocs.org/docs/nose/en/latest/</a>)</li>
+<li>pyflakes (<a class="reference external" href="http://pypi.python.org/pypi/pyflakes">http://pypi.python.org/pypi/pyflakes</a>)</li>
+<li>gdb para la parte de <em>C-debugging</em> (depurado de C).</li>
+</ul>
+</div>
+<div class="contents local topic" id="contenido-de-los-capitulos">
+<p class="topic-title first">Contenido de los capítulos</p>
+<ul class="simple">
+<li><a class="reference internal" href="#evitando-bugs" id="id2">Evitando <em>bugs</em></a><ul>
+<li><a class="reference internal" href="#buenas-practicas-para-evitar-tener-problemas-al-escribir-codigo" id="id3">Buenas prácticas para evitar tener problemas al escribir código</a></li>
+<li><a class="reference internal" href="#pyflakes-analisis-estatico-veloz" id="id4">pyflakes: Análisis estático veloz</a><ul>
+<li><a class="reference internal" href="#corriendo-pyflakes-en-el-fichero-que-estamos-editando" id="id5">Corriendo pyflakes en el fichero que estamos editando</a></li>
+<li><a class="reference internal" href="#a-type-as-go-spell-checker-like-integration-integracion-de-un-comprobador-de-codigo-a-medida-que-tecleas" id="id6">A type-as-go spell-checker like integration (integración de un comprobador de código a medida que tecleas)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#flujo-de-trabajo-para-depuracion-de-codigo" id="id7">Flujo de trabajo para depuración de código</a></li>
+<li><a class="reference internal" href="#usando-el-depurador-python" id="id8">Usando el depurador Python</a><ul>
+<li><a class="reference internal" href="#invocando-al-depurador" id="id9">Invocando al depurador</a><ul>
+<li><a class="reference internal" href="#postmortem" id="id10">Postmortem</a></li>
+<li><a class="reference internal" href="#ejecucion-paso-a-paso" id="id11">Ejecución paso a paso</a></li>
+<li><a class="reference internal" href="#otras-formas-de-comenzar-una-depuracion" id="id12">Otras formas de comenzar una depuración</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#comandos-del-depurador-e-interacciones" id="id13">Comandos del depurador e interacciones</a><ul>
+<li><a class="reference internal" href="#obteniendo-ayuda-dentro-del-depurador" id="id14">Obteniendo ayuda dentro del depurador</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#depurando-errores-de-segmentacion-usando-gdb" id="id15">Depurando errores de segmentación usando gdb</a></li>
+</ul>
+</div>
+<div class="section" id="evitando-bugs">
+<h2><a class="toc-backref" href="#id2">2.3.1. Evitando <em>bugs</em></a><a class="headerlink" href="#evitando-bugs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="buenas-practicas-para-evitar-tener-problemas-al-escribir-codigo">
+<h3><a class="toc-backref" href="#id3">2.3.1.1. Buenas prácticas para evitar tener problemas al escribir código</a><a class="headerlink" href="#buenas-practicas-para-evitar-tener-problemas-al-escribir-codigo" title="Permalink to this headline">¶</a></h3>
+<div class="sidebar">
+<p class="first sidebar-title">Brian Kernighan</p>
+<p class="last"><em>“Everyone knows that debugging is twice as hard as writing a
+program in the first place. So if you&#8217;re as clever as you can be
+when you write it, how will you ever debug it?”</em></p>
+</div>
+<ul class="simple">
+<li>Todos nosotros escribimos código con errores. Acéptalo. Habrá que lidiar con ello.</li>
+<li>Escribe tu código con <em>testing</em> (las pruebas) y <em>debugging</em> (la depuración) en mente.</li>
+<li>Keep It Simple, Stupid (KISS). Mantenlo simple, estúpido.<ul>
+<li>¿Cuál es la cosa más simple que podría funcionar?</li>
+</ul>
+</li>
+<li>Don&#8217;t Repeat Yourself (DRY). No te repitas.<ul>
+<li>Cada pieza de conocimiento debe tener una única, inequívoca y acreditada
+representación dentro del sistema.</li>
+<li>Constantes, algoritmos, etc...</li>
+</ul>
+</li>
+<li>Intenta limitar la cantidad de interdependencias de tu código (<em>Loose Coupling</em> / acoplamiento simple)</li>
+<li>Nombra a tus variables, funciones y módulos de forma significativa y explicativa (no usar
+nombres matemáticos)</li>
+</ul>
+</div>
+<div class="section" id="pyflakes-analisis-estatico-veloz">
+<h3><a class="toc-backref" href="#id4">2.3.1.2. pyflakes: Análisis estático veloz</a><a class="headerlink" href="#pyflakes-analisis-estatico-veloz" title="Permalink to this headline">¶</a></h3>
+<p>Existen varias herramientas de análisis estático en Python; algunas de ellas son:
+* <a class="reference external" href="http://www.logilab.org/857">pylint</a>,
+* <a class="reference external" href="http://pychecker.sourceforge.net/">pychecker</a>, y
+* <a class="reference external" href="http://pypi.python.org/pypi/pyflakes">pyflakes</a>.
+* <a class="reference external" href="http://pypi.python.org/pypi/pep8">pep8</a>
+* <a class="reference external" href="http://pypi.python.org/pypi/flake8">flake8</a></p>
+<p>En nuestro caso nos vamos a focalizar en pyflakes, la cual es la herramienta más simple.</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>Rápido, simple</strong></li>
+<li>Detecta errores de sintaxis, <em>imports</em> ausentes, errores en nombres.</li>
+</ul>
+</div></blockquote>
+<p>Otra buena recomendación es la herramienta flake8 que es una combinación
+de pyflakes y de pep8. Así, además de los errores que captura pyflakes,
+flake8 detecta violaciones de la recomendación de la guía de estilo <a class="reference external" href="http://www.python.org/dev/peps/pep-0008/">PEP8</a> .</p>
+<p>La integración de pyflakes (o flake8) en tu editor o IDE sería altamente recomendable.
+<strong>Provoca que aumente tu productividad</strong>.</p>
+<div class="section" id="corriendo-pyflakes-en-el-fichero-que-estamos-editando">
+<h4><a class="toc-backref" href="#id5">2.3.1.2.1. Corriendo pyflakes en el fichero que estamos editando</a><a class="headerlink" href="#corriendo-pyflakes-en-el-fichero-que-estamos-editando" title="Permalink to this headline">¶</a></h4>
+<p>Puedes crear una forma rápida (acceso rápido) para correr pyflakes en el
+fichero que estemos editando.</p>
+<ul>
+<li><p class="first"><strong>En kate</strong>
+Menu: &#8216;settings -&gt; configure kate</p>
+<blockquote>
+<div><ul>
+<li><p class="first">En plugins hay que habilitar &#8216;external tools&#8217;</p>
+</li>
+<li><p class="first">En &#8216;external Tools&#8217;, añadir <tt class="xref py py-obj docutils literal"><span class="pre">pyflakes</span></tt>:</p>
+<div class="highlight-python"><pre>kdialog --title "pyflakes %filename" --msgbox "$(pyflakes %filename)"</pre>
+</div>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>En TextMate</strong></p>
+<p>Menu: TextMate -&gt; Preferences -&gt; Advanced -&gt; Shell variables, añade una
+&#8216;shell variable&#8217;:</p>
+<div class="highlight-python"><pre>TM_PYCHECKER=/Library/Frameworks/Python.framework/Versions/Current/bin/pyflakes</pre>
+</div>
+<p>A partir de entonces <tt class="xref py py-obj docutils literal"><span class="pre">Ctrl-Shift-V</span></tt> lanzará un <tt class="xref py py-obj docutils literal"><span class="pre">report</span></tt> pyflakes</p>
+</li>
+<li><p class="first"><strong>En vim</strong>
+En tu <tt class="xref py py-obj docutils literal"><span class="pre">vimrc</span></tt> (conectará la tecla F5 a <tt class="xref py py-obj docutils literal"><span class="pre">pyflakes</span></tt>):</p>
+<div class="highlight-python"><pre>autocmd FileType python let &amp;mp = 'echo "*** running % ***" ; pyflakes %'
+autocmd FileType tex,mp,rst,python imap &lt;Esc&gt;[15~ &lt;C-O&gt;:make!^M
+autocmd FileType tex,mp,rst,python map  &lt;Esc&gt;[15~ :make!^M
+autocmd FileType tex,mp,rst,python set autowrite</pre>
+</div>
+</li>
+<li><p class="first"><strong>En emacs</strong>
+En tu <tt class="xref py py-obj docutils literal"><span class="pre">emacs</span></tt> (conectará la tecla F5 a <tt class="xref py py-obj docutils literal"><span class="pre">pyflakes</span></tt>):</p>
+<div class="highlight-python"><pre>(defun pyflakes-thisfile () (interactive)
+       (compile (format "pyflakes %s" (buffer-file-name)))
+)
+
+(define-minor-mode pyflakes-mode
+    "Toggle pyflakes mode.
+    With no argument, this command toggles the mode.
+    Non-null prefix argument turns on the mode.
+    Null prefix argument turns off the mode."
+    ;; The initial value.
+    nil
+    ;; The indicator for the mode line.
+    " Pyflakes"
+    ;; The minor mode bindings.
+    '( ([f5] . pyflakes-thisfile) )
+)
+
+(add-hook 'python-mode-hook (lambda () (pyflakes-mode t)))</pre>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="a-type-as-go-spell-checker-like-integration-integracion-de-un-comprobador-de-codigo-a-medida-que-tecleas">
+<h4><a class="toc-backref" href="#id6">2.3.1.2.2. A type-as-go spell-checker like integration (integración de un comprobador de código a medida que tecleas)</a><a class="headerlink" href="#a-type-as-go-spell-checker-like-integration-integracion-de-un-comprobador-de-codigo-a-medida-que-tecleas" title="Permalink to this headline">¶</a></h4>
+<ul>
+<li><p class="first"><strong>En vim</strong>
+* Usa el plugin pyflakes.vim:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>descarga el fichero zip desde</li>
+</ol>
+<blockquote>
+<div><p><a class="reference external" href="http://www.vim.org/scripts/script.php?script_id=2441">http://www.vim.org/scripts/script.php?script_id=2441</a></p>
+</div></blockquote>
+<ol class="arabic simple">
+<li>extrae los ficheros en <tt class="docutils literal"><span class="pre">~/.vim/ftplugin/python</span></tt></li>
+<li>comprueba que tu vimrc tiene <tt class="docutils literal"><span class="pre">filetype</span> <span class="pre">plugin</span> <span class="pre">indent</span> <span class="pre">on</span></tt></li>
+</ol>
+<img alt="../../_images/vim_pyflakes.png" src="../../_images/vim_pyflakes.png" />
+</div></blockquote>
+<ul>
+<li><p class="first">De forma alternativa: usa el plugin <tt class="xref py py-obj docutils literal"><span class="pre">syntastic</span></tt>. Puede ser configurado para usar
+también <tt class="docutils literal"><span class="pre">flake8</span></tt> y además maneja la comprobación &#8216;al vuelo&#8217; para muchos
+otros lenguajes.</p>
+<img alt="../../_images/vim_syntastic.png" src="../../_images/vim_syntastic.png" />
+</li>
+</ul>
+</li>
+<li><p class="first"><strong>En emacs</strong>
+Usa el modo flymake con pyflakes, documentado en
+<a class="reference external" href="http://www.plope.com/Members/chrism/flymake-mode">http://www.plope.com/Members/chrism/flymake-mode</a> : añade lo siguiente a tu
+fichero .emacs:</p>
+<div class="highlight-python"><pre>(when (load "flymake" t)
+        (defun flymake-pyflakes-init ()
+        (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                            'flymake-create-temp-inplace))
+            (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+            (list "pyflakes" (list local-file))))
+
+        (add-to-list 'flymake-allowed-file-name-masks
+                '("\\.py\\'" flymake-pyflakes-init)))
+
+(add-hook 'find-file-hook 'flymake-find-file-hook)</pre>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="flujo-de-trabajo-para-depuracion-de-codigo">
+<h2><a class="toc-backref" href="#id7">2.3.2. Flujo de trabajo para depuración de código</a><a class="headerlink" href="#flujo-de-trabajo-para-depuracion-de-codigo" title="Permalink to this headline">¶</a></h2>
+<p>Si te encuentras ante un error (<tt class="xref py py-obj docutils literal"><span class="pre">bug</span></tt>) que no es trivial es cuando las estrategias
+para depurar código se hacen notar. No existe una forma inequívoca de hacer las cosas, por ello, las estrategias te pueden ayudar:</p>
+<blockquote>
+<div><strong>Para depurar un problema dado, la situación favorable se produce cuando
+el problema se aisla en un pequeño número de líneas de código, fuera
+del código de la aplicación completa con pequeños ciclos
+modificar-ejecutar-fallar</strong></div></blockquote>
+<ol class="arabic">
+<li><p class="first">Hazlo fallar de forma confiable.  Encuentra un caso de prueba que provoque
+que el código falle cada vez que se ejecute.</p>
+</li>
+<li><p class="first">Divide y ganarás.  Una vez que tienes un caso de prueba fallando,
+aisla el código con errores.</p>
+<ul class="simple">
+<li>Qué módulo.</li>
+<li>Qué función.</li>
+<li>Qué línea de código.</li>
+</ul>
+<p>=&gt; aisla un fallo pequeño y reproducible: un caso de prueba</p>
+</li>
+<li><p class="first">Cambia una cosa cada vez y vuelve a ejecutar el caso de prueba que está fallando.</p>
+</li>
+<li><p class="first">Usa el depurador para entender qué es lo que está fallando.</p>
+</li>
+<li><p class="first">Toma notas y sé paciente.  Podría llevar un rato.</p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Una vez que has pasado por este proceso: aislar la pequeña porción de código
+que reproduce el <tt class="xref py py-obj docutils literal"><span class="pre">bug</span></tt> y reparar el <tt class="xref py py-obj docutils literal"><span class="pre">bug</span></tt> usando esta pieza de código
+añade el código correspondiente a tu conjunto de pruebas.</p>
+</div>
+</div>
+<div class="section" id="usando-el-depurador-python">
+<h2><a class="toc-backref" href="#id8">2.3.3. Usando el depurador Python</a><a class="headerlink" href="#usando-el-depurador-python" title="Permalink to this headline">¶</a></h2>
+<p>El depurador python, <tt class="docutils literal"><span class="pre">pdb</span></tt>: <a class="reference external" href="http://docs.python.org/library/pdb.html">http://docs.python.org/library/pdb.html</a>,
+te permite inspeccionar tu código de forma interactiva.</p>
+<p>Te permite:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Ver el código.</li>
+<li>Ir hacia arriba y hacia abajo del punto donde se ha producido un error.</li>
+<li>Inspeccionar valores de variables.</li>
+<li>Modificar valores de variables.</li>
+<li>Establecer <tt class="xref py py-obj docutils literal"><span class="pre">breakpoints</span></tt> (punto de parada del proceso).</li>
+</ul>
+</div></blockquote>
+<div class="topic">
+<p class="topic-title first"><strong>print</strong></p>
+<p>Sí, las declaraciones <tt class="docutils literal"><span class="pre">print</span></tt> sirven como herramienta de depuración.
+Sin embargo, para inspeccionar en tiempo de ejecución es más
+eficiente usar el depurador.</p>
+</div>
+<div class="section" id="invocando-al-depurador">
+<h3><a class="toc-backref" href="#id9">2.3.3.1. Invocando al depurador</a><a class="headerlink" href="#invocando-al-depurador" title="Permalink to this headline">¶</a></h3>
+<p>Formas de lanzar el depurador:</p>
+<ol class="arabic simple">
+<li>Postmortem, lanza el depurador después de que se hayan producido errores.</li>
+<li>Lanza el módulo con el depurador.</li>
+<li>Llama al depurador desde dentro del módulo.</li>
+</ol>
+<div class="section" id="postmortem">
+<h4><a class="toc-backref" href="#id10">2.3.3.1.1. Postmortem</a><a class="headerlink" href="#postmortem" title="Permalink to this headline">¶</a></h4>
+<p><strong>Situación</strong>: Estás trabajando en ipython y obtienes un error (<a class="reference external" href="http://docs.python.org/2.7/library/traceback.html#traceback" title="(in Python v2.7)"><tt class="xref py py-obj docutils literal"><span class="pre">traceback</span></tt></a>).</p>
+<p>En este caso estamos depurando el fichero <a class="reference download internal" href="../../_downloads/index_error.py"><tt class="xref download docutils literal"><span class="pre">index_error.py</span></tt></a>. Cuando lo ejecutes verás como se lanza un <tt class="xref py py-class docutils literal"><span class="pre">IndexError</span></tt>. Escribe <tt class="docutils literal"><span class="pre">%debug</span></tt> y entrarás en el depurador.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="o">%</span><span class="n">run</span> <span class="n">index_error</span><span class="o">.</span><span class="n">py</span>
+<div class="newline"></div><span class="go">---------------------------------------------------------------------------</span>
+<div class="newline"></div><span class="go">IndexError                                Traceback (most recent call last)</span>
+<div class="newline"></div><span class="go">/home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/index_error.py in &lt;module&gt;()</span>
+<div class="newline"></div><span class="go">      6</span>
+<div class="newline"></div><span class="go">      7 if __name__ == &#39;__main__&#39;:</span>
+<div class="newline"></div><span class="go">----&gt; 8     index_error()</span>
+<div class="newline"></div><span class="go">      9</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">/home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/index_error.py in index_error()</span>
+<div class="newline"></div><span class="go">      3 def index_error():</span>
+<div class="newline"></div><span class="go">      4     lst = list(&#39;foobar&#39;)</span>
+<div class="newline"></div><span class="go">----&gt; 5     print lst[len(lst)]</span>
+<div class="newline"></div><span class="go">      6</span>
+<div class="newline"></div><span class="go">      7 if __name__ == &#39;__main__&#39;:</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">IndexError: list index out of range</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="gp">In [2]: </span><span class="o">%</span><span class="n">debug</span>
+<div class="newline"></div><span class="go">&gt; /home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/index_error.py(5)index_error()</span>
+<div class="newline"></div><span class="go">      4     lst = list(&#39;foobar&#39;)</span>
+<div class="newline"></div><span class="go">----&gt; 5     print lst[len(lst)]</span>
+<div class="newline"></div><span class="go">      6</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">ipdb&gt; list</span>
+<div class="newline"></div><span class="go">      1 &quot;&quot;&quot;Small snippet to raise an IndexError.&quot;&quot;&quot;</span>
+<div class="newline"></div><span class="go">      2</span>
+<div class="newline"></div><span class="go">      3 def index_error():</span>
+<div class="newline"></div><span class="go">      4     lst = list(&#39;foobar&#39;)</span>
+<div class="newline"></div><span class="go">----&gt; 5     print lst[len(lst)]</span>
+<div class="newline"></div><span class="go">      6</span>
+<div class="newline"></div><span class="go">      7 if __name__ == &#39;__main__&#39;:</span>
+<div class="newline"></div><span class="go">      8     index_error()</span>
+<div class="newline"></div><span class="go">      9</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">ipdb&gt; len(lst)</span>
+<div class="newline"></div><span class="go">6</span>
+<div class="newline"></div><span class="go">ipdb&gt; print lst[len(lst)-1]</span>
+<div class="newline"></div><span class="go">r</span>
+<div class="newline"></div><span class="go">ipdb&gt; quit</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">In [3]:</span>
+<div class="newline"></div></pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first">Depuración post-mortem sin ipython</p>
+<p>En algunas situaciones no podrás usar IPython, por ejemplo para depurar
+un <tt class="xref py py-obj docutils literal"><span class="pre">script</span></tt> que ha sido llamado desde la línea de comandos. En este caso,
+puedes ejecutar el <tt class="xref py py-obj docutils literal"><span class="pre">script</span></tt> de la siguiente forma
+<tt class="docutils literal"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pdb</span> <span class="pre">script.py</span></tt>:</p>
+<div class="highlight-python"><pre>$ python -m pdb index_error.py
+&gt; /home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/index_error.py(1)&lt;module&gt;()
+-&gt; """Small snippet to raise an IndexError."""
+(Pdb) continue
+Traceback (most recent call last):
+File "/usr/lib/python2.6/pdb.py", line 1296, in main
+    pdb._runscript(mainpyfile)
+File "/usr/lib/python2.6/pdb.py", line 1215, in _runscript
+    self.run(statement)
+File "/usr/lib/python2.6/bdb.py", line 372, in run
+    exec cmd in globals, locals
+File "&lt;string&gt;", line 1, in &lt;module&gt;
+File "index_error.py", line 8, in &lt;module&gt;
+    index_error()
+File "index_error.py", line 5, in index_error
+    print lst[len(lst)]
+IndexError: list index out of range
+Uncaught exception. Entering post mortem debugging
+Running 'cont' or 'step' will restart the program
+&gt; /home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/index_error.py(5)index_error()
+-&gt; print lst[len(lst)]
+(Pdb)</pre>
+</div>
+</div>
+</div>
+<div class="section" id="ejecucion-paso-a-paso">
+<h4><a class="toc-backref" href="#id11">2.3.3.1.2. Ejecución paso a paso</a><a class="headerlink" href="#ejecucion-paso-a-paso" title="Permalink to this headline">¶</a></h4>
+<p><strong>Situación</strong>: Crees que existe un error en un módulo pero no estás seguro donde.</p>
+<p>Por ejemplo, estamos intentado depurar <a class="reference download internal" href="../../_downloads/wiener_filtering.py"><tt class="xref download docutils literal"><span class="pre">wiener_filtering.py</span></tt></a>.
+A pesar de que el código se ejecuta, observamos que el filtrado no se
+está haciendo correctamente.</p>
+<ul>
+<li><p class="first">Ejecuta el <tt class="xref py py-obj docutils literal"><span class="pre">script</span></tt> en IPython con el depurador usando <tt class="docutils literal"><span class="pre">%run</span> <span class="pre">-d</span>
+<span class="pre">wiener_filtering.py</span></tt>:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="o">%</span><span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="n">wiener_filtering</span><span class="o">.</span><span class="n">py</span>
+<div class="newline"></div><span class="go">*** Blank or comment</span>
+<div class="newline"></div><span class="go">*** Blank or comment</span>
+<div class="newline"></div><span class="go">*** Blank or comment</span>
+<div class="newline"></div><span class="go">Breakpoint 1 at /home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/wiener_filtering.py:4</span>
+<div class="newline"></div><span class="go">NOTE: Enter &#39;c&#39; at the ipdb&gt;  prompt to start your script.</span>
+<div class="newline"></div><span class="go">&gt; &lt;string&gt;(1)&lt;module&gt;()</span>
+<div class="newline"></div></pre></div>
+</div>
+</li>
+<li><p class="first">Coloca un <em>breakpoint</em> en la línea 34 usando <tt class="docutils literal"><span class="pre">b</span> <span class="pre">34</span></tt>:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="go">ipdb&gt; n</span>
+<div class="newline"></div><span class="go">&gt; /home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/wiener_filtering.py(4)&lt;module&gt;()</span>
+<div class="newline"></div><span class="go">      3</span>
+<div class="newline"></div><span class="go">1---&gt; 4 import numpy as np</span>
+<div class="newline"></div><span class="go">      5 import scipy as sp</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">ipdb&gt; b 34</span>
+<div class="newline"></div><span class="go">Breakpoint 2 at /home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/wiener_filtering.py:34</span>
+<div class="newline"></div></pre></div>
+</div>
+</li>
+<li><p class="first">Continua la ejecución hasta el siguiente <tt class="xref py py-obj docutils literal"><span class="pre">breakpoint</span></tt> con <tt class="docutils literal"><span class="pre">c(ont(inue))</span></tt>:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="go">ipdb&gt; c</span>
+<div class="newline"></div><span class="go">&gt; /home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/wiener_filtering.py(34)iterated_wiener()</span>
+<div class="newline"></div><span class="go">     33     &quot;&quot;&quot;</span>
+<div class="newline"></div><span class="go">2--&gt; 34     noisy_img = noisy_img</span>
+<div class="newline"></div><span class="go">     35     denoised_img = local_mean(noisy_img, size=size)</span>
+<div class="newline"></div></pre></div>
+</div>
+</li>
+<li><p class="first">Da pasos hacia adelante y detrás del código con <tt class="docutils literal"><span class="pre">n(ext)</span></tt> y
+<tt class="docutils literal"><span class="pre">s(tep)</span></tt>. <tt class="docutils literal"><span class="pre">next</span></tt> salta hasta la siguiente declaración en el actual
+contexto de ejecución mientras que <tt class="docutils literal"><span class="pre">step</span></tt> se moverá entre los contextos
+en ejecución, i.e. permitiendo explorar dentro de llamadas a funciones:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="go">ipdb&gt; s</span>
+<div class="newline"></div><span class="go">&gt; /home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/wiener_filtering.py(35)iterated_wiener()</span>
+<div class="newline"></div><span class="go">2    34     noisy_img = noisy_img</span>
+<div class="newline"></div><span class="go">---&gt; 35     denoised_img = local_mean(noisy_img, size=size)</span>
+<div class="newline"></div><span class="go">     36     l_var = local_var(noisy_img, size=size)</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">ipdb&gt; n</span>
+<div class="newline"></div><span class="go">&gt; /home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/wiener_filtering.py(36)iterated_wiener()</span>
+<div class="newline"></div><span class="go">     35     denoised_img = local_mean(noisy_img, size=size)</span>
+<div class="newline"></div><span class="go">---&gt; 36     l_var = local_var(noisy_img, size=size)</span>
+<div class="newline"></div><span class="go">     37     for i in range(3):</span>
+<div class="newline"></div></pre></div>
+</div>
+</li>
+<li><p class="first">Muévete unas pocas líneas y explora las variables locales:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="go">ipdb&gt; n</span>
+<div class="newline"></div><span class="go">&gt; /home/varoquau/dev/scipy-lecture-notes/advanced/debugging_optimizing/wiener_filtering.py(37)iterated_wiener()</span>
+<div class="newline"></div><span class="go">     36     l_var = local_var(noisy_img, size=size)</span>
+<div class="newline"></div><span class="go">---&gt; 37     for i in range(3):</span>
+<div class="newline"></div><span class="go">     38         res = noisy_img - denoised_img</span>
+<div class="newline"></div><span class="go">ipdb&gt; print l_var</span>
+<div class="newline"></div><span class="go">[[5868 5379 5316 ..., 5071 4799 5149]</span>
+<div class="newline"></div><span class="go"> [5013  363  437 ...,  346  262 4355]</span>
+<div class="newline"></div><span class="go"> [5379  410  344 ...,  392  604 3377]</span>
+<div class="newline"></div><span class="go"> ...,</span>
+<div class="newline"></div><span class="go"> [ 435  362  308 ...,  275  198 1632]</span>
+<div class="newline"></div><span class="go"> [ 548  392  290 ...,  248  263 1653]</span>
+<div class="newline"></div><span class="go"> [ 466  789  736 ..., 1835 1725 1940]]</span>
+<div class="newline"></div><span class="go">ipdb&gt; print l_var.min()</span>
+<div class="newline"></div><span class="go">0</span>
+<div class="newline"></div></pre></div>
+</div>
+</li>
+</ul>
+<p><em>Oh dear</em>, solo vemos enteror y variación 0. Aquí está nuestro error,
+estamos haciendo aritmética con enteros.</p>
+<div class="topic">
+<p class="topic-title first">Lanzando excepciones en errores numéricos</p>
+<p>Cuando ejecutamos el fichero <a class="reference download internal" href="../../_downloads/wiener_filtering.py"><tt class="xref download docutils literal"><span class="pre">wiener_filtering.py</span></tt></a>, se lanzarán
+los siguientes avisos:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [2]: </span><span class="o">%</span><span class="n">run</span> <span class="n">wiener_filtering</span><span class="o">.</span><span class="n">py</span>
+<div class="newline"></div><span class="go">wiener_filtering.py:40: RuntimeWarning: divide by zero encountered in divide</span>
+<div class="newline"></div><span class="go">    noise_level = (1 - noise/l_var )</span>
+<div class="newline"></div></pre></div>
+</div>
+<p>Podemos convertir estos avisos a excepciones, lo que nos permitiría
+hacer una depuración post-mortem sobre ellos y encontrar el problema
+de manera más rápida:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [3]: </span><span class="n">np</span><span class="o">.</span><span class="n">seterr</span><span class="p">(</span><span class="nb">all</span><span class="o">=</span><span class="s">&#39;raise&#39;</span><span class="p">)</span>
+<div class="newline"></div><span class="gr">Out[3]: </span><span class="p">{</span><span class="s">&#39;divide&#39;</span><span class="p">:</span> <span class="s">&#39;print&#39;</span><span class="p">,</span> <span class="s">&#39;invalid&#39;</span><span class="p">:</span> <span class="s">&#39;print&#39;</span><span class="p">,</span> <span class="s">&#39;over&#39;</span><span class="p">:</span> <span class="s">&#39;print&#39;</span><span class="p">,</span> <span class="s">&#39;under&#39;</span><span class="p">:</span> <span class="s">&#39;ignore&#39;</span><span class="p">}</span>
+<div class="newline"></div><span class="gp">In [4]: </span><span class="o">%</span><span class="n">run</span> <span class="n">wiener_filtering</span><span class="o">.</span><span class="n">py</span>
+<div class="newline"></div><span class="go">---------------------------------------------------------------------------</span>
+<div class="newline"></div><span class="go">FloatingPointError                        Traceback (most recent call last)</span>
+<div class="newline"></div><span class="go">/home/esc/anaconda/lib/python2.7/site-packages/IPython/utils/py3compat.pyc in execfile(fname, *where)</span>
+<div class="newline"></div><span class="go">    176             else:</span>
+<div class="newline"></div><span class="go">    177                 filename = fname</span>
+<div class="newline"></div><span class="go">--&gt; 178             __builtin__.execfile(filename, *where)</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">/home/esc/physique-cuso-python-2013/scipy-lecture-notes/advanced/debugging/wiener_filtering.py in &lt;module&gt;()</span>
+<div class="newline"></div><span class="go">     55 pl.matshow(noisy_lena[cut], cmap=pl.cm.gray)</span>
+<div class="newline"></div><span class="go">     56</span>
+<div class="newline"></div><span class="go">---&gt; 57 denoised_lena = iterated_wiener(noisy_lena)</span>
+<div class="newline"></div><span class="go">     58 pl.matshow(denoised_lena[cut], cmap=pl.cm.gray)</span>
+<div class="newline"></div><span class="go">     59</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">/home/esc/physique-cuso-python-2013/scipy-lecture-notes/advanced/debugging/wiener_filtering.py in iterated_wiener(noisy_img, size)</span>
+<div class="newline"></div><span class="go">     38         res = noisy_img - denoised_img</span>
+<div class="newline"></div><span class="go">     39         noise = (res**2).sum()/res.size</span>
+<div class="newline"></div><span class="go">---&gt; 40         noise_level = (1 - noise/l_var )</span>
+<div class="newline"></div><span class="go">     41         noise_level[noise_level&lt;0] = 0</span>
+<div class="newline"></div><span class="go">     42         denoised_img += noise_level*res</span>
+<div class="newline"></div><span class="go">FloatingPointError: divide by zero encountered in divide</span>
+<div class="newline"></div></pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="otras-formas-de-comenzar-una-depuracion">
+<h4><a class="toc-backref" href="#id12">2.3.3.1.3. Otras formas de comenzar una depuración</a><a class="headerlink" href="#otras-formas-de-comenzar-una-depuracion" title="Permalink to this headline">¶</a></h4>
+<ul>
+<li><p class="first"><strong>Lanzar una excepción *break point* a lo pobre</strong></p>
+<p>Si encuentras tedioso el tener que anotar el número de línea para colocar
+un <em>break point</em>, puedes lanzar una excepción en el punto que quieres
+inspeccionar y usar la &#8216;magia&#8217; <tt class="docutils literal"><span class="pre">%debug</span></tt> de ipython. Destacar que en este
+caso no puedes moverte por el código y continuar después la ejecución.</p>
+</li>
+<li><p class="first"><strong>Depurando fallos de pruebas usando nosetests</strong></p>
+<p>Podemos ejecutar <tt class="docutils literal"><span class="pre">nosetests</span> <span class="pre">--pdb</span></tt> para saltar a la depuración
+post-mortem de excepciones y <tt class="docutils literal"><span class="pre">nosetests</span> <span class="pre">--pdb-failure</span></tt> para inspeccionar
+los fallos de pruebas usando el depurador.</p>
+<p>Además, puedes usar la interfaz IPython para el depurador en <strong>nose</strong>
+usando el plugin  de <strong>nose</strong>
+<a class="reference external" href="http://pypi.python.org/pypi/ipdbplugin">ipdbplugin</a>. Podremos, entonces,
+pasar las opciones <tt class="docutils literal"><span class="pre">--ipdb</span></tt> y <tt class="docutils literal"><span class="pre">--ipdb-failure</span></tt> a los <em>nosetests</em>.</p>
+</li>
+<li><p class="first"><strong>Llamando explícitamente al depurador</strong></p>
+<p>Inserta la siguiente línea donde quieres que salte el depurador:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
+<div class="newline"></div></pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Cuandos e ejecutan <tt class="docutils literal"><span class="pre">nosetests</span></tt>, se captura la salida y parecerá
+que el depurador no está funcionando. Para evitar esto simplemente ejecuta
+los <tt class="docutils literal"><span class="pre">nosetests</span></tt> con la etiqueta <tt class="docutils literal"><span class="pre">-s</span></tt>.</p>
+</div>
+<div class="topic">
+<p class="topic-title first">Depuradores gráficos y alternativas</p>
+<ul class="simple">
+<li>Quizá encuentres más conveniente usar un depurador gráfico como
+<a class="reference external" href="http://winpdb.org/">winpdb</a>. para inspeccionar saltas a través del
+código e inspeccionar las variables</li>
+<li>De forma alternativa, <a class="reference external" href="http://pypi.python.org/pypi/pudb">pudb</a> es un
+buen depurador semi-gráfico con una interfaz de texto en la consola.</li>
+<li>También, estaría bien echarle un ojo al proyecto
+<a class="reference external" href="http://code.google.com/p/pydbgr/">pydbgr</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="comandos-del-depurador-e-interacciones">
+<h3><a class="toc-backref" href="#id13">2.3.3.2. Comandos del depurador e interacciones</a><a class="headerlink" href="#comandos-del-depurador-e-interacciones" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="86%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">l(list)</span></tt></td>
+<td>Lista el código en la posición actual</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">u(p)</span></tt></td>
+<td>Paso arriba de la llamada a la pila (<em>call stack</em>)</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">d(own)</span></tt></td>
+<td>Paso abajo de la llamada a la pila ((<em>call stack</em>)</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">n(ext)</span></tt></td>
+<td>Ejecuta la siguiente línea (no va hacia abajo en funciones nuevas)</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">s(tep)</span></tt></td>
+<td>Ejecuta la siguiente declaración (va hacia abajo en las nuevas funciones)</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">bt</span></tt></td>
+<td>Muestra el <em>call stack</em></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">a</span></tt></td>
+<td>Muestra las variables locales</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">!command</span></tt></td>
+<td>Ejecuta el comando <strong>Python</strong> proporcionado (en oposición a comandos pdb)</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p><strong>Los comandos de depuración no son código Python</strong></p>
+<p class="last">No puedes nombrar a las variables de la forma que quieras. Por ejemplo,
+si estamos dentro del depurador no podremos sobreescribir a las variables
+con el mismo y, por tanto, <strong>habrá que usar diferentes nombres para las
+variables cuando estemos teclenado código en el depurador</strong>.</p>
+</div>
+<div class="section" id="obteniendo-ayuda-dentro-del-depurador">
+<h4><a class="toc-backref" href="#id14">2.3.3.2.1. Obteniendo ayuda dentro del depurador</a><a class="headerlink" href="#obteniendo-ayuda-dentro-del-depurador" title="Permalink to this headline">¶</a></h4>
+<p>Teclea <tt class="docutils literal"><span class="pre">h</span></tt> o <tt class="docutils literal"><span class="pre">help</span></tt> para acceder a la ayuda interactiva:</p>
+<div class="highlight-pycon"><div class="highlight"><pre><span class="go">ipdb&gt; help</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">Documented commands (type help &lt;topic&gt;):</span>
+<div class="newline"></div><span class="go">========================================</span>
+<div class="newline"></div><span class="go">EOF    bt         cont      enable  jump  pdef   r        tbreak   w</span>
+<div class="newline"></div><span class="go">a      c          continue  exit    l     pdoc   restart  u        whatis</span>
+<div class="newline"></div><span class="go">alias  cl         d         h       list  pinfo  return   unalias  where</span>
+<div class="newline"></div><span class="go">args   clear      debug     help    n     pp     run      unt</span>
+<div class="newline"></div><span class="go">b      commands   disable   ignore  next  q      s        until</span>
+<div class="newline"></div><span class="go">break  condition  down      j       p     quit   step     up</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">Miscellaneous help topics:</span>
+<div class="newline"></div><span class="go">==========================</span>
+<div class="newline"></div><span class="go">exec  pdb</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">Undocumented commands:</span>
+<div class="newline"></div><span class="go">======================</span>
+<div class="newline"></div><span class="go">retval  rv</span>
+<div class="newline"></div></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="depurando-errores-de-segmentacion-usando-gdb">
+<h2><a class="toc-backref" href="#id15">2.3.4. Depurando errores de segmentación usando gdb</a><a class="headerlink" href="#depurando-errores-de-segmentacion-usando-gdb" title="Permalink to this headline">¶</a></h2>
+<p>Si te encuentras con un error de segmentación no podrás depurarlo con
+pdb ya que se &#8216;romperá&#8217; antes de que se pueda lanzar el depurador.
+De la misma forma, si tienes un <em>bug</em> en un códico C empotrado en
+Python, pdb será poco útil. Por estas razones tendremos que usar el
+gnu debugger,
+<a class="reference external" href="http://www.gnu.org/s/gdb/">gdb</a>, disponible en Linux.</p>
+<p>Antes de comenzar con gdb, permitidnos añadirle unas pocas herramientas
+específicas para Python. Para ello, añadimos unas pocas macros a nuestro
+<tt class="xref py py-obj docutils literal"><span class="pre">gbdinit</span></tt>. La opción óptima dependerá de tu versión de Python y de tu
+versión de gdb. Hemos añadido una versión simplificada en:download:<tt class="xref py py-obj docutils literal"><span class="pre">gdbinit</span></tt>,
+pero eres libre de leer
+<a class="reference external" href="http://wiki.python.org/moin/DebuggingWithGdb">DebuggingWithGdb</a>.</p>
+<p>Para depurar con gdb el &#8216;script&#8217; Python <a class="reference download internal" href="../../_downloads/segfault.py"><tt class="xref download docutils literal"><span class="pre">segfault.py</span></tt></a>, podemos
+ejecutar el &#8216;script&#8217; en gdb como sigue:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> gdb python
+<div class="newline"></div><span class="go">...</span>
+<div class="newline"></div><span class="go">(gdb) run segfault.py</span>
+<div class="newline"></div><span class="go">Starting program: /usr/bin/python segfault.py</span>
+<div class="newline"></div><span class="go">[Thread debugging using libthread_db enabled]</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">Program received signal SIGSEGV, Segmentation fault.</span>
+<div class="newline"></div><span class="go">_strided_byte_copy (dst=0x8537478 &quot;\360\343G&quot;, outstrides=4, src=</span>
+<div class="newline"></div><span class="go">    0x86c0690 &lt;Address 0x86c0690 out of bounds&gt;, instrides=32, N=3,</span>
+<div class="newline"></div><span class="go">    elsize=4)</span>
+<div class="newline"></div><span class="go">        at numpy/core/src/multiarray/ctors.c:365</span>
+<div class="newline"></div><span class="go">365            _FAST_MOVE(Int32);</span>
+<div class="newline"></div><span class="go">(gdb)</span>
+<div class="newline"></div></pre></div>
+</div>
+<p>Obtenemos un error de segmentación y gdb lo captura para depurarlo post-mortem
+en el nivel C de la pila (<em>stack</em>) (no en el <em>Python call stack</em>). Podemos
+depurar la llamada a la pila en C usando comandos gdb:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">(gdb) up</span>
+<div class="newline"></div><span class="gp">#</span>1  0x004af4f5 in _copy_from_same_shape <span class="o">(</span><span class="nv">dest</span><span class="o">=</span>&lt;value optimized out&gt;,
+<div class="newline"></div><span class="go">    src=&lt;value optimized out&gt;, myfunc=0x496780 &lt;_strided_byte_copy&gt;,</span>
+<div class="newline"></div><span class="go">    swap=0)</span>
+<div class="newline"></div><span class="go">at numpy/core/src/multiarray/ctors.c:748</span>
+<div class="newline"></div><span class="go">748         myfunc(dit-&gt;dataptr, dest-&gt;strides[maxaxis],</span>
+<div class="newline"></div></pre></div>
+</div>
+<p>Como puedes ver, ahora mismo estamos en el código C de numpy. Nos gustaría
+saber cuál es el código python que desencadena este error de segmentación,
+así que vamos hacia arriba de la pila hasta que demos con el código Python
+que buscamos:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">(gdb) up</span>
+<div class="newline"></div><span class="gp">#</span>8  0x080ddd23 in call_function <span class="o">(</span><span class="nv">f</span><span class="o">=</span>
+<div class="newline"></div><span class="go">    Frame 0x85371ec, for file /home/varoquau/usr/lib/python2.6/site-packages/numpy/core/arrayprint.py, line 156, in _leading_trailing (a=&lt;numpy.ndarray at remote 0x85371b0&gt;, _nc=&lt;module at remote 0xb7f93a64&gt;), throwflag=0)</span>
+<div class="newline"></div><span class="go">    at ../Python/ceval.c:3750</span>
+<div class="newline"></div><span class="go">3750    ../Python/ceval.c: No such file or directory.</span>
+<div class="newline"></div><span class="go">        in ../Python/ceval.c</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">(gdb) up</span>
+<div class="newline"></div><span class="gp">#</span>9  PyEval_EvalFrameEx <span class="o">(</span><span class="nv">f</span><span class="o">=</span>
+<div class="newline"></div><span class="go">    Frame 0x85371ec, for file /home/varoquau/usr/lib/python2.6/site-packages/numpy/core/arrayprint.py, line 156, in _leading_trailing (a=&lt;numpy.ndarray at remote 0x85371b0&gt;, _nc=&lt;module at remote 0xb7f93a64&gt;), throwflag=0)</span>
+<div class="newline"></div><span class="go">    at ../Python/ceval.c:2412</span>
+<div class="newline"></div><span class="go">2412    in ../Python/ceval.c</span>
+<div class="newline"></div><span class="go">(gdb)</span>
+<div class="newline"></div></pre></div>
+</div>
+<p>Una vez que estamos en el bucle de ejecución Python, podríamos usar nuestra función especial de ayuda Python. Por ejemplo, podemos encontrar el correspondiente
+código Python:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">(gdb) pyframe</span>
+<div class="newline"></div><span class="go">/home/varoquau/usr/lib/python2.6/site-packages/numpy/core/arrayprint.py (158): _leading_trailing</span>
+<div class="newline"></div><span class="go">(gdb)</span>
+<div class="newline"></div></pre></div>
+</div>
+<p>Este es el código numpy, tenemos que ir hacia arriba hasta que encomntremos
+el código que hemos escrito:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">(gdb) up</span>
+<div class="newline"></div><span class="go">...</span>
+<div class="newline"></div><span class="go">(gdb) up</span>
+<div class="newline"></div><span class="gp">#</span>34 0x080dc97a in PyEval_EvalFrameEx <span class="o">(</span><span class="nv">f</span><span class="o">=</span>
+<div class="newline"></div><span class="go">    Frame 0x82f064c, for file segfault.py, line 11, in print_big_array (small_array=&lt;numpy.ndarray at remote 0x853ecf0&gt;, big_array=&lt;numpy.ndarray at remote 0x853ed20&gt;), throwflag=0) at ../Python/ceval.c:1630</span>
+<div class="newline"></div><span class="go">1630    ../Python/ceval.c: No such file or directory.</span>
+<div class="newline"></div><span class="go">        in ../Python/ceval.c</span>
+<div class="newline"></div><span class="go">(gdb) pyframe</span>
+<div class="newline"></div><span class="go">segfault.py (12): print_big_array</span>
+<div class="newline"></div></pre></div>
+</div>
+<p>El código correspondiente es:</p>
+<p>Entonces, el error de segmentación ocurre cuando mostramos <tt class="xref py py-obj docutils literal"><span class="pre">big_array[-10:]</span></tt>.
+La razón es que <tt class="docutils literal"><span class="pre">big_array</span></tt> ha sido localizado con su final fuera de la
+memoria del programa.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Para ver una lista de los comandos Python específicos definidos en el
+<tt class="xref py py-obj docutils literal"><span class="pre">gdbinit</span></tt> podéis leer el código fuente de este fichero.</p>
+</div>
+<hr class="docutils" />
+<div class="green topic">
+<p class="topic-title first"><strong>Ejercicio final</strong></p>
+<p>El siguiente <em>script</em> está bien documentado y es legible. Busca responder
+un problema de interés en el mundo de la computación numérica pero no
+funciona... ¿Lo podrías depurar?</p>
+<p><strong>Código fuente Python:</strong> <a class="reference download internal" href="../../_downloads/to_debug.py"><tt class="xref download docutils literal"><span class="pre">to_debug.py</span></tt></a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<div class="newline"></div><span class="sd">A script to compare different root-finding algorithms.</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="sd">This version of the script is buggy and does not execute. It is your task</span>
+<div class="newline"></div><span class="sd">to find an fix these bugs.</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="sd">The output of the script sould look like:</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="sd">    Benching 1D root-finder optimizers from scipy.optimize:</span>
+<div class="newline"></div><span class="sd">                brenth:   604678 total function calls</span>
+<div class="newline"></div><span class="sd">                brentq:   594454 total function calls</span>
+<div class="newline"></div><span class="sd">                ridder:   778394 total function calls</span>
+<div class="newline"></div><span class="sd">                bisect:  2148380 total function calls</span>
+<div class="newline"></div><span class="sd">&quot;&quot;&quot;</span>
+<div class="newline"></div><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="newline"></div><span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">optimize</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="n">FUNCTIONS</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">,</span>  <span class="c"># Dilating map</span>
+<div class="newline"></div>             <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">,</span> <span class="c"># Contracting map</span>
+<div class="newline"></div>             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="mf">1e-4</span><span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="c"># Almost null gradient at the root</span>
+<div class="newline"></div>             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">),</span> <span class="c"># Non monotonous function</span>
+<div class="newline"></div>             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mf">1.1</span><span class="o">*</span><span class="n">x</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">x</span><span class="p">),</span> <span class="c"># Fonction with several local maxima</span>
+<div class="newline"></div>            <span class="p">)</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="n">OPTIMIZERS</span> <span class="o">=</span> <span class="p">(</span><span class="n">optimize</span><span class="o">.</span><span class="n">brenth</span><span class="p">,</span> <span class="n">optimize</span><span class="o">.</span><span class="n">brentq</span><span class="p">,</span> <span class="n">optimize</span><span class="o">.</span><span class="n">ridder</span><span class="p">,</span>
+<div class="newline"></div>              <span class="n">optimize</span><span class="o">.</span><span class="n">bisect</span><span class="p">)</span>
+<div class="newline"></div>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">def</span> <span class="nf">apply_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="newline"></div>    <span class="sd">&quot;&quot;&quot; Return the number of function calls given an root-finding optimizer, </span>
+<div class="newline"></div><span class="sd">        a function and upper and lower bounds.</span>
+<div class="newline"></div><span class="sd">    &quot;&quot;&quot;</span>
+<div class="newline"></div>    <span class="k">return</span> <span class="n">optimizer</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">full_output</span><span class="o">=</span><span class="bp">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">function_calls</span><span class="p">,</span>
+<div class="newline"></div>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">def</span> <span class="nf">bench_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">):</span>
+<div class="newline"></div>    <span class="sd">&quot;&quot;&quot; Find roots for all the functions, and upper and lower bounds</span>
+<div class="newline"></div><span class="sd">        given and return the total number of function calls.</span>
+<div class="newline"></div><span class="sd">    &quot;&quot;&quot;</span>
+<div class="newline"></div>    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">apply_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<div class="newline"></div>               <span class="k">for</span> <span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">param_grid</span><span class="p">)</span>
+<div class="newline"></div>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">def</span> <span class="nf">compare_optimizers</span><span class="p">(</span><span class="n">optimizers</span><span class="p">):</span>
+<div class="newline"></div>    <span class="sd">&quot;&quot;&quot; Compare all the optimizers given on a grid of a few different</span>
+<div class="newline"></div><span class="sd">        functions all admitting a signle root in zero and a upper and</span>
+<div class="newline"></div><span class="sd">        lower bounds.</span>
+<div class="newline"></div><span class="sd">    &quot;&quot;&quot;</span>
+<div class="newline"></div>    <span class="n">random_a</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.3</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<div class="newline"></div>    <span class="n">random_b</span> <span class="o">=</span>   <span class="o">.</span><span class="mi">3</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<div class="newline"></div>    <span class="n">param_grid</span> <span class="o">=</span> <span class="n">product</span><span class="p">(</span><span class="n">FUNCTIONS</span><span class="p">,</span> <span class="n">random_a</span><span class="p">,</span> <span class="n">random_b</span><span class="p">)</span>
+<div class="newline"></div>    <span class="k">print</span> <span class="s">&quot;Benching 1D root-finder optimizers from scipy.optimize:&quot;</span>
+<div class="newline"></div>    <span class="k">for</span> <span class="n">optimizer</span> <span class="ow">in</span> <span class="n">OPTIMIZERS</span><span class="p">:</span>
+<div class="newline"></div>        <span class="k">print</span> <span class="s">&#39;</span><span class="si">% 20s</span><span class="s">: </span><span class="si">% 8i</span><span class="s"> total function calls&#39;</span> <span class="o">%</span> <span class="p">(</span>
+<div class="newline"></div>                    <span class="n">optimizer</span><span class="o">.</span><span class="n">__name__</span><span class="p">,</span> 
+<div class="newline"></div>                    <span class="n">bench_optimizer</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">param_grid</span><span class="p">)</span>
+<div class="newline"></div>                <span class="p">)</span>
+<div class="newline"></div>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+<div class="newline"></div>    <span class="n">compare_optimizers</span><span class="p">(</span><span class="n">OPTIMIZERS</span><span class="p">)</span>
+<div class="newline"></div></pre></div>
+</div>
+</div>
+<p><div style="clear: both"></div></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../optimizing/index.html" title="2.4. Optimizing code"
+             >next</a></li>
+        <li class="right" >
+          <a href="../advanced_numpy/index.html" title="2.2. Numpy avanzado"
+             >previous</a> |</li>
+        <li><a href="../../index.html">Scipy lecture notes</a> &raquo;</li>
+          <li><a href="../index.html" >2. Temas avanzados</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

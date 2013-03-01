@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Soluciones &mdash; Scipy lecture notes</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2012.3 (EuroScipy 2012)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Scipy lecture notes" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../index.html">Scipy lecture notes</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="soluciones">
+<h1>Soluciones<a class="headerlink" href="#soluciones" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="la-solucion-pi-wallis">
+<span id="pi-wallis"></span><h2>La solución Pi Wallis<a class="headerlink" href="#la-solucion-pi-wallis" title="Permalink to this headline">¶</a></h2>
+<p>Calcula los decimales de Pi usando la fórmula de Wallis:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<div class="newline"></div><span class="sd">The correction for the calculation of pi using the Wallis formula.</span>
+<div class="newline"></div><span class="sd">&quot;&quot;&quot;</span>
+<div class="newline"></div><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="n">pi</span> <span class="o">=</span> <span class="mf">3.14159265358979312</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="n">my_pi</span> <span class="o">=</span> <span class="mf">1.</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100000</span><span class="p">):</span>
+<div class="newline"></div>    <span class="n">my_pi</span> <span class="o">*=</span> <span class="mi">4</span><span class="o">*</span><span class="n">i</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mf">1.</span><span class="p">)</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="n">my_pi</span> <span class="o">*=</span> <span class="mi">2</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">print</span> <span class="n">pi</span>
+<div class="newline"></div><span class="k">print</span> <span class="n">my_pi</span>
+<div class="newline"></div><span class="k">print</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pi</span> <span class="o">-</span> <span class="n">my_pi</span><span class="p">)</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="c">################################################################################</span>
+<div class="newline"></div><span class="n">num</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="newline"></div><span class="n">den</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="newline"></div><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100000</span><span class="p">):</span>
+<div class="newline"></div>    <span class="n">tmp</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">i</span><span class="o">*</span><span class="n">i</span>
+<div class="newline"></div>    <span class="n">num</span> <span class="o">*=</span> <span class="n">tmp</span>
+<div class="newline"></div>    <span class="n">den</span> <span class="o">*=</span> <span class="n">tmp</span><span class="o">-</span><span class="mi">1</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="n">better_pi</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="n">num</span><span class="o">/</span><span class="n">den</span><span class="p">)</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">print</span> <span class="n">pi</span>
+<div class="newline"></div><span class="k">print</span> <span class="n">better_pi</span>
+<div class="newline"></div><span class="k">print</span> <span class="nb">abs</span><span class="p">(</span><span class="n">pi</span> <span class="o">-</span> <span class="n">better_pi</span><span class="p">)</span>
+<div class="newline"></div><span class="k">print</span> <span class="nb">abs</span><span class="p">(</span><span class="n">my_pi</span> <span class="o">-</span> <span class="n">better_pi</span><span class="p">)</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="c">################################################################################</span>
+<div class="newline"></div><span class="c"># Solution in a single line using more adcanved constructs (reduce, lambda,</span>
+<div class="newline"></div><span class="c"># list comprehensions</span>
+<div class="newline"></div><span class="k">print</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="p">[</span><span class="nb">float</span><span class="p">((</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span><span class="o">/</span><span class="p">((</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">100000</span><span class="p">)])</span>
+<div class="newline"></div></pre></div>
+</div>
+</div>
+<div class="section" id="la-solucion-quicksort">
+<span id="quick-sort"></span><h2>La solución Quicksort<a class="headerlink" href="#la-solucion-quicksort" title="Permalink to this headline">¶</a></h2>
+<p>Implementa el algoritmo quicksort tal como viene definido en la wikipedia:</p>
+<div class="highlight-python"><pre>function quicksort(array)
+    var list less, greater
+    if length(array) ≤ 1
+        return array
+    select and remove a pivot value pivot from array
+    for each x in array
+        if x ≤ pivot then append x to less
+        else append x to greater
+    return concatenate(quicksort(less), pivot, quicksort(greater))</pre>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<div class="newline"></div><span class="sd">Implement the quick sort algorithm.</span>
+<div class="newline"></div><span class="sd">&quot;&quot;&quot;</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">def</span> <span class="nf">qsort</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
+<div class="newline"></div>    <span class="sd">&quot;&quot;&quot; Quick sort: returns a sorted copy of the list.</span>
+<div class="newline"></div><span class="sd">    &quot;&quot;&quot;</span>
+<div class="newline"></div>    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+<div class="newline"></div>        <span class="k">return</span> <span class="n">lst</span>
+<div class="newline"></div>    <span class="n">pivot</span><span class="p">,</span> <span class="n">rest</span>    <span class="o">=</span> <span class="n">lst</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lst</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+<div class="newline"></div>
+<div class="newline"></div>    <span class="c"># Could use list comprehension:</span>
+<div class="newline"></div>    <span class="c"># less_than      = [ lt for lt in rest if lt &lt; pivot ]</span>
+<div class="newline"></div>
+<div class="newline"></div>    <span class="n">less_than</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="newline"></div>    <span class="k">for</span> <span class="n">lt</span> <span class="ow">in</span> <span class="n">rest</span><span class="p">:</span>
+<div class="newline"></div>        <span class="k">if</span> <span class="n">lt</span> <span class="o">&lt;</span> <span class="n">pivot</span><span class="p">:</span>
+<div class="newline"></div>            <span class="n">less_than</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lt</span><span class="p">)</span>
+<div class="newline"></div>
+<div class="newline"></div>    <span class="c"># Could use list comprehension:</span>
+<div class="newline"></div>    <span class="c"># greater_equal  = [ ge for ge in rest if ge &gt;= pivot ]</span>
+<div class="newline"></div>
+<div class="newline"></div>    <span class="n">greater_equal</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="newline"></div>    <span class="k">for</span> <span class="n">ge</span> <span class="ow">in</span> <span class="n">rest</span><span class="p">:</span>
+<div class="newline"></div>        <span class="k">if</span> <span class="n">ge</span> <span class="o">&gt;=</span> <span class="n">pivot</span><span class="p">:</span>
+<div class="newline"></div>            <span class="n">greater_equal</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ge</span><span class="p">)</span>
+<div class="newline"></div>    <span class="k">return</span> <span class="n">qsort</span><span class="p">(</span><span class="n">less_than</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">pivot</span><span class="p">]</span> <span class="o">+</span> <span class="n">qsort</span><span class="p">(</span><span class="n">greater_equal</span><span class="p">)</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="c"># And now check that qsort does sort:</span>
+<div class="newline"></div><span class="k">assert</span> <span class="n">qsort</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="o">==</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<div class="newline"></div><span class="k">assert</span> <span class="n">qsort</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<div class="newline"></div><span class="k">assert</span> <span class="n">qsort</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="nb">sorted</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<div class="newline"></div></pre></div>
+</div>
+</div>
+<div class="section" id="secuencia-de-fibonacci">
+<span id="fibonacci"></span><h2>Secuencia de Fibonacci<a class="headerlink" href="#secuencia-de-fibonacci" title="Permalink to this headline">¶</a></h2>
+<p>Escribe una función que muestre los <tt class="docutils literal"><span class="pre">n</span></tt> primeros términos de la secuencia
+de Fibonacci, definidad por:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">u_0</span> <span class="pre">=</span> <span class="pre">1;</span> <span class="pre">u_1</span> <span class="pre">=</span> <span class="pre">1</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">u_(n+2)</span> <span class="pre">=</span> <span class="pre">u_(n+1)</span> <span class="pre">+</span> <span class="pre">u_n</span></tt></li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">fib</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<div class="newline"></div><span class="gp">... </span>    <span class="sd">&quot;&quot;&quot;Display the n first terms of Fibonacci sequence&quot;&quot;&quot;</span>
+<div class="newline"></div><span class="gp">... </span>    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<div class="newline"></div><span class="gp">... </span>    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<div class="newline"></div><span class="gp">... </span>    <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">:</span>
+<div class="newline"></div><span class="gp">... </span>        <span class="k">print</span> <span class="n">b</span>
+<div class="newline"></div><span class="gp">... </span>        <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span>
+<div class="newline"></div><span class="gp">... </span>        <span class="n">i</span> <span class="o">+=</span><span class="mi">1</span>
+<div class="newline"></div><span class="gp">...</span>
+<div class="newline"></div><span class="gp">&gt;&gt;&gt; </span><span class="n">fib</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<div class="newline"></div><span class="go">1</span>
+<div class="newline"></div><span class="go">1</span>
+<div class="newline"></div><span class="go">2</span>
+<div class="newline"></div><span class="go">3</span>
+<div class="newline"></div><span class="go">5</span>
+<div class="newline"></div><span class="go">8</span>
+<div class="newline"></div><span class="go">13</span>
+<div class="newline"></div><span class="go">21</span>
+<div class="newline"></div><span class="go">34</span>
+<div class="newline"></div><span class="go">55</span>
+<div class="newline"></div></pre></div>
+</div>
+</div>
+<div class="section" id="la-solucion-del-listado-de-un-directorio">
+<span id="dir-sort"></span><h2>La solución del listado de un directorio<a class="headerlink" href="#la-solucion-del-listado-de-un-directorio" title="Permalink to this headline">¶</a></h2>
+<p>Implementa un script que usa el nombre de un directorio como argumento
+y devuelva la lista de los ficheros &#8216;.py&#8217; files ordenados por la longitud del nombre.</p>
+<p><strong>Truco:</strong> intenta entender el docstring de list.sort</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;</span>
+<div class="newline"></div><span class="sd">Script to list all the &#39;.py&#39; files in a directory, in the order of file</span>
+<div class="newline"></div><span class="sd">name length.</span>
+<div class="newline"></div><span class="sd">&quot;&quot;&quot;</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="kn">import</span> <span class="nn">os</span>
+<div class="newline"></div><span class="kn">import</span> <span class="nn">sys</span>
+<div class="newline"></div>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">def</span> <span class="nf">filter_and_sort</span><span class="p">(</span><span class="n">file_list</span><span class="p">):</span>
+<div class="newline"></div>    <span class="sd">&quot;&quot;&quot; Out of a list of file names, returns only the ones ending by</span>
+<div class="newline"></div><span class="sd">        &#39;.py&#39;, ordered with increasing file name length.</span>
+<div class="newline"></div><span class="sd">    &quot;&quot;&quot;</span>
+<div class="newline"></div>    <span class="n">file_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">filename</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">file_list</span> 
+<div class="newline"></div>                          <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&#39;.py&#39;</span><span class="p">)]</span>
+<div class="newline"></div>
+<div class="newline"></div>    <span class="k">def</span> <span class="nf">key</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+<div class="newline"></div>        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<div class="newline"></div>
+<div class="newline"></div>    <span class="n">file_list</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+<div class="newline"></div>    <span class="k">return</span> <span class="n">file_list</span>
+<div class="newline"></div>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+<div class="newline"></div>    <span class="n">file_list</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<div class="newline"></div>    <span class="n">sorted_file_list</span> <span class="o">=</span> <span class="n">filter_and_sort</span><span class="p">(</span><span class="n">file_list</span><span class="p">)</span>
+<div class="newline"></div>    <span class="k">print</span> <span class="n">sorted_file_list</span>
+<div class="newline"></div></pre></div>
+</div>
+</div>
+<div class="section" id="la-solucion-del-fichero-e-s-de-datos">
+<span id="data-file"></span><h2>La solución del fichero E/S de datos<a class="headerlink" href="#la-solucion-del-fichero-e-s-de-datos" title="Permalink to this headline">¶</a></h2>
+<p>Escribe una función que lea la columna de números en <tt class="docutils literal"><span class="pre">data.txt</span></tt>
+y calcule el máximo, el mínimo y la suma de los valores.</p>
+<p>Fichero de datos:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="mf">10.2</span>
+<div class="newline"></div><span class="mf">43.1</span>
+<div class="newline"></div><span class="mf">32.6</span>
+<div class="newline"></div><span class="mf">32.5</span>
+<div class="newline"></div><span class="mf">61.3</span>
+<div class="newline"></div><span class="mf">58.2</span>
+<div class="newline"></div></pre></div>
+</div>
+<p>Solución:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;Script to read in a column of numbers and calculate the min, max and sum.</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="sd">Data is stored in data.txt.</span>
+<div class="newline"></div><span class="sd">&quot;&quot;&quot;</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">def</span> <span class="nf">load_data</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+<div class="newline"></div>    <span class="n">fp</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<div class="newline"></div>    <span class="n">data_string</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<div class="newline"></div>    <span class="n">fp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<div class="newline"></div>
+<div class="newline"></div>    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="newline"></div>    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data_string</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+<div class="newline"></div>        <span class="c"># Data is read in as a string. We need to convert it to floats</span>
+<div class="newline"></div>        <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<div class="newline"></div>
+<div class="newline"></div>    <span class="c"># Could instead use the following one line with list comprehensions!</span>
+<div class="newline"></div>    <span class="c"># data = [float(x) for x in data_string.split()]</span>
+<div class="newline"></div>    <span class="k">return</span> <span class="n">data</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+<div class="newline"></div>    <span class="n">data</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s">&#39;data.txt&#39;</span><span class="p">)</span>
+<div class="newline"></div>    <span class="c"># Python provides these basic math functions</span>
+<div class="newline"></div>    <span class="k">print</span><span class="p">(</span><span class="s">&#39;min: </span><span class="si">%f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="nb">min</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<div class="newline"></div>    <span class="k">print</span><span class="p">(</span><span class="s">&#39;max: </span><span class="si">%f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="nb">max</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<div class="newline"></div>    <span class="k">print</span><span class="p">(</span><span class="s">&#39;sum: </span><span class="si">%f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="nb">sum</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+<div class="newline"></div></pre></div>
+</div>
+</div>
+<div class="section" id="la-solucion-de-busqueda-en-el-pythonpath">
+<span id="path-site"></span><h2>La solución de búsqueda en el PYTHONPATH<a class="headerlink" href="#la-solucion-de-busqueda-en-el-pythonpath" title="Permalink to this headline">¶</a></h2>
+<p>Escribe un programa que busque el módulo <tt class="docutils literal"><span class="pre">site.py</span></tt> en tu PYTHONPATH.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="sd">&quot;&quot;&quot;Script to search the PYTHONPATH for the module site.py&quot;&quot;&quot;</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="kn">import</span> <span class="nn">os</span>
+<div class="newline"></div><span class="kn">import</span> <span class="nn">sys</span>
+<div class="newline"></div><span class="kn">import</span> <span class="nn">glob</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">def</span> <span class="nf">find_module</span><span class="p">(</span><span class="n">module</span><span class="p">):</span>
+<div class="newline"></div>    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="newline"></div>    <span class="c"># Loop over the list of paths in sys.path</span>
+<div class="newline"></div>    <span class="k">for</span> <span class="n">subdir</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+<div class="newline"></div>        <span class="c"># Join the subdir path with the module we&#39;re searching for</span>
+<div class="newline"></div>        <span class="n">pth</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subdir</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span>
+<div class="newline"></div>        <span class="c"># Use glob to test if the pth is exists</span>
+<div class="newline"></div>        <span class="n">res</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pth</span><span class="p">)</span>
+<div class="newline"></div>        <span class="c"># glob returns a list, if it is not empty, the pth exists</span>
+<div class="newline"></div>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<div class="newline"></div>            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<div class="newline"></div>    <span class="k">return</span> <span class="n">result</span>
+<div class="newline"></div>
+<div class="newline"></div>
+<div class="newline"></div><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+<div class="newline"></div>    <span class="n">result</span> <span class="o">=</span> <span class="n">find_module</span><span class="p">(</span><span class="s">&#39;site.py&#39;</span><span class="p">)</span>
+<div class="newline"></div>    <span class="k">print</span> <span class="n">result</span>
+<div class="newline"></div>    
+<div class="newline"></div></pre></div>
+</div>
+<p><div style="clear: both"></div></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="../index.html">Scipy lecture notes</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

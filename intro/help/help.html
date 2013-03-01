@@ -1,0 +1,193 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1.4. Obteniendo ayuda y buscando en la documentación &mdash; Scipy lecture notes</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2012.3 (EuroScipy 2012)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Scipy lecture notes" href="../../index.html" />
+    <link rel="up" title="1. Para empezar con Python para fines científicos" href="../index.html" />
+    <link rel="next" title="1.5. Matplotlib: plotting" href="../matplotlib/matplotlib.html" />
+    <link rel="prev" title="1.3.4. Advanced operations" href="../numpy/advanced_operations.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../matplotlib/matplotlib.html" title="1.5. Matplotlib: plotting"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="../numpy/advanced_operations.html" title="1.3.4. Advanced operations"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">Scipy lecture notes</a> &raquo;</li>
+          <li><a href="../index.html" accesskey="U">1. Para empezar con Python para fines científicos</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="obteniendo-ayuda-y-buscando-en-la-documentacion">
+<span id="help"></span><h1>1.4. Obteniendo ayuda y buscando en la documentación<a class="headerlink" href="#obteniendo-ayuda-y-buscando-en-la-documentacion" title="Permalink to this headline">¶</a></h1>
+<p>Mejor que conocer todas las funciones existentes en Numpy y en Scipy sería más importante
+e interesante encontrar de forma rápida a través de la documentación y de la ayuda
+disponible. Aquí encontrarás algunas formas de encontrar información:</p>
+<ul>
+<li><p class="first">En Ipython, <tt class="docutils literal"><span class="pre">help</span> <span class="pre">function</span></tt> abre el <tt class="xref py py-obj docutils literal"><span class="pre">docstring</span></tt> de la función. Solo has de teclear el
+principio del nombre de la función y después pulsar tab para que se muestre en pantalla
+las posibles funciones que estamos buscando.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [204]: </span><span class="n">help</span> <span class="n">np</span><span class="o">.</span><span class="n">v</span>
+<div class="newline"></div><span class="go">np.vander     np.vdot       np.version    np.void0      np.vstack</span>
+<div class="newline"></div><span class="go">np.var        np.vectorize  np.void       np.vsplit</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="gp">In [204]: </span><span class="n">help</span> <span class="n">np</span><span class="o">.</span><span class="n">vander</span>
+<div class="newline"></div></pre></div>
+</div>
+</li>
+</ul>
+<p>En Ipython no es posible abrir una ventana aparte para mostrar la ayuda y la
+documentación; sin embargo siempre podríamos abrir una segunda consola <tt class="docutils literal"><span class="pre">Ipython</span></tt>
+para mostrar únicamente la ayuda y <tt class="xref py py-obj docutils literal"><span class="pre">docstrings</span></tt>...</p>
+<ul>
+<li><p class="first">Se puede navegar online en las documentaciones de Numpy y de Scipy en
+<a class="reference external" href="http://docs.scipy.org/doc">http://docs.scipy.org/doc</a>. El botón <tt class="docutils literal"><span class="pre">search</span></tt> localizado en la documentación de refencia
+de ambos paquetes es muy útil
+(<a class="reference external" href="http://docs.scipy.org/doc/numpy/reference/">http://docs.scipy.org/doc/numpy/reference/</a> y
+<a class="reference external" href="http://docs.scipy.org/doc/scipy/reference/">http://docs.scipy.org/doc/scipy/reference/</a>).</p>
+<p>Tutoriales sobre varios temas además de la API completa con todos los
+<tt class="xref py py-obj docutils literal"><span class="pre">docstrings</span></tt> se puede encontrar en el siguiente sitio web.</p>
+<a class="reference internal image-reference" href="../../_images/scipy_doc.png"><img alt="../../_images/scipy_doc.png" class="align-center" src="../../_images/scipy_doc.png" /></a>
+</li>
+<li><p class="first">La socumentación de Numpy y de Scipy se completa y actualiza de forma regular por
+los usuarios en la wiki <a class="reference external" href="http://docs.scipy.org/numpy/">http://docs.scipy.org/numpy/</a>. Como resultado,
+algunos <tt class="xref py py-obj docutils literal"><span class="pre">docstrings</span></tt> están más claros y detallados en la wiki y podrías leer
+directamente la documentación en la wiki en lugar de usar la documentación oficial.
+Hay que tener en cuenta que cualquiera puede crearuna cuenta en la wiki y escribir
+mejor documentación; ¡esta es una forma sencilla de contribuir a un proyecto
+de código libre y ayudar a mejorar las herramientas que usas!</p>
+<a class="reference internal image-reference" href="../../_images/docwiki.png"><img alt="../../_images/docwiki.png" class="align-center" src="../../_images/docwiki.png" /></a>
+</li>
+<li><p class="first">El recetario (<tt class="xref py py-obj docutils literal"><span class="pre">cookbook</span></tt>) de Scipy <a class="reference external" href="http://www.scipy.org/Cookbook">http://www.scipy.org/Cookbook</a> proporciona recetas
+para muchos de los problemas que nos encontramos a menudo, como el ajuste de datos,
+resolver ecuaciones diferenciales ordinarias, etc.</p>
+</li>
+<li><p class="first">La web de Matplotlib <a class="reference external" href="http://matplotlib.sourceforge.net/">http://matplotlib.sourceforge.net/</a> dispone de una
+<a href="#id1"><span class="problematic" id="id2">**</span></a>galeria* con un gran número de gráficos y ejemplos con el código fuente y el
+gráfico resultante. Esto es muy útil aprender mediante ejemplos. También se encuentra
+disponible la documentación estándar.</p>
+<a class="reference internal image-reference" href="../../_images/matplotlib.png"><img alt="../../_images/matplotlib.png" class="align-center" src="../../_images/matplotlib.png" /></a>
+</li>
+<li><p class="first">El sitio web de Mayavi
+<a class="reference external" href="http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/">http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/</a>
+también dispone de una galería de ejemplos
+<a class="reference external" href="http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/auto/examples.html">http://code.enthought.com/projects/mayavi/docs/development/html/mayavi/auto/examples.html</a>
+en la cual podemos navegar a través de diferentes soluciones de visualización.</p>
+<a class="reference internal image-reference" href="../../_images/mayavi_website.png"><img alt="../../_images/mayavi_website.png" class="align-center" src="../../_images/mayavi_website.png" /></a>
+</li>
+</ul>
+<p>Finalmente, también serían útiles dos posibilidades más &#8220;técnicas&#8221;:</p>
+<ul>
+<li><p class="first">En Ipython, la función mágica <tt class="docutils literal"><span class="pre">%psearch</span></tt> busca objetos que coincidan
+con los patrones de búsqueda. Esto es útil, por ejemplo, cuando desconocemos
+el nombre exacto de una función.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [3]: </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="newline"></div><span class="gp">In [4]: </span><span class="o">%</span><span class="n">psearch</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="o">*</span>
+<div class="newline"></div><span class="go">np.diag</span>
+<div class="newline"></div><span class="go">np.diagflat</span>
+<div class="newline"></div><span class="go">np.diagonal</span>
+<div class="newline"></div></pre></div>
+</div>
+</li>
+<li><p class="first">numpy.lookfor busca por palabras clave dentro de los <tt class="xref py py-obj docutils literal"><span class="pre">docstrings</span></tt> de módulos específicos.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [45]: </span><span class="n">numpy</span><span class="o">.</span><span class="n">lookfor</span><span class="p">(</span><span class="s">&#39;convolution&#39;</span><span class="p">)</span>
+<div class="newline"></div><span class="go">Search results for &#39;convolution&#39;</span>
+<div class="newline"></div><span class="go">--------------------------------</span>
+<div class="newline"></div><span class="go">numpy.convolve</span>
+<div class="newline"></div><span class="go">    Returns the discrete, linear convolution of two one-dimensional</span>
+<div class="newline"></div><span class="go">sequences.</span>
+<div class="newline"></div><span class="go">numpy.bartlett</span>
+<div class="newline"></div><span class="go">    Return the Bartlett window.</span>
+<div class="newline"></div><span class="go">numpy.correlate</span>
+<div class="newline"></div><span class="go">    Discrete, linear correlation of two 1-dimensional sequences.</span>
+<div class="newline"></div><span class="gp">In [46]: </span><span class="n">numpy</span><span class="o">.</span><span class="n">lookfor</span><span class="p">(</span><span class="s">&#39;remove&#39;</span><span class="p">,</span> <span class="n">module</span><span class="o">=</span><span class="s">&#39;os&#39;</span><span class="p">)</span>
+<div class="newline"></div><span class="go">Search results for &#39;remove&#39;</span>
+<div class="newline"></div><span class="go">---------------------------</span>
+<div class="newline"></div><span class="go">os.remove</span>
+<div class="newline"></div><span class="go">    remove(path)</span>
+<div class="newline"></div><span class="go">os.removedirs</span>
+<div class="newline"></div><span class="go">    removedirs(path)</span>
+<div class="newline"></div><span class="go">os.rmdir</span>
+<div class="newline"></div><span class="go">    rmdir(path)</span>
+<div class="newline"></div><span class="go">os.unlink</span>
+<div class="newline"></div><span class="go">    unlink(path)</span>
+<div class="newline"></div><span class="go">os.walk</span>
+<div class="newline"></div><span class="go">    Directory tree generator.</span>
+<div class="newline"></div></pre></div>
+</div>
+</li>
+<li><p class="first">Si todo lo anterior falla (y Google no tiene la respuesta)...
+¡no hay que desesperarse! Escribe a la lista de correo que se
+ajuste a tu problema: obtendrás una rápida respuesta si defines correctamente
+tu problema. A menudo, expertos en <tt class="xref py py-obj docutils literal"><span class="pre">python</span> <span class="pre">científico</span></tt> ofrecen explicaciones
+muy clarificadoras en las listas de correo.</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>Numpy discussion</strong> (<a class="reference external" href="mailto:numpy-discussion&#37;&#52;&#48;scipy&#46;org">numpy-discussion<span>&#64;</span>scipy<span>&#46;</span>org</a>): todo acerca de arrays
+numpy, como manipularlos, preguntas sobre indexación, etc.</li>
+<li><strong>SciPy Users List</strong> (<a class="reference external" href="mailto:scipy-user&#37;&#52;&#48;scipy&#46;org">scipy-user<span>&#64;</span>scipy<span>&#46;</span>org</a>): cálculos científicos con Python,
+procesamiento de datos de alto nivel, en particular con el paquete scipy.</li>
+<li><a class="reference external" href="mailto:matplotlib-users&#37;&#52;&#48;lists&#46;sourceforge&#46;net">matplotlib-users<span>&#64;</span>lists<span>&#46;</span>sourceforge<span>&#46;</span>net</a> para hacer gráficas con
+matplotlib.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p><div style="clear: both"></div></p>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../matplotlib/matplotlib.html" title="1.5. Matplotlib: plotting"
+             >next</a></li>
+        <li class="right" >
+          <a href="../numpy/advanced_operations.html" title="1.3.4. Advanced operations"
+             >previous</a> |</li>
+        <li><a href="../../index.html">Scipy lecture notes</a> &raquo;</li>
+          <li><a href="../index.html" >1. Para empezar con Python para fines científicos</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

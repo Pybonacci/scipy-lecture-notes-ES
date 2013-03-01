@@ -1,0 +1,456 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1.1. Computación científica con herramientas y flujos de trabajo &mdash; Scipy lecture notes</title>
+    
+    <link rel="stylesheet" href="../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2012.3 (EuroScipy 2012)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Scipy lecture notes" href="../index.html" />
+    <link rel="up" title="1. Para empezar con Python para fines científicos" href="index.html" />
+    <link rel="next" title="1.2. The Python language" href="language/python_language.html" />
+    <link rel="prev" title="1. Para empezar con Python para fines científicos" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="language/python_language.html" title="1.2. The Python language"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="index.html" title="1. Para empezar con Python para fines científicos"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Scipy lecture notes</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">1. Para empezar con Python para fines científicos</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="computacion-cientifica-con-herramientas-y-flujos-de-trabajo">
+<h1>1.1. Computación científica con herramientas y flujos de trabajo<a class="headerlink" href="#computacion-cientifica-con-herramientas-y-flujos-de-trabajo" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">autores:</th><td class="field-body">Fernando Pérez, Emmanuelle Gouillart, Gaël Varoquaux, Valentin Haenel</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="por-que-python">
+<h2>1.1.1. ¿Por qué Python?<a class="headerlink" href="#por-que-python" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cuales-son-las-necesidades-de-los-cientificos">
+<h3>1.1.1.1. ¡Cuáles son las necesidades de los científicos?<a class="headerlink" href="#cuales-son-las-necesidades-de-los-cientificos" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Obtener datos (simulación, experimentos)</li>
+<li>Manipular y procesar datos.</li>
+<li>Visualizar resultados... ¡para ver qué estamos haciendo!</li>
+<li>Presentar resultados: generar figuras para reportes o publicaciones y
+hacer presentaciones.</li>
+</ul>
+</div>
+<div class="section" id="especificaciones">
+<h3>1.1.1.2. Especificaciones<a class="headerlink" href="#especificaciones" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Conjunto completo de <strong>piezas</strong> correspondiente a métodos numéricos
+clásicos o acciones básicas: no queremos re-programar el gráfico de una
+curva, una transformada de Fourier o un algoritmo de ajuste. ¡No
+reinventes la rueda!</li>
+<li>Fácil de aprender: las ciencias de la computación no son ni nuestro trabajo
+ni nuestra formación. Queremos ser capaces de graficar una curva, suavizar
+una señal o hacer una transformada de Fourier en unos pocos minutos.</li>
+<li>Fácil comunicación con colaboradores, estudiantes y clientes para hacer del
+código algo vivo dentro de un laboratorio o una compañía: el código debería
+ser tan entendible como un libro. El lenguaje debería contener la menor
+cantidad de sintaxis simbólica o rutinas innecesarias que puedan distraer
+al lector del entendimiento matemático o científico del código.</li>
+<li>Código eficiente que se ejecute rápido... pero no es necesario decir que un
+código muy rápido se vuelve inútil si perdemos mucho tiempo en escribirlo.
+Por lo tanto, necesitamos rapidez tanto en el desarrollo como en el tiempo
+de ejecución.</li>
+<li>La idea es evitar tener que aprender un nuevo software para cada problema nuevo.
+Un ambiente/lenguaje para todo, siempreque sea posible.</li>
+</ul>
+</div>
+<div class="section" id="soluciones-existentes">
+<h3>1.1.1.3. Soluciones existentes<a class="headerlink" href="#soluciones-existentes" title="Permalink to this headline">¶</a></h3>
+<p>¿Qué soluciones usan los científicos para trabajar?</p>
+<p><strong>Lenguajes compilados: C, C++, Fortran, etc.</strong></p>
+<ul class="simple">
+<li>Ventajas:<ul>
+<li>Muy rápidos. Compiladores muy optimizados. Para cálculos intensivos es
+difícil escapar de estos lenguajes.</li>
+<li>Algunas bibliotecas científicas muy optimizadas han sido escritas para
+estos lenguajes. Ejemplo: BLAS (operaciones vectoriales y matriciales)</li>
+</ul>
+</li>
+<li>Desventajas:<ul>
+<li>Difícil uso: no hay interactividad durante el desarrollo,
+pasos de compilación obligatorios, sintaxis compleja (&amp;, ::, }}, ;, etc.),
+manejo de uso de memoria manual (difícil en C). Estos son <strong>lenguajes
+difíciles</strong> para científicos ajenos a las ciencias de la computación.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Lenguajes de script: Matlab</strong></p>
+<ul class="simple">
+<li>Ventajas:<ul>
+<li>Conjunto de bibliotecas muy completas con numerosos algoritmos para temáticas
+muy diferentes. Rápida ejecución debido a que estas bibliotecas por lo general
+están escritas en un lenguaje compilado.</li>
+<li>Cómodo ambiente de desarrollo: ayuda completa y bien organizada, editor
+integrado, etc.</li>
+<li>Soporte comercial disponible.</li>
+</ul>
+</li>
+<li>Desventajas:<ul>
+<li>El lenguaje es pobre y puede llegar a ser restrictivo para usuarios
+avanzados.</li>
+<li>No es gratuito ni libre.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Otros lenguajes de script: Scilab, Octave, Igor, R, IDL, etc.</strong></p>
+<ul class="simple">
+<li>Ventajas:<ul>
+<li>Son de código abierto, gratuitos o al menos más baratos que Matlab.</li>
+<li>Algunas características pueden ser muy avanzadas (estadística en R,
+gráficas en Igor, etc.).</li>
+</ul>
+</li>
+<li>Desventajas:<ul>
+<li>Menos algoritmos disponibles que Matlab y el lenguaje no es más avanzado.</li>
+<li>Algunos softwares están muy enfocados a una temática concreta. Por ejemplo, Gnuplot o
+xmgrace para graficar curvas. Estos programas son muy poderosos, pero están
+restringidos a un solo tipo de uso, como por ejemplo para hacer gráficos.</li>
+</ul>
+</li>
+</ul>
+<p><strong>¿Qué hay de Python?</strong></p>
+<ul class="simple">
+<li>Ventajas:<ul>
+<li>Bibliotecas de cálculo científico muy completas (aunque un poco menos que
+en Matlab).</li>
+<li>Lenguaje bien pensado, lo que permite escribir código muy legible y bien
+estructurado: &#8220;escribimos el código que pensamos&#8221;.</li>
+<li>Existen muchas bibliotecas para otras tareas, además de para cálculo científico
+(administración de servidores web, acceso al puerto serie, etc.).</li>
+<li>Software libre y de acceso abierto, ampliamente difundido con una
+comunidad activa y vibrante.</li>
+</ul>
+</li>
+<li>Desventajas:<ul>
+<li>Ambiente de desarrollo menos placentero que, por ejemplo, Matlab.
+(Más orientado a los geeks).</li>
+<li>No se pueden encontrar todos los algoritmos en softwares o toolboxes más
+especializados.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="bloques-de-construccion-para-python-cientifico">
+<h2>1.1.2. Bloques de construcción para Python científico<a class="headerlink" href="#bloques-de-construccion-para-python-cientifico" title="Permalink to this headline">¶</a></h2>
+<p>Al contrario de Matlab, Scilab o R, Python no viene con un conjunto de
+módulos para cálculo científico. A continuación se muestran los bloques
+o librerías básicas que, correctamente combinados, permiten obtener un
+completo ambiente de desarrollo para cálculo científico:</p>
+<ul>
+<li><p class="first"><strong>Python</strong>, un lenguaje computacional genérico y moderno</p>
+<blockquote>
+<div><ul class="simple">
+<li>Lenguaje Python: tipos de datos (<tt class="docutils literal"><span class="pre">string</span></tt>, <tt class="docutils literal"><span class="pre">int</span></tt>), control de flujo,
+estructuras de datos (listas, diccionarios), patrones, etc.</li>
+<li>Módulos de la biblioteca estándar.</li>
+<li>Un gran número de módulos especializados o aplicaciones escritas en
+Python: protocolos web, framework para aplicaciones web, etc. ... y
+cálculo científico.</li>
+<li>Herramientas de desarrollo (pruebas automáticas, generación de
+documentación)</li>
+</ul>
+</div></blockquote>
+<a class="reference internal image-reference" href="../_images/snapshot_ipython.png"><img alt="../_images/snapshot_ipython.png" class="align-right" src="../_images/snapshot_ipython.png" /></a>
+</li>
+<li><p class="first"><strong>IPython</strong>, una <strong>consola de Python</strong> avanzada <a class="reference external" href="http://ipython.org/">http://ipython.org/</a></p>
+</li>
+<li><p class="first"><strong>Numpy</strong> : proporciona poderosos objetos de <strong>arrays numéricos</strong> y rutinas
+para manipularlos. <a class="reference external" href="http://www.numpy.org/">http://www.numpy.org/</a></p>
+</li>
+</ul>
+<ul>
+<li><p class="first"><strong>Scipy</strong> : rutinas de alto nivel para procesamiento de datos.
+Optimización, regresión, interpolación, etc. <a class="reference external" href="http://www.scipy.org/">http://www.scipy.org/</a></p>
+<a class="reference internal image-reference" href="../_images/random_c.jpg"><img alt="../_images/random_c.jpg" class="align-right" src="../_images/random_c.jpg" /></a>
+</li>
+<li><p class="first"><strong>Matplotlib</strong> : visualización bidimensional, gráficos &#8220;listos para publicar&#8221;
+<a class="reference external" href="http://matplotlib.sourceforge.net/">http://matplotlib.sourceforge.net/</a></p>
+<p><div style="clear: both"></div></p>
+<a class="reference internal image-reference" href="../_images/example_surface_from_irregular_data.jpg"><img alt="../_images/example_surface_from_irregular_data.jpg" class="align-right" src="../_images/example_surface_from_irregular_data.jpg" /></a>
+</li>
+<li><p class="first"><strong>Mayavi</strong> : visualización tridimensional
+<a class="reference external" href="http://code.enthought.com/projects/mayavi/">http://code.enthought.com/projects/mayavi/</a></p>
+<p><div style="clear: both"></div></p>
+</li>
+</ul>
+</div>
+<div class="section" id="el-flujo-de-trabajo-interactivo-ipython-y-un-editor-de-textos">
+<h2>1.1.3. El flujo de trabajo interactivo: IPython y un editor de textos<a class="headerlink" href="#el-flujo-de-trabajo-interactivo-ipython-y-un-editor-de-textos" title="Permalink to this headline">¶</a></h2>
+<p><strong>Trabajo interactivo para probar y entender algoritmos</strong>: En esta
+sección, describiremos un flujo de trabajo interactivo con
+<a class="reference external" href="http://ipython.org">IPython</a> que es práctico para explorar y
+entender algoritmos.</p>
+<p>Python es un lenguaje multipropósito. Como tal, no existe un ambiente
+bendito para trabajar ni hay una sola manera de usarlo. Aunque esto hace
+que sea más difícil para principiantes encontrar su propio camino, esto hace
+posible que Python sea usado para escribir programas, en servidores web o
+dispositivos embebidos.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Documento de referencia para esta sección:</p>
+<p class="last"><strong>IPython user manual:</strong> <a class="reference external" href="http://ipython.org/ipython-doc/dev/index.html">http://ipython.org/ipython-doc/dev/index.html</a></p>
+</div>
+<div class="section" id="interaccion-en-la-linea-de-comandos">
+<h3>1.1.3.1. Interacción en la línea de comandos<a class="headerlink" href="#interaccion-en-la-linea-de-comandos" title="Permalink to this headline">¶</a></h3>
+<p>Iniciar <tt class="xref py py-obj docutils literal"><span class="pre">ipython</span></tt>:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="k">print</span><span class="p">(</span><span class="s">&#39;Hola mundo&#39;</span><span class="p">)</span>
+<div class="newline"></div><span class="go">Hola mundo</span>
+<div class="newline"></div></pre></div>
+</div>
+<p>Obteniendo ayuda usando el operador <strong>?</strong> después de un objeto:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [2]: </span><span class="k">print</span><span class="err">?</span>
+<div class="newline"></div><span class="go">Type:               builtin_function_or_method</span>
+<div class="newline"></div><span class="go">Base Class:         &lt;type &#39;builtin_function_or_method&#39;&gt;</span>
+<div class="newline"></div><span class="go">String Form:        &lt;built-in function print&gt;</span>
+<div class="newline"></div><span class="go">Namespace:          Python builtin</span>
+<div class="newline"></div><span class="go">Docstring:</span>
+<div class="newline"></div><span class="go">    print(value, ..., sep=&#39; &#39;, end=&#39;\n&#39;, file=sys.stdout)</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">    Prints the values to a stream, or to sys.stdout by default.</span>
+<div class="newline"></div><span class="go">    Optional keyword arguments:</span>
+<div class="newline"></div><span class="go">    file: a file-like object (stream); defaults to the current sys.stdout.</span>
+<div class="newline"></div><span class="go">    sep:  string inserted between values, default a space.</span>
+<div class="newline"></div><span class="go">    end:  string appended after the last value, default a newline.</span>
+<div class="newline"></div></pre></div>
+</div>
+</div>
+<div class="section" id="elaboracion-del-algoritmo-en-un-editor-de-textos">
+<h3>1.1.3.2. Elaboración del algoritmo en un editor de textos<a class="headerlink" href="#elaboracion-del-algoritmo-en-un-editor-de-textos" title="Permalink to this headline">¶</a></h3>
+<p>Creamos un archivo <tt class="xref py py-obj docutils literal"><span class="pre">mi_fichero.py</span></tt> en un editor de texto. En EPD (Enthought Python
+Distribution), puedes usar <tt class="xref py py-obj docutils literal"><span class="pre">Scite</span></tt>, disponible en el menú de inicio. En
+Python(x,y) puedes usar Spyder. En Ubuntu, si todavía no tienes tu editor
+favorito, te aconsejamos instalar <tt class="xref py py-obj docutils literal"><span class="pre">Stani's</span> <span class="pre">Python</span> <span class="pre">editor</span></tt>. En el archivo,
+agrega las siguientes líneas:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">s</span> <span class="o">=</span> <span class="s">&#39;Hola mundo&#39;</span>
+<div class="newline"></div><span class="k">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<div class="newline"></div></pre></div>
+</div>
+<p>Ahora, puedes ejecutarlo en IPython y explorar las variables resultantes:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="o">%</span><span class="n">run</span> <span class="n">mi_fichero</span><span class="o">.</span><span class="n">py</span>
+<div class="newline"></div><span class="go">Hola mundo</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="gp">In [2]: </span><span class="n">s</span>
+<div class="newline"></div><span class="gr">Out[2]: </span><span class="s">&#39;Hola mundo&#39;</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="gp">In [3]: </span><span class="o">%</span><span class="n">whos</span>
+<div class="newline"></div><span class="go">Variable   Type    Data/Info</span>
+<div class="newline"></div><span class="go">----------------------------</span>
+<div class="newline"></div><span class="go">s          str     Hola mundo</span>
+<div class="newline"></div></pre></div>
+</div>
+<div class="topic">
+<p class="topic-title first"><strong>Desde un script hasta funciones</strong></p>
+<p>Si bien es tentador trabajar solo con scripts, que es un archivo lleno
+de instrucciones a seguir que se siguen una tras otra, iremos planeando
+una evolución progresiva del script hacia un conjunto de funciones:</p>
+<ul class="simple">
+<li>Un script no es reutilizable, las funciones sí.</li>
+<li>Pensar en términos de funcionas ayuda a dividir el problema en
+pequeños bloques.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="consejos-y-trucos-de-ipython">
+<h3>1.1.3.3. Consejos y trucos de IPython<a class="headerlink" href="#consejos-y-trucos-de-ipython" title="Permalink to this headline">¶</a></h3>
+<p>El manual de usuario de IPython contiene mucha información sobre cómo usar
+IPython, pero para que puedas iniciarte queremos darte una breve introducción a tres
+características útiles: <em>historial</em>, <em>funciones mágicas</em> y <em>autocompletado
+con tabulador</em>.</p>
+<p>Como una consola UNIX, IPython soporta comandos de historial. Teclea <em>arriba</em>
+y <em>abajo</em> para reutilizar los comandos anteriormente ejecutados:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="gp">In [2]: </span><span class="o">&lt;</span><span class="n">cursor</span> <span class="n">arriba</span><span class="o">&gt;</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="gp">In [2]: </span><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>
+<div class="newline"></div></pre></div>
+</div>
+<p>IPython soporta las llamadas funciones <em>mágicas</em> anteponiendo a  un comando
+el caracter <tt class="docutils literal"><span class="pre">%</span></tt>. Por ejemplo, las funciones <tt class="docutils literal"><span class="pre">run</span></tt> y <tt class="docutils literal"><span class="pre">whos</span></tt> de la
+sección anterior son funciones mágicas. Tened en cuenta que, el ajuste
+<tt class="docutils literal"><span class="pre">automagic</span></tt>, que está activado por defecto, te permite omitir el signo <tt class="docutils literal"><span class="pre">%</span></tt>
+predecesor al comando. De esta forma, puedes solo escribir la función
+mágica y funcionará.</p>
+<p>Otras funciones mágicas útiles son:</p>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">%cd</span></tt> para cambiar el directorio actual.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [2]: </span><span class="n">cd</span> <span class="o">/</span><span class="n">tmp</span>
+<div class="newline"></div><span class="go">/tmp</span>
+<div class="newline"></div></pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">%timeit</span></tt> permite medir el tiempo de ejecución de pequeños fragmentos de
+código usando el módulo <tt class="docutils literal"><span class="pre">timeit</span></tt> de la biblioteca estándar:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [3]: </span><span class="n">timeit</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>
+<div class="newline"></div><span class="go">10000000 loops, best of 3: 39 ns per loop</span>
+<div class="newline"></div></pre></div>
+</div>
+</li>
+<li><p class="first"><tt class="docutils literal"><span class="pre">%cpaste</span></tt> te permite pegar código, especialmente aquel que venga de un
+sitio web que ha sido precedido por el prompt estándar de Python (o sea
+<tt class="docutils literal"><span class="pre">&gt;&gt;&gt;</span></tt>) o con un prompt de IPython (por ejemplo: <tt class="docutils literal"><span class="pre">In</span> <span class="pre">[3]:</span></tt>):</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [5]: </span><span class="n">cpaste</span>
+<div class="newline"></div><span class="go">Pasting code; enter &#39;--&#39; alone on the line to stop or use Ctrl-D.</span>
+<div class="newline"></div><span class="go">:In [3]: timeit x = 10</span>
+<div class="newline"></div><span class="go">:--</span>
+<div class="newline"></div><span class="go">10000000 loops, best of 3: 85.9 ns per loop</span>
+<div class="newline"></div><span class="gp">In [6]: </span><span class="n">cpaste</span>
+<div class="newline"></div><span class="go">Pasting code; enter &#39;--&#39; alone on the line to stop or use Ctrl-D.</span>
+<div class="newline"></div><span class="go">:&gt;&gt;&gt; timeit x = 10</span>
+<div class="newline"></div><span class="go">:--</span>
+<div class="newline"></div><span class="go">10000000 loops, best of 3: 86 ns per loop</span>
+<div class="newline"></div></pre></div>
+</div>
+</li>
+</ul>
+<ul>
+<li><p class="first"><tt class="docutils literal"><span class="pre">%debug</span></tt> te permite entrar en depuración post-mortem. Esto quiere decir
+que si el código que intentas ejecutar lanza una excepción, usando <tt class="docutils literal"><span class="pre">%debug</span></tt>
+entrarás al depurador en el punto donde ocurrió la excepción.</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [7]: </span><span class="n">x</span> <span class="o">===</span> <span class="mi">10</span>
+<div class="newline"></div><span class="go">  File &quot;&lt;ipython-input-6-12fd421b5f28&gt;&quot;, line 1</span>
+<div class="newline"></div><span class="go">    x === 10</span>
+<div class="newline"></div><span class="go">        ^</span>
+<div class="newline"></div><span class="go">SyntaxError: invalid syntax</span>
+<div class="newline"></div>
+<div class="newline"></div>
+<div class="newline"></div><span class="gp">In [8]: </span><span class="n">debug</span>
+<div class="newline"></div><span class="go">&gt; /home/esc/anaconda/lib/python2.7/site-packages/IPython/core/compilerop.py(87)ast_parse()</span>
+<div class="newline"></div><span class="go">     86         and are passed to the built-in compile function.&quot;&quot;&quot;</span>
+<div class="newline"></div><span class="go">---&gt; 87         return compile(source, filename, symbol, self.flags | PyCF_ONLY_AST, 1)</span>
+<div class="newline"></div><span class="go">     88</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="go">ipdb&gt;locals()</span>
+<div class="newline"></div><span class="go">{&#39;source&#39;: u&#39;x === 10\n&#39;, &#39;symbol&#39;: &#39;exec&#39;, &#39;self&#39;:</span>
+<div class="newline"></div><span class="go">&lt;IPython.core.compilerop.CachingCompiler instance at 0x2ad8ef0&gt;,</span>
+<div class="newline"></div><span class="go">&#39;filename&#39;: &#39;&lt;ipython-input-6-12fd421b5f28&gt;&#39;}</span>
+<div class="newline"></div></pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">La chuleta (o cheat-sheet) de IPython es accesible a través de la
+función mágica <tt class="docutils literal"><span class="pre">%quickref</span></tt>.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Se muestra una lista de todas las funciones mágicas disponibles cuando
+se escribe <tt class="docutils literal"><span class="pre">%magic</span></tt>.</p>
+</div>
+<p>Además, IPython viene con diversos <em>alias</em> que emulan herramientas comunes
+de líneas de comando UNIX como <tt class="docutils literal"><span class="pre">ls</span></tt> para listar archivos, <tt class="docutils literal"><span class="pre">cp</span></tt> para
+copiar archivos y <tt class="docutils literal"><span class="pre">rm</span></tt> para eliminar archivos. Se muestra una lista de
+los alias disponibles cuando se escribe <tt class="docutils literal"><span class="pre">alias</span></tt>:</p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="n">alias</span>
+<div class="newline"></div><span class="go">Total number of aliases: 16</span>
+<div class="newline"></div><span class="go">Out[1]:</span>
+<div class="newline"></div><span class="go">[(&#39;cat&#39;, &#39;cat&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;clear&#39;, &#39;clear&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;cp&#39;, &#39;cp -i&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;ldir&#39;, &#39;ls -F -o --color %l | grep /$&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;less&#39;, &#39;less&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;lf&#39;, &#39;ls -F -o --color %l | grep ^-&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;lk&#39;, &#39;ls -F -o --color %l | grep ^l&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;ll&#39;, &#39;ls -F -o --color&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;ls&#39;, &#39;ls -F --color&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;lx&#39;, &#39;ls -F -o --color %l | grep ^-..x&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;man&#39;, &#39;man&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;mkdir&#39;, &#39;mkdir&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;more&#39;, &#39;more&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;mv&#39;, &#39;mv -i&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;rm&#39;, &#39;rm -i&#39;),</span>
+<div class="newline"></div><span class="go">(&#39;rmdir&#39;, &#39;rmdir&#39;)]</span>
+<div class="newline"></div></pre></div>
+</div>
+<p>Finalmente, nos gustaría mencionar la característica de <em>autocompletado con
+tabulador</em>, cuya descripción la extraemos directamente del manual original de IPython:</p>
+<p><em>El autocompletado con tabulador, especialmente para atributos, es una
+manera conveniente de explorar la estructura de cualquier objeto con el
+que estés tratando. Simplemente escribe nombre_del_objeto.&lt;TAB&gt; para ver
+los atributos del objeto. Además de objetos y palabras claves de Python,
+el autocompletado con tabulador también funciona para nombres de archivos
+y directorios.</em></p>
+<div class="highlight-ipython"><div class="highlight"><pre><span class="gp">In [1]: </span><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="gp">In [2]: </span><span class="n">x</span><span class="o">.&lt;</span><span class="n">TAB</span><span class="o">&gt;</span>
+<div class="newline"></div><span class="go">x.bit_length   x.conjugate    x.denominator  x.imag         x.numerator</span>
+<div class="newline"></div><span class="go">x.real</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="gp">In [3]: </span><span class="n">x</span><span class="o">.</span><span class="n">real</span><span class="o">.</span>
+<div class="newline"></div><span class="go">x.real.bit_length   x.real.denominator  x.real.numerator</span>
+<div class="newline"></div><span class="go">x.real.conjugate    x.real.imag         x.real.real</span>
+<div class="newline"></div>
+<div class="newline"></div><span class="gp">In [4]: </span><span class="n">x</span><span class="o">.</span><span class="n">real</span><span class="o">.</span>
+<div class="newline"></div></pre></div>
+</div>
+<p><div style="clear: both"></div></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="language/python_language.html" title="1.2. The Python language"
+             >next</a></li>
+        <li class="right" >
+          <a href="index.html" title="1. Para empezar con Python para fines científicos"
+             >previous</a> |</li>
+        <li><a href="../index.html">Scipy lecture notes</a> &raquo;</li>
+          <li><a href="index.html" >1. Para empezar con Python para fines científicos</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

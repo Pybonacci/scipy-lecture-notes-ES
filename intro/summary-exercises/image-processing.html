@@ -1,0 +1,120 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1.6.11.15. Aplicación de proceso de imagen: contando burbujas y granos no fundidos &mdash; Scipy lecture notes</title>
+    
+    <link rel="stylesheet" href="../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '2012.3 (EuroScipy 2012)',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="Scipy lecture notes" href="../../index.html" />
+    <link rel="up" title="1.6. Scipy : high-level scientific computing" href="../scipy.html" />
+    <link rel="next" title="1.6.11.16. Example of solution for the image processing exercise: unmolten grains in glass" href="answers_image_processing.html" />
+    <link rel="prev" title="1.6.11.14. Non linear least squares curve fitting: application to point extraction in topographical lidar data" href="optimize-fit.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="answers_image_processing.html" title="1.6.11.16. Example of solution for the image processing exercise: unmolten grains in glass"
+             accesskey="N">next</a></li>
+        <li class="right" >
+          <a href="optimize-fit.html" title="1.6.11.14. Non linear least squares curve fitting: application to point extraction in topographical lidar data"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">Scipy lecture notes</a> &raquo;</li>
+          <li><a href="../index.html" >1. Para empezar con Python para fines científicos</a> &raquo;</li>
+          <li><a href="../scipy.html" accesskey="U">1.6. Scipy : high-level scientific computing</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="aplicacion-de-proceso-de-imagen-contando-burbujas-y-granos-no-fundidos">
+<span id="summary-exercise-image-processing"></span><h1>1.6.11.15. Aplicación de proceso de imagen: contando burbujas y granos no fundidos<a class="headerlink" href="#aplicacion-de-proceso-de-imagen-contando-burbujas-y-granos-no-fundidos" title="Permalink to this headline">¶</a></h1>
+<a class="reference internal image-reference" href="../../_images/MV_HFV_012.jpg"><img alt="../../_images/MV_HFV_012.jpg" class="align-center" src="../../_images/MV_HFV_012.jpg" /></a>
+<div class="section" id="definicion-del-problema">
+<h2>1.6.11.15.1. Definición del problema<a class="headerlink" href="#definicion-del-problema" title="Permalink to this headline">¶</a></h2>
+<p>1. Abre la imagen file MV_HFV_012.jpg y muéstrala en pantalla. Navega
+a través de los argumentos del <tt class="xref py py-obj docutils literal"><span class="pre">docstring</span></tt> de <tt class="docutils literal"><span class="pre">imshow</span></tt> para mostrar
+la imagen con la orientación correctato display the image (origen en la
+esquina inferior izquierda y no en la esquina superior izquierda como
+en un array estándar).</p>
+<p>Esta imagen <tt class="xref py py-obj docutils literal"><span class="pre">Scanning</span> <span class="pre">Element</span> <span class="pre">Microscopy</span></tt> representa una muestra de cristal
+(matriz gris clara) con algunas burbujass (en negro) y granos de arena sin fundir (gris oscuro).
+Deseamos determinar la fración de la muestra cubierta por cada una de estas tres
+fases y estimar el tamaño típico de los granos de arena, de las burbujas, sus
+tamaños, etc.</p>
+<ol class="arabic simple" start="2">
+<li>Recorta la imagen para eliminar el panel inferior con la información de la medida.</li>
+</ol>
+<p>3. Filtra ligeramente la imagen con un filtro de mediana para refinar su histograma.
+Comprueba como cambia el histograma.</p>
+<p>4. Usando el histograma de la imagen filtrada determina umbrales que permitan definir
+máscaras para los píxeles de arena, los píxeles de cristal y los píxeles de burbuja.
+Otra opción (deberes para casa): escribe una función que determine automáticamente
+los umbrales a partir de la mínima del histograma.</p>
+<p>5. Muestra en pantalla una imagen en la cual las tres fases (cristal, burbuja, arena) se
+muestre con tres colores diferentes.</p>
+<ol class="arabic simple" start="6">
+<li>Usa morfología matemática para limpiar las diferentes fases.</li>
+<li>Creo etiquetas de atributos para todas las burbujas y los granos de arena</li>
+</ol>
+<blockquote>
+<div>y elimina granos de arena que sean menores a 10 píxeles. Para hacer esto</div></blockquote>
+<p>último puedes usar <tt class="docutils literal"><span class="pre">ndimage.sum</span></tt> o <tt class="docutils literal"><span class="pre">np.bincount</span></tt> para calcular el tamaño de los granos.</p>
+<ol class="arabic simple" start="8">
+<li>Calcula el tamaño medio de las burbujas.</li>
+</ol>
+</div>
+<div class="section" id="solucion-propuesta">
+<span id="image-answers"></span><h2>1.6.11.15.2. Solución propuesta<a class="headerlink" href="#solucion-propuesta" title="Permalink to this headline">¶</a></h2>
+<p><div style="clear: both"></div></p>
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="answers_image_processing.html" title="1.6.11.16. Example of solution for the image processing exercise: unmolten grains in glass"
+             >next</a></li>
+        <li class="right" >
+          <a href="optimize-fit.html" title="1.6.11.14. Non linear least squares curve fitting: application to point extraction in topographical lidar data"
+             >previous</a> |</li>
+        <li><a href="../../index.html">Scipy lecture notes</a> &raquo;</li>
+          <li><a href="../index.html" >1. Para empezar con Python para fines científicos</a> &raquo;</li>
+          <li><a href="../scipy.html" >1.6. Scipy : high-level scientific computing</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
